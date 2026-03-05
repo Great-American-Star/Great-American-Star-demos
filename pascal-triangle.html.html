@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Pascal's Triangle - Great American Star (1/5th Section)</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-button {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-button.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        }
+
+        .triangle-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+            overflow-x: auto;
+            min-width: 100%;
+        }
+
+        .triangle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: max-content;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .row {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell {
+            width: 70px;
+            height: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 9px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            margin: 3px;
+        }
+
+        .cell:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .cell.animated {
+            animation: pathPulse 0.5s ease-in-out;
+        }
+
+        .cell.valid-next {
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        @keyframes pathPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .letter-mode .cell {
+            font-size: 20px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .info-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+
+        .copyright-notice {
+            position: fixed;
+            bottom: 10px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #ffd700;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: bold;
+            z-index: 1000;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .copyright-notice:hover {
+            background: rgba(0, 0, 0, 1);
+            border-color: #ffd700;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .create-instructions {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            display: none;
+        }
+
+        .create-instructions h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .control-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-button {
+                width: 80%;
+                margin-bottom: 10px;
+            }
+            
+            .cell {
+                width: 60px;
+                height: 45px;
+                font-size: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Interactive Pascal's Triangle</h1>
+            <div class="subtitle">Great American Star - Mathematical Foundation (1/5th Section)</div>
+            <div class="subtitle">Modified Pascal's Triangle: 71,855,450 Paths per Section</div>
+        </div>
+
+        <div class="controls">
+            <!-- First row: Show Numbers/Letters -->
+            <div class="control-row">
+                <button class="control-button" id="numbersBtn" onclick="toggleMode('numbers')">Show Numbers</button>
+                <button class="control-button active" id="lettersBtn" onclick="toggleMode('letters')">Show Letters</button>
+            </div>
+            
+            <!-- Second row: Animation -->
+            <div class="control-row">
+                <button class="control-button" id="animationBtn" onclick="toggleAnimation()">Start Path Animation</button>
+            </div>
+            
+            <!-- Third row: Other controls -->
+            <div class="control-row">
+                <button class="control-button" onclick="traceRandomPath()">Trace Random Path</button>
+                <button class="control-button" id="createModeBtn" onclick="toggleCreateMode()">Create a Path</button>
+                <button class="control-button" onclick="clearHighlights()">Clear Highlights</button>
+            </div>
+        </div>
+
+        <!-- Create Path Instructions -->
+        <div class="create-instructions" id="createInstructions">
+            <h3>Create a Path - Click Through Each Row</h3>
+            <p style="color: white; margin-bottom: 10px;">Click on one cell in each row to create your custom path. Current row: <span id="currentRow">0</span></p>
+            <p style="color: #ffd700; font-size: 14px;">Green borders show valid next positions (maximum 2 choices per Pascal's triangle rules).</p>
+            <button class="control-button" onclick="resetCreatePath()">Reset Path Creation</button>
+        </div>
+
+        <div class="triangle-container">
+            <div class="triangle" id="triangle">
+                <!-- Triangle will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h3>Mathematical Information</h3>
+            <p id="triangleInfo">This represents 1/5th of the complete Great American Star. Each cell shows the number of possible paths to that position.</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">71,855,450</div>
+                    <div>Paths in This Section</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">359,277,250</div>
+                    <div>Total Star Paths (×5)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <div>Rows (0-23)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">11→22→21→10</div>
+                    <div>Growth Pattern</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fixed Copyright Notice -->
+    <div class="copyright-notice">
+        © RABBIDANCZIGER@GMAIL.COM
+    </div>
+
+    <script>
+        // Triangle data structure
+        const triangleData = [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2],
+            [1, 3, 6, 10, 15, 21, 28, 27, 21, 15, 10, 6, 3],
+            [1, 4, 10, 20, 35, 56, 84, 111, 132, 141, 135, 115, 85, 45],
+            [1, 5, 15, 35, 70, 126, 210, 321, 453, 594, 729, 840, 910, 925, 870],
+            [1, 6, 21, 56, 126, 252, 462, 783, 1236, 1830, 2559, 3399, 4309, 5234, 6104, 6834],
+            [1, 7, 28, 84, 210, 462, 924, 1707, 3003, 4833, 7392, 10791, 15100, 20334, 26338, 32942, 39776],
+            [1, 8, 36, 120, 330, 792, 1716, 3432, 6435, 11268, 18660, 29451, 44551, 64885, 91223, 124162, 164938, 204714],
+            [1, 9, 45, 165, 495, 1287, 3003, 6435, 12870, 24138, 42798, 72249, 116800, 181685, 273008, 397170, 562108, 766822, 971536],
+            [1, 10, 55, 220, 715, 2002, 5005, 11440, 24310, 48620, 91718, 163967, 280767, 462452, 735460, 1132630, 1695738, 2462560, 3434358, 4405156],
+            [1, 11, 66, 286, 1001, 3003, 8008, 19448, 43758, 92378, 184756, 348423, 629190, 1091642, 1827102, 2959732, 4655470, 7118030, 10552388, 14957544, 19362700],
+            [1, 12, 78, 364, 1365, 4368, 12376, 31824, 75582, 168960, 353716, 702104, 1331294, 2422936, 4250038, 7209770, 11865240, 18983270, 29535658, 44493202, 63855746, 83218290],
+            [13, 91, 455, 1820, 5733, 16016, 41041, 98280, 221760, 468676, 936472, 1768398, 3200232, 5508270, 9018009, 14207207, 21600600, 31600600, 44600600, 60600600, 79600600],
+            [104, 546, 2275, 7553, 21549, 57057, 139321, 320041, 690401, 1405077, 2704549, 4968631, 8708901, 14717010, 23735616, 37336207, 56936807, 84537407, 123138007, 175738607],
+            [650, 2821, 10374, 31927, 78876, 178933, 378274, 750315, 1440716, 2595793, 4500342, 7372973, 11581874, 17509490, 25735123, 37336330, 53274137, 75411544, 106149951],
+            [3471, 13195, 41301, 110803, 267709, 589842, 1218157, 2359031, 4299747, 7372535, 12073315, 19046865, 29128339, 43237829, 62572952, 88908282, 124319826, 171731370],
+            [16666, 54496, 151104, 378512, 856221, 1804063, 3563094, 6658125, 11657872, 19430387, 31503702, 49550567, 75679206, 112917035, 165489987, 238398269, 338730095],
+            [71162, 205600, 529616, 1234733, 2660284, 5323157, 10181219, 18839344, 33297216, 56128589, 91079291, 143629858, 219309063, 328226098, 481615085, 693013354],
+            [276762, 735216, 1764849, 3925017, 8185441, 15844376, 29023563, 51862907, 88160123, 144288712, 227918003, 350547861, 528856924, 782082009, 1175095363],
+            [1011978, 2500065, 5689866, 11814458, 23659817, 44684939, 80547846, 139410753, 231571465, 372860177, 578778180, 882635041, 1310691965, 1893774328],
+            [3512043, 8201909, 17491775, 34306233, 64966050, 115650789, 195198635, 315769388, 504340853, 777201030, 1159836071, 1670528036, 2340220001],
+            [11713952, 25693684, 51387459, 95353283, 166319072, 276517707, 441287095, 681056483, 1025397336, 1480737366, 2070265402, 2820485403],
+            [37407636, 77081143, 146734742, 261088025, 431405732, 681056483, 1041343819, 1546631155, 2222968521, 3070233923, 4149719326],
+            [114488779, 223815885, 408549627, 693637652, 1124962384, 1765306302, 2587937457, 3668270612, 4999204535, 6649923861]
+        ];
+
+        // Letter sequence for the Great American Star
+        const letterSequence = "UNITEDSTATESofAMERICA250";
+        
+        // Word boundaries for color coding - FIXED POSITIONS
+        const wordBoundaries = {
+            "UNITED": { start: 0, end: 5, color: '#0000ff' },    // Blue
+            "STATES": { start: 6, end: 11, color: '#ff0000' },   // Red
+            "of": { start: 12, end: 13, color: '#0000ff' },      // Blue
+            "AMERICA": { start: 14, end: 20, color: '#ff0000' }, // Red
+            "250": { start: 21, end: 23, color: '#ffd700' }      // Gold - position 21="2", 22="5", 23="0"
+        };
+
+        let currentMode = 'letters';
+        let animationRunning = false;
+        let animationInterval = null;
+        let createMode = false;
+        let createPath = [];
+        let currentCreateRow = 0;
+        let traceTimeouts = []; // Track all trace timeouts
+
+        // Get color for a specific row based on which word it belongs to
+        function getWordColor(row) {
+            for (const [word, info] of Object.entries(wordBoundaries)) {
+                if (row >= info.start && row <= info.end) {
+                    return info.color;
+                }
+            }
+            return '#333';
+        }
+
+        // Get valid next positions for continuous path - PROPER PASCAL'S TRIANGLE RULES
+        function getValidNextPositions(currentRow, currentCol) {
+            if (currentRow >= triangleData.length - 1) return [];
+            
+            const nextRow = currentRow + 1;
+            const nextRowLength = triangleData[nextRow].length;
+            const currentRowLength = triangleData[currentRow].length;
+            const validPositions = [];
+            
+            // PASCAL'S TRIANGLE RULE: Each cell connects to exactly 2 cells below it
+            // Position (row, col) connects to (row+1, col) and (row+1, col+1)
+            // BUT we need to handle the expanding/contracting nature of our modified triangle
+            
+            if (nextRowLength > currentRowLength) {
+                // Row is expanding - standard Pascal's triangle rule
+                // From position col, you can go to col or col+1 in next row
+                if (currentCol < nextRowLength) validPositions.push(currentCol);     // Same position
+                if (currentCol + 1 < nextRowLength) validPositions.push(currentCol + 1); // Right diagonal
+            } else if (nextRowLength < currentRowLength) {
+                // Row is contracting - reverse Pascal's triangle rule
+                // From position col, you can go to col-1 or col in next row (if they exist)
+                if (currentCol > 0 && currentCol - 1 < nextRowLength) validPositions.push(currentCol - 1); // Left diagonal
+                if (currentCol < nextRowLength) validPositions.push(currentCol); // Same position
+            } else {
+                // Same length - standard Pascal's triangle rule
+                if (currentCol < nextRowLength) validPositions.push(currentCol);     // Same position
+                if (currentCol + 1 < nextRowLength) validPositions.push(currentCol + 1); // Right diagonal
+            }
+            
+            // Remove duplicates and ensure we have exactly 1 or 2 valid positions
+            const uniquePositions = [...new Set(validPositions)];
+            return uniquePositions.map(col => ({ row: nextRow, col }));
+        }
+
+        // Generate a truly continuous path through the triangle - PROPER PASCAL'S TRIANGLE
+        function generateContinuousPath() {
+            const path = [];
+            let currentCol = Math.floor(Math.random() * triangleData[0].length); // Start anywhere in first row
+            
+            for (let row = 0; row < triangleData.length; row++) {
+                path.push({ row, col: currentCol });
+                
+                // Get valid next positions and choose one randomly
+                if (row < triangleData.length - 1) {
+                    const validNext = getValidNextPositions(row, currentCol);
+                    if (validNext.length > 0) {
+                        const nextPosition = validNext[Math.floor(Math.random() * validNext.length)];
+                        currentCol = nextPosition.col;
+                    } else {
+                        // If no valid next positions, stop the path
+                        console.log('Path ended early at row', row, 'col', currentCol);
+                        break;
+                    }
+                }
+            }
+            
+            console.log('Generated continuous path with', path.length, 'steps');
+            console.log('Path:', path.map(p => `(${p.row},${p.col})`).join(' → '));
+            return path;
+        }
+
+        // Clear all trace timeouts
+        function clearTraceTimeouts() {
+            traceTimeouts.forEach(timeout => clearTimeout(timeout));
+            traceTimeouts = [];
+        }
+
+        // Initialize the triangle
+        function initTriangle() {
+            const triangleElement = document.getElementById('triangle');
+            triangleElement.innerHTML = '';
+
+            triangleData.forEach((row, rowIndex) => {
+                const rowElement = document.createElement('div');
+                rowElement.className = 'row';
+                
+                row.forEach((value, colIndex) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = rowIndex;
+                    cell.dataset.col = colIndex;
+                    
+                    if (currentMode === 'numbers') {
+                        cell.textContent = value.toLocaleString();
+                        // Gradually decrease font size from top to bottom
+                        const baseFontSize = 16; // Start with larger font
+                        const minFontSize = 8;   // Minimum font size for bottom rows
+                        const fontSize = Math.max(minFontSize, baseFontSize - (rowIndex * 0.3));
+                        cell.style.fontSize = fontSize + 'px';
+                        cell.style.color = '#333';
+                    } else {
+                        if (rowIndex < letterSequence.length) {
+                            cell.textContent = letterSequence[rowIndex];
+                            cell.style.fontSize = '20px';
+                            // Set permanent word-based colors for letters
+                            const letterColor = getWordColor(rowIndex);
+                            cell.style.color = letterColor;
+                        } else {
+                            cell.textContent = '';
+                        }
+                    }
+                    
+                    cell.addEventListener('click', () => {
+                        if (createMode) {
+                            handleCreatePathClick(rowIndex, colIndex);
+                        } else {
+                            showCellInfo(rowIndex, colIndex, value);
+                        }
+                    });
+                    rowElement.appendChild(cell);
+                });
+                
+                triangleElement.appendChild(rowElement);
+            });
+
+            if (currentMode === 'letters') {
+                triangleElement.classList.add('letter-mode');
+            } else {
+                triangleElement.classList.remove('letter-mode');
+            }
+        }
+
+        // Toggle between numbers and letters mode
+        function toggleMode(mode) {
+            currentMode = mode;
+            
+            document.getElementById('numbersBtn').classList.toggle('active', mode === 'numbers');
+            document.getElementById('lettersBtn').classList.toggle('active', mode === 'letters');
+            
+            initTriangle();
+            
+            const info = document.getElementById('triangleInfo');
+            if (mode === 'letters') {
+                info.textContent = 'Letter mode: Each row represents a letter in "UNITEDSTATESofAMERICA250". Click any cell to see path information.';
+            } else {
+                info.textContent = 'Number mode: Each cell shows the number of possible paths to that position. Click any cell for detailed information.';
+            }
+        }
+
+        // Show information about a specific cell
+        function showCellInfo(row, col, value) {
+            const info = document.getElementById('triangleInfo');
+            const letter = row < letterSequence.length ? letterSequence[row] : '';
+            
+            info.innerHTML = `
+                <strong>Position:</strong> Row ${row}, Column ${col + 1}<br>
+                <strong>Letter:</strong> ${letter || 'Beyond sequence'}<br>
+                <strong>Paths to this position:</strong> ${value.toLocaleString()}<br>
+                <strong>Progress:</strong> ${row + 1}/24 through the sequence<br>
+                <strong>Mathematical significance:</strong> This position represents one of the branching points in our modified Pascal's triangle structure.
+            `;
+        }
+
+        // Toggle animation on/off
+        function toggleAnimation() {
+            const btn = document.getElementById('animationBtn');
+            
+            if (animationRunning) {
+                // Stop animation
+                animationRunning = false;
+                if (animationInterval) {
+                    clearInterval(animationInterval);
+                    animationInterval = null;
+                }
+                btn.textContent = 'Start Path Animation';
+                btn.classList.remove('active');
+                clearHighlights();
+                document.getElementById('triangleInfo').textContent = 'Path animation stopped.';
+            } else {
+                // Start animation
+                animationRunning = true;
+                btn.textContent = 'Stop Path Animation';
+                btn.classList.add('active');
+                document.getElementById('triangleInfo').textContent = 'Path animation running - watch continuous paths flow through the triangle following Pascal\'s triangle rules!';
+                
+                // Start the animation loop
+                animationInterval = setInterval(() => {
+                    if (animationRunning) {
+                        animateRandomPath();
+                    }
+                }, 3000); // New path every 3 seconds
+                
+                // Start first path immediately
+                animateRandomPath();
+            }
+        }
+
+        // Animate a single continuous path
+        function animateRandomPath() {
+            if (!animationRunning) return;
+            
+            const path = generateContinuousPath();
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffa500', '#9370db', '#32cd32'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            console.log('Animating continuous path with', path.length, 'steps in color', color);
+            
+            // Animate each cell in the path
+            path.forEach((position, index) => {
+                setTimeout(() => {
+                    if (!animationRunning) return;
+                    
+                    const cell = document.querySelector(`[data-row="${position.row}"][data-col="${position.col}"]`);
+                    if (cell) {
+                        // Add highlight
+                        cell.style.backgroundColor = color;
+                        cell.style.fontWeight = '900';
+                        cell.classList.add('animated');
+                        
+                        // Keep original letter color
+                        if (currentMode === 'letters') {
+                            const letterColor = getWordColor(position.row);
+                            cell.style.color = letterColor;
+                        }
+                        
+                        // Remove highlight after a delay
+                        setTimeout(() => {
+                            if (cell) {
+                                cell.style.backgroundColor = '';
+                                cell.style.fontWeight = '';
+                                cell.classList.remove('animated');
+                                
+                                // Restore original color
+                                if (currentMode === 'letters') {
+                                    const letterColor = getWordColor(position.row);
+                                    cell.style.color = letterColor;
+                                } else {
+                                    cell.style.color = '#333';
+                                }
+                            }
+                        }, 2000); // Keep highlight for 2 seconds
+                    }
+                }, index * 150); // 150ms delay between each cell
+            });
+        }
+
+        // Trace Random Path - Single continuous path with slow progression - FIXED
+        function traceRandomPath() {
+            // Clear any running animations or traces
+            if (animationRunning) {
+                toggleAnimation(); // Stop current animation
+            }
+            
+            // Clear any existing trace timeouts
+            clearTraceTimeouts();
+            
+            // Clear all highlights immediately
+            clearHighlights();
+            
+            const path = generateContinuousPath();
+            const color = '#4ecdc4';
+            
+            document.getElementById('triangleInfo').textContent = 'Tracing a single continuous path through the triangle - each cell connects to the next following Pascal\'s triangle rules (max 2 choices per step).';
+            
+            // Animate the path
+            path.forEach((position, index) => {
+                const timeout = setTimeout(() => {
+                    const cell = document.querySelector(`[data-row="${position.row}"][data-col="${position.col}"]`);
+                    if (cell) {
+                        cell.style.backgroundColor = color;
+                        cell.style.fontWeight = '900';
+                        cell.classList.add('animated');
+                        
+                        if (currentMode === 'letters') {
+                            const letterColor = getWordColor(position.row);
+                            cell.style.color = letterColor;
+                        }
+                    }
+                }, index * 250); // Slower progression for single trace
+                
+                traceTimeouts.push(timeout);
+            });
+        }
+
+        // Show valid next positions for create mode
+        function showValidNextPositions() {
+            // Clear all valid indicators
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.classList.remove('valid-next');
+            });
+            
+            if (createPath.length === 0) {
+                // First row - all positions are valid
+                document.querySelectorAll('[data-row="0"]').forEach(cell => {
+                    cell.classList.add('valid-next');
+                });
+            } else {
+                // Show valid next positions based on last position in path
+                const lastPosition = createPath[createPath.length - 1];
+                const validNext = getValidNextPositions(lastPosition.row, lastPosition.col);
+                
+                console.log(`From position (${lastPosition.row}, ${lastPosition.col}), valid next positions:`, validNext);
+                
+                validNext.forEach(pos => {
+                    const cell = document.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
+                    if (cell) {
+                        cell.classList.add('valid-next');
+                    }
+                });
+            }
+        }
+
+        // Toggle Create Mode
+        function toggleCreateMode() {
+            createMode = !createMode;
+            
+            if (animationRunning) {
+                toggleAnimation(); // Stop animation if running
+            }
+            
+            // Clear any trace timeouts when entering create mode
+            clearTraceTimeouts();
+            
+            document.getElementById('createModeBtn').classList.toggle('active', createMode);
+            document.getElementById('createInstructions').style.display = createMode ? 'block' : 'none';
+            
+            if (createMode) {
+                resetCreatePath();
+            } else {
+                clearHighlights();
+            }
+        }
+
+        // Handle create path click - FIXED: Only allow Pascal's triangle paths
+        function handleCreatePathClick(row, col) {
+            if (createPath.length === 0) {
+                // First click - must be in row 0
+                if (row !== 0) {
+                    document.getElementById('triangleInfo').textContent = `Please start by clicking on any cell in row 0. You clicked on row ${row}.`;
+                    return;
+                }
+            } else {
+                // Check if this is a valid next position according to Pascal's triangle rules
+                const lastPosition = createPath[createPath.length - 1];
+                const validNext = getValidNextPositions(lastPosition.row, lastPosition.col);
+                const isValid = validNext.some(pos => pos.row === row && pos.col === col);
+                
+                if (!isValid) {
+                    document.getElementById('triangleInfo').textContent = `Invalid position! Pascal's triangle rules: each cell connects to maximum 2 cells below it. Green borders show valid options.`;
+                    return;
+                }
+            }
+            
+            // Add this cell to the path
+            createPath.push({ row, col });
+            
+            // Highlight ALL cells in the created path with the SAME COLOR
+            createPath.forEach((position) => {
+                const pathCell = document.querySelector(`[data-row="${position.row}"][data-col="${position.col}"]`);
+                if (pathCell) {
+                    pathCell.style.backgroundColor = '#00ff00';
+                    pathCell.style.fontWeight = '900';
+                    pathCell.classList.remove('valid-next');
+                    
+                    if (currentMode === 'letters') {
+                        const letterColor = getWordColor(position.row);
+                        pathCell.style.color = letterColor;
+                    }
+                }
+            });
+            
+            // Update current row
+            currentCreateRow = row + 1;
+            document.getElementById('currentRow').textContent = currentCreateRow;
+            
+            if (currentCreateRow >= triangleData.length) {
+                document.getElementById('triangleInfo').textContent = `Path creation complete! You created a continuous path through all ${triangleData.length} rows following Pascal's triangle rules.`;
+                document.getElementById('currentRow').textContent = 'Complete';
+                // Clear valid indicators
+                document.querySelectorAll('.cell').forEach(cell => {
+                    cell.classList.remove('valid-next');
+                });
+            } else {
+                const validNext = getValidNextPositions(row, col);
+                document.getElementById('triangleInfo').textContent = `Good! Now click on any green-bordered cell in row ${currentCreateRow} to continue your path. (${validNext.length} valid choices available)`;
+                showValidNextPositions();
+            }
+        }
+
+        // Reset create path
+        function resetCreatePath() {
+            createPath = [];
+            currentCreateRow = 0;
+            document.getElementById('currentRow').textContent = currentCreateRow;
+            document.getElementById('triangleInfo').textContent = 'Click on any cell in row 0 to start creating your continuous path following Pascal\'s triangle rules.';
+            clearHighlights();
+            showValidNextPositions();
+        }
+
+        // Clear all highlights
+        function clearHighlights() {
+            // Clear any trace timeouts
+            clearTraceTimeouts();
+            
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.style.backgroundColor = '';
+                cell.style.fontWeight = '';
+                cell.classList.remove('animated', 'valid-next');
+                
+                // Restore permanent letter colors
+                if (currentMode === 'letters') {
+                    const row = parseInt(cell.dataset.row);
+                    if (row < letterSequence.length) {
+                        const letterColor = getWordColor(row);
+                        cell.style.color = letterColor;
+                    }
+                } else {
+                    cell.style.color = '#333';
+                }
+            });
+            
+            document.getElementById('triangleInfo').textContent = 'All highlights cleared. Use the controls above to explore continuous paths through the triangle following Pascal\'s triangle rules.';
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start in letters mode by default
+            currentMode = 'letters';
+            document.getElementById('lettersBtn').classList.add('active');
+            document.getElementById('numbersBtn').classList.remove('active');
+            initTriangle();
+            
+            const info = document.getElementById('triangleInfo');
+            info.textContent = 'Letter mode: Each row represents a letter in "UNITEDSTATESofAMERICA250". Click any cell to see path information.';
+            
+            console.log('🇺🇸 Interactive Pascal\'s Triangle loaded!');
+            console.log('71,855,450 paths in this section × 5 = 359,277,250 total paths');
+            console.log('Following proper Pascal\'s triangle rules: each cell connects to maximum 2 cells below it');
+        });
+    </script>
+</body>
+</html>

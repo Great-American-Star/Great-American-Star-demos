@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Great American Star - Interactive Path Calculator</title>
+<style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .calculator-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .row-selector {
+            margin-bottom: 20px;
+        }
+        
+        .row-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .row-selector select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .row-display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        
+        .row-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .row-table th,
+        .row-table td {
+            padding: 8px 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .row-table th {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: bold;
+        }
+        
+        .row-table td {
+            background: rgba(255, 255, 255, 0.1);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .row-sum {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .phase-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .expand { background: #4CAF50; }
+        .peak { background: #FF9800; }
+        .contract { background: #F44336; }
+        .final { background: #9C27B0; }
+        
+        .final-calculation {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .final-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .interactive-controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #FF9800, #F44336);
+            transition: width 0.5s ease;
+        }
+        
+        .copyright-notice {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #ffd700;
+        }
+        
+        .copyright-fixed {
+            position: fixed;
+            bottom: 10px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>The Great American Star</h1>
+<div class="subtitle">Interactive Mathematical Path Calculator</div>
+<div class="subtitle">America's 250th Anniversary - 359,277,250 Unique Paths</div>
+</div>
+<div class="stats-grid">
+<div class="stat-card">
+<div class="stat-number">359,277,250</div>
+<div>Total Unique Paths</div>
+</div>
+<div class="stat-card">
+<div class="stat-number">71,855,450</div>
+<div>Paths per Star Section</div>
+</div>
+<div class="stat-card">
+<div class="stat-number">24</div>
+<div>Total Rows (0-23)</div>
+</div>
+<div class="stat-card">
+<div class="stat-number">50</div>
+<div>Starting Points (States)</div>
+</div>
+</div>
+<div class="calculator-section">
+<h2>Interactive Row Calculator</h2>
+<div class="interactive-controls">
+<div class="control-group">
+<label for="rowSelect">Select Row to Explore:</label>
+<select id="rowSelect" onchange="displayRow()">
+<option value="">Choose a row...</option>
+</select>
+</div>
+<div class="control-group">
+<button onclick="animateAllRows()">Animate All Rows</button>
+<button onclick="showFinalCalculation()">Show Final Result</button>
+</div>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill" style="width: 0%"></div>
+</div>
+<div class="row-display" id="rowDisplay" style="display: none;">
+<!-- Row data will be displayed here -->
+</div>
+</div>
+<div class="final-calculation" id="finalCalc" style="display: none;">
+<h2>🎉 FINAL CALCULATION 🎉</h2>
+<div>One-Fifth of Star: <span class="final-number">71,855,450</span></div>
+<div>Complete Star: 71,855,450 × 5 = </div>
+<div class="final-number">359,277,250</div>
+<div>Unique Paths for America's 250th Anniversary!</div>
+</div>
+
+<!-- Copyright Notice in Footer -->
+<div class="copyright-notice">
+© RABBIDANCZIGER@GMAIL.COM
+</div>
+
+</div>
+
+<!-- Fixed Copyright Notice -->
+<div class="copyright-fixed">
+© RABBIDANCZIGER@GMAIL.COM
+</div>
+<script>
+        // Pascal's Triangle Data for The Great American Star
+        const pascalData = [
+            {row: 0, positions: 11, values: [1,1,1,1,1,1,1,1,1,1,1], sum: 11, phase: 'expand'},
+            {row: 1, positions: 12, values: [1,2,2,2,2,2,2,2,2,2,2,1], sum: 22, phase: 'expand'},
+            {row: 2, positions: 13, values: [1,3,4,4,4,4,4,4,4,4,4,3,1], sum: 44, phase: 'expand'},
+            {row: 3, positions: 14, values: [1,4,7,8,8,8,8,8,8,8,8,7,4,1], sum: 88, phase: 'expand'},
+            {row: 4, positions: 15, values: [1,5,11,15,16,16,16,16,16,16,16,15,11,5,1], sum: 176, phase: 'expand'},
+            {row: 5, positions: 16, values: [1,6,16,26,31,32,32,32,32,32,32,31,26,16,6,1], sum: 352, phase: 'expand'},
+            {row: 6, positions: 17, values: [1,7,22,42,57,63,64,64,64,64,64,63,57,42,22,7,1], sum: 704, phase: 'expand'},
+            {row: 7, positions: 18, values: [1,8,29,64,99,120,127,128,128,128,128,127,120,99,64,29,8,1], sum: 1408, phase: 'expand'},
+            {row: 8, positions: 19, values: [1,9,37,93,163,219,247,255,256,256,256,255,247,219,163,93,37,9,1], sum: 2816, phase: 'expand'},
+            {row: 9, positions: 20, values: [1,10,46,130,256,382,466,502,511,512,512,511,502,466,382,256,130,46,10,1], sum: 5632, phase: 'expand'},
+            {row: 10, positions: 21, values: [1,11,56,176,386,638,848,968,1013,1023,1024,1023,1013,968,848,638,386,176,56,11,1], sum: 11264, phase: 'expand'},
+            {row: 11, positions: 22, values: [1,12,67,232,562,1024,1486,1816,1981,2036,2047,2047,2036,1981,1816,1486,1024,562,232,67,12,1], sum: 22528, phase: 'peak'},
+            {row: 12, positions: 21, values: [13,79,299,794,1586,2510,3302,3797,4017,4083,4094,4083,4017,3797,3302,2510,1586,794,299,79,13], sum: 45056, phase: 'contract'},
+            {row: 13, positions: 20, values: [92,378,1093,2380,4096,5812,7099,7814,8100,8177,8177,8100,7814,7099,5812,4096,2380,1093,378,92], sum: 90112, phase: 'contract'},
+            {row: 14, positions: 19, values: [470,1471,3473,6476,9908,12911,14913,15914,16277,16277,15914,14913,12911,9908,6476,3473,1471,470,92], sum: 180224, phase: 'contract'},
+            {row: 15, positions: 18, values: [1941,4944,9949,16384,22819,27824,30827,32191,32554,32191,30827,27824,22819,16384,9949,4944,1941,562], sum: 360448, phase: 'contract'},
+            {row: 16, positions: 17, values: [6885,14893,26333,39203,50643,58651,63018,64745,64745,63018,58651,50643,39203,26333,14893,6885,2503], sum: 720896, phase: 'contract'},
+            {row: 17, positions: 16, values: [21778,41226,65536,89846,109294,121669,127763,129763,127763,121669,109294,89846,65536,41226,21778,9388], sum: 1441792, phase: 'contract'},
+            {row: 18, positions: 15, values: [63004,106762,155382,199140,231963,249432,257526,257526,249432,231963,199140,155382,106762,63004,31166], sum: 2883584, phase: 'contract'},
+            {row: 19, positions: 14, values: [169766,262144,354522,431103,481395,506958,514958,506958,481395,431103,354522,262144,169766,94170], sum: 5767168, phase: 'contract'},
+            {row: 20, positions: 13, values: [431910,616666,785625,912498,988353,1021916,1021916,988353,912498,785625,616666,431910,263936], sum: 11534336, phase: 'contract'},
+            {row: 21, positions: 12, values: [1048576,1402291,1698123,1900851,2010269,2043832,2010269,1900851,1698123,1402291,1048576,695846], sum: 23068672, phase: 'contract'},
+            {row: 22, positions: 11, values: [2450867,3100414,3598974,3911120,4054101,4054101,3911120,3598974,3100414,2450867,1744422], sum: 46137344, phase: 'contract'},
+            {row: 23, positions: 10, values: [5551281,6699388,7510094,7965221,8108202,7965221,7510094,6699388,5551281,4195289], sum: 71855450, phase: 'final'}
+        ];
+
+        // Initialize the page
+        function init() {
+            const select = document.getElementById('rowSelect');
+            pascalData.forEach(row => {
+                const option = document.createElement('option');
+                option.value = row.row;
+                option.textContent = `Row ${row.row} (${row.positions} positions, ${row.phase})`;
+                select.appendChild(option);
+            });
+        }
+
+        function displayRow() {
+            const select = document.getElementById('rowSelect');
+            const rowNum = parseInt(select.value);
+            const display = document.getElementById('rowDisplay');
+            
+            if (isNaN(rowNum)) {
+                display.style.display = 'none';
+                return;
+            }
+            
+            const rowData = pascalData[rowNum];
+            const progress = ((rowNum + 1) / pascalData.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            let html = `
+                <div class="phase-indicator ${rowData.phase}">
+                    ${rowData.phase.toUpperCase()} PHASE
+                </div>
+                <h3>Row ${rowData.row} - ${rowData.positions} Positions</h3>
+                <table class="row-table">
+                    <tr>
+                        <th>Position</th>
+            `;
+            
+            for (let i = 1; i <= rowData.positions; i++) {
+                html += `<th>${i}</th>`;
+            }
+            html += `</tr><tr><th>Value</th>`;
+            
+            rowData.values.forEach(value => {
+                html += `<td>${value.toLocaleString()}</td>`;
+            });
+            
+            html += `</tr></table>
+                <div class="row-sum">Row Sum: ${rowData.sum.toLocaleString()}</div>
+            `;
+            
+            display.innerHTML = html;
+            display.style.display = 'block';
+        }
+
+        function animateAllRows() {
+            let currentRow = 0;
+            const select = document.getElementById('rowSelect');
+            
+            function showNextRow() {
+                if (currentRow < pascalData.length) {
+                    select.value = currentRow;
+                    displayRow();
+                    currentRow++;
+                    setTimeout(showNextRow, 1000);
+                } else {
+                    showFinalCalculation();
+                }
+            }
+            
+            showNextRow();
+        }
+
+        function showFinalCalculation() {
+            document.getElementById('finalCalc').style.display = 'block';
+            document.getElementById('finalCalc').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize when page loads
+        window.onload = init;
+    </script>
+</body>
+</html>

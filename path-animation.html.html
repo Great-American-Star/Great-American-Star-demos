@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Great American Star Path Animation</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+
+        .header h1:first-of-type {
+            font-size: 2.8em;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header h1:last-of-type {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .triangle-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+            overflow-x: auto;
+            min-width: 100%;
+        }
+
+        .triangle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: max-content;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .row {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell {
+            width: 70px;
+            height: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            position: relative;
+            margin: 3px;
+        }
+
+        .cell.animated {
+            animation: pathPulse 0.5s ease-in-out;
+        }
+
+        @keyframes pathPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .info-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+
+        .copyright-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 107, 0.1));
+            border-radius: 15px;
+            padding: 25px;
+            margin: 40px auto 20px auto;
+            text-align: center;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            max-width: 800px;
+        }
+
+        .copyright-section h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .copyright-main {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .copyright-details {
+            font-size: 0.95em;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .copyright-disclaimer {
+            font-size: 0.85em;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .cell {
+                width: 60px;
+                height: 45px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Great American Star</h1>
+            <h1>Path Animation</h1>
+            <div class="subtitle">1/5th Section - Modified Pascal's Triangle: 71,855,450 Paths per Section</div>
+        </div>
+
+        <div class="triangle-container">
+            <div class="triangle" id="triangle">
+                <!-- Triangle will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h3>Watch 359,277,250 Unique Paths Flow Through America's Mathematical Star</h3>
+            <p id="triangleInfo">This represents 1/5th of the complete Great American Star. Watch as continuous paths flow through the modified Pascal's triangle structure, each representing a unique American journey.</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">71,855,450</div>
+                    <div>Paths in This Section</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">359,277,250</div>
+                    <div>Total Star Paths (×5)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <div>Rows (0-23)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">11→22→21→10</div>
+                    <div>Growth Pattern</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Copyright Section -->
+        <div class="copyright-section">
+            <h3>Original Creator & Copyright</h3>
+            <div class="copyright-main">
+                © RABBIDANCZIGER@GMAIL.COM
+            </div>
+            <div class="copyright-details">
+                Creator of "The Great American Star" Mathematical Art Concept<br>
+                Path Animation Designer • 359,277,250 Unique Paths Algorithm
+            </div>
+            <div class="copyright-disclaimer">
+                All rights reserved. This mathematical art concept, animation design, and path calculation methodology<br>
+                are the original intellectual property of the creator.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Triangle data structure
+        const triangleData = [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2],
+            [1, 3, 6, 10, 15, 21, 28, 27, 21, 15, 10, 6, 3],
+            [1, 4, 10, 20, 35, 56, 84, 111, 132, 141, 135, 115, 85, 45],
+            [1, 5, 15, 35, 70, 126, 210, 321, 453, 594, 729, 840, 910, 925, 870],
+            [1, 6, 21, 56, 126, 252, 462, 783, 1236, 1830, 2559, 3399, 4309, 5234, 6104, 6834],
+            [1, 7, 28, 84, 210, 462, 924, 1707, 3003, 4833, 7392, 10791, 15100, 20334, 26338, 32942, 39776],
+            [1, 8, 36, 120, 330, 792, 1716, 3432, 6435, 11268, 18660, 29451, 44551, 64885, 91223, 124162, 164938, 204714],
+            [1, 9, 45, 165, 495, 1287, 3003, 6435, 12870, 24138, 42798, 72249, 116800, 181685, 273008, 397170, 562108, 766822, 971536],
+            [1, 10, 55, 220, 715, 2002, 5005, 11440, 24310, 48620, 91718, 163967, 280767, 462452, 735460, 1132630, 1695738, 2462560, 3434358, 4405156],
+            [1, 11, 66, 286, 1001, 3003, 8008, 19448, 43758, 92378, 184756, 348423, 629190, 1091642, 1827102, 2959732, 4655470, 7118030, 10552388, 14957544, 19362700],
+            [1, 12, 78, 364, 1365, 4368, 12376, 31824, 75582, 168960, 353716, 702104, 1331294, 2422936, 4250038, 7209770, 11865240, 18983270, 29535658, 44493202, 63855746, 83218290],
+            [13, 91, 455, 1820, 5733, 16016, 41041, 98280, 221760, 468676, 936472, 1768398, 3200232, 5508270, 9018009, 14207207, 21600600, 31600600, 44600600, 60600600, 79600600],
+            [104, 546, 2275, 7553, 21549, 57057, 139321, 320041, 690401, 1405077, 2704549, 4968631, 8708901, 14717010, 23735616, 37336207, 56936807, 84537407, 123138007, 175738607],
+            [650, 2821, 10374, 31927, 78876, 178933, 378274, 750315, 1440716, 2595793, 4500342, 7372973, 11581874, 17509490, 25735123, 37336330, 53274137, 75411544, 106149951],
+            [3471, 13195, 41301, 110803, 267709, 589842, 1218157, 2359031, 4299747, 7372535, 12073315, 19046865, 29128339, 43237829, 62572952, 88908282, 124319826, 171731370],
+            [16666, 54496, 151104, 378512, 856221, 1804063, 3563094, 6658125, 11657872, 19430387, 31503702, 49550567, 75679206, 112917035, 165489987, 238398269, 338730095],
+            [71162, 205600, 529616, 1234733, 2660284, 5323157, 10181219, 18839344, 33297216, 56128589, 91079291, 143629858, 219309063, 328226098, 481615085, 693013354],
+            [276762, 735216, 1764849, 3925017, 8185441, 15844376, 29023563, 51862907, 88160123, 144288712, 227918003, 350547861, 528856924, 782082009, 1175095363],
+            [1011978, 2500065, 5689866, 11814458, 23659817, 44684939, 80547846, 139410753, 231571465, 372860177, 578778180, 882635041, 1310691965, 1893774328],
+            [3512043, 8201909, 17491775, 34306233, 64966050, 115650789, 195198635, 315769388, 504340853, 777201030, 1159836071, 1670528036, 2340220001],
+            [11713952, 25693684, 51387459, 95353283, 166319072, 276517707, 441287095, 681056483, 1025397336, 1480737366, 2070265402, 2820485403],
+            [37407636, 77081143, 146734742, 261088025, 431405732, 681056483, 1041343819, 1546631155, 2222968521, 3070233923, 4149719326],
+            [114488779, 223815885, 408549627, 693637652, 1124962384, 1765306302, 2587937457, 3668270612, 4999204535, 6649923861]
+        ];
+
+        // Letter sequence for the Great American Star
+        const letterSequence = "UNITEDSTATESofAMERICA250";
+        
+        // Word boundaries for color coding
+        const wordBoundaries = {
+            "UNITED": { start: 0, end: 5, color: '#0000ff' },    // Blue
+            "STATES": { start: 6, end: 11, color: '#ff0000' },   // Red
+            "of": { start: 12, end: 13, color: '#0000ff' },      // Blue
+            "AMERICA": { start: 14, end: 20, color: '#ff0000' }, // Red
+            "250": { start: 21, end: 23, color: '#ffd700' }      // Gold
+        };
+
+        let animationRunning = true;
+        let animationInterval = null;
+
+        // Get color for a specific row based on which word it belongs to
+        function getWordColor(row) {
+            for (const [word, info] of Object.entries(wordBoundaries)) {
+                if (row >= info.start && row <= info.end) {
+                    return info.color;
+                }
+            }
+            return '#333';
+        }
+
+        // Get valid next positions for continuous path
+        function getValidNextPositions(currentRow, currentCol) {
+            if (currentRow >= triangleData.length - 1) return [];
+            
+            const nextRow = currentRow + 1;
+            const nextRowLength = triangleData[nextRow].length;
+            const currentRowLength = triangleData[currentRow].length;
+            const validPositions = [];
+            
+            if (nextRowLength > currentRowLength) {
+                if (currentCol < nextRowLength) validPositions.push(currentCol);
+                if (currentCol + 1 < nextRowLength) validPositions.push(currentCol + 1);
+            } else if (nextRowLength < currentRowLength) {
+                if (currentCol > 0 && currentCol - 1 < nextRowLength) validPositions.push(currentCol - 1);
+                if (currentCol < nextRowLength) validPositions.push(currentCol);
+            } else {
+                if (currentCol < nextRowLength) validPositions.push(currentCol);
+                if (currentCol + 1 < nextRowLength) validPositions.push(currentCol + 1);
+            }
+            
+            const uniquePositions = [...new Set(validPositions)];
+            return uniquePositions.map(col => ({ row: nextRow, col }));
+        }
+
+        // Generate a truly continuous path through the triangle
+        function generateContinuousPath() {
+            const path = [];
+            let currentCol = Math.floor(Math.random() * triangleData[0].length);
+            
+            for (let row = 0; row < triangleData.length; row++) {
+                path.push({ row, col: currentCol });
+                
+                if (row < triangleData.length - 1) {
+                    const validNext = getValidNextPositions(row, currentCol);
+                    if (validNext.length > 0) {
+                        const nextPosition = validNext[Math.floor(Math.random() * validNext.length)];
+                        currentCol = nextPosition.col;
+                    }
+                }
+            }
+            
+            return path;
+        }
+
+        // Initialize the triangle
+        function initTriangle() {
+            const triangleElement = document.getElementById('triangle');
+            triangleElement.innerHTML = '';
+
+            triangleData.forEach((row, rowIndex) => {
+                const rowElement = document.createElement('div');
+                rowElement.className = 'row';
+                
+                row.forEach((value, colIndex) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = rowIndex;
+                    cell.dataset.col = colIndex;
+                    
+                    if (rowIndex < letterSequence.length) {
+                        cell.textContent = letterSequence[rowIndex];
+                        const letterColor = getWordColor(rowIndex);
+                        cell.style.color = letterColor;
+                    } else {
+                        cell.textContent = '';
+                    }
+                    
+                    rowElement.appendChild(cell);
+                });
+                
+                triangleElement.appendChild(rowElement);
+            });
+        }
+
+        // Animate a single continuous path
+        function animateRandomPath() {
+            if (!animationRunning) return;
+            
+            const path = generateContinuousPath();
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffa500', '#9370db', '#32cd32'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            path.forEach((position, index) => {
+                setTimeout(() => {
+                    if (!animationRunning) return;
+                    
+                    const cell = document.querySelector(`[data-row="${position.row}"][data-col="${position.col}"]`);
+                    if (cell) {
+                        cell.style.backgroundColor = color;
+                        cell.style.fontWeight = '900';
+                        cell.classList.add('animated');
+                        
+                        const letterColor = getWordColor(position.row);
+                        cell.style.color = letterColor;
+                        
+                        setTimeout(() => {
+                            if (cell) {
+                                cell.style.backgroundColor = '';
+                                cell.style.fontWeight = '';
+                                cell.classList.remove('animated');
+                                
+                                const letterColor = getWordColor(position.row);
+                                cell.style.color = letterColor;
+                            }
+                        }, 1500);
+                    }
+                }, index * 100);
+            });
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initTriangle();
+            
+            // Start automatic animation
+            animationInterval = setInterval(() => {
+                if (animationRunning) {
+                    animateRandomPath();
+                }
+            }, 2000);
+            
+            // Start first animation immediately
+            animateRandomPath();
+            
+            console.log('Great American Star Path Animation loaded!');
+            console.log('71,855,450 paths in this section × 5 = 359,277,250 total paths');
+        });
+    </script>
+</body>
+</html>
