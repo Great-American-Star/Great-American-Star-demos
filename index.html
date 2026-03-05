@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great American Star - Interactive Demonstrations</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3em;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        .demo-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+        .demo-card:hover {
+            transform: translateY(-5px);
+        }
+        .demo-title {
+            font-size: 1.5em;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        .demo-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .demo-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ffd700);
+            color: #000;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .demo-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255,215,0,0.4);
+        }
+        .video-section {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        .stats {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 40px 0;
+        }
+        .copyright {
+            margin-top: 50px;
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+        video {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>The Great American Star</h1>
+        <div class="subtitle">Interactive Mathematical Art for America's 250th Anniversary</div>
+        
+        <div class="stats">
+            <h2>359,277,250 Unique Paths • 350 Million Americans • One Mathematical Star</h2>
+            <p>Experience the mathematical beauty of Pascal's Triangle transformed into America's most patriotic art installation</p>
+        </div>
+
+        <div class="video-section">
+            <h2>🎥 Path Visualization Demo</h2>
+            <video controls width="100%">
+                <source src="path-demo-video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p>Watch as random paths are highlighted in real-time, showing how individual journeys flow through Pascal's Triangle from the central pentagon to the star's tips.</p>
+        </div>
+
+        <div class="demo-grid">
+            <div class="demo-card">
+                <div class="demo-title">📊 Path Calculator</div>
+                <div class="demo-description">
+                    Calculate the exact number of paths through each section of the star. 
+                    Explore the mathematical foundation behind 359+ million unique journeys.
+                </div>
+                <a href="calculator.html" class="demo-button">Launch Calculator</a>
+            </div>
+
+            <div class="demo-card">
+                <div class="demo-title">🔺 Interactive Pascal's Triangle</div>
+                <div class="demo-description">
+                    Experience one-fifth of the Great American Star. Watch paths flow through 
+                    the mathematical structure, see letters change colors, and create your own paths.
+                </div>
+                <a href="pascal-triangle.html" class="demo-button">Explore Triangle</a>
+            </div>
+
+            <div class="demo-card">
+                <div class="demo-title">✨ Path Animation</div>
+                <div class="demo-description">
+                    Watch the mesmerizing flow of paths through America's mathematical star. 
+                    See how 71+ million paths per section create the complete visualization.
+                </div>
+                <a href="path-animation.html" class="demo-button">Watch Animation</a>
+            </div>
+        </div>
+
+        <div class="stats">
+            <h3>🎯 Partnership Opportunities</h3>
+            <p>Transform this mathematical concept into immersive installations, educational tools, and personalized experiences for America's 250th anniversary celebration.</p>
+        </div>
+
+        <div class="copyright">
+            <p><strong>© RABBIDANCZIGER@GMAIL.COM</strong></p>
+            <p>Creator: Yehuda Dancziger | Email: rebbidancziger@gmail.com</p>
+            <p>Contact: 845-362-2435 (Mendy Goldmunzer, Point Person)</p>
+        </div>
+    </div>
+</body>
+</html>
