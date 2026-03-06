@@ -29,6 +29,21 @@
             margin-bottom: 40px;
             opacity: 0.9;
         }
+        .hero-image {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .hero-image img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
         .demo-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -123,9 +138,39 @@
         <h1>The Great American Star</h1>
         <div class="subtitle">Interactive Mathematical Art for America's 250th Anniversary</div>
         
+        <div class="hero-image">
+            <img src="star-design-core.jpeg" alt="The Great American Star - Core Design">
+            <p style="margin-top: 15px; font-size: 1.1em; color: #ffd700;"><strong>The Great American Star</strong><br>Mathematical letter arrangement showing 359,277,250 unique paths through "UNITED STATES of AMERICA 250"</p>
+        </div>
+        
         <div class="stats">
             <h2>359,277,250 Unique Paths • 350 Million Americans • One Mathematical Star</h2>
             <p>Experience the mathematical beauty of Pascal's Triangle transformed into America's most patriotic art installation</p>
+        </div>
+
+        <div class="stats">
+            <h2>America 250 Connection</h2>
+            <p>The Great American Star is designed as the centerpiece mathematical art installation for America's historic 250th anniversary celebration. Launching <strong>June 1st, 2026</strong> to capture the full patriotic season leading to July 4th, this project embodies the official America250 motto <strong>"350 by 250"</strong> - engaging all 350 million Americans by our nation's 250th anniversary.</p>
+            <p>Each of the <strong>359,277,250 unique paths</strong> represents an individual American citizen's journey through our shared national phrase "UNITED STATES of AMERICA 250." This creates a powerful symbol of unity from diversity - <em>E Pluribus Unum</em> - where every person has their own unique mathematical path, yet together we form one beautiful, harmonious star.</p>
+        </div>
+
+        <div class="stats">
+            <h2>🔢 Mathematical Foundation</h2>
+            <p><strong>The Great American Star</strong> transforms Pascal's Triangle mathematics into a stunning five-pointed star formation. The phrase <strong>"UNITEDSTATESOFAMERICA250"</strong> (24 characters, no spaces) is arranged using modified Pascal's Triangle principles, creating a mathematical masterpiece.</p>
+            
+            <div style="text-align: left; max-width: 800px; margin: 0;">
+                <h3 style="color: #ffd700; margin-bottom: 15px;">🎯 Key Mathematical Elements:</h3>
+                <ul style="line-height: 1.8;">
+                    <li><strong>Starting Points:</strong> 50 positions in a central pentagon (representing the 50 states)</li>
+                    <li><strong>Path Structure:</strong> Each path follows Pascal's Triangle rules through 24 character positions</li>
+                    <li><strong>Total Paths:</strong> 359,277,250 unique mathematical journeys (one for each American)</li>
+                    <li><strong>Star Sections:</strong> Five identical sections, each containing 71,855,450 paths</li>
+                    <li><strong>Symmetrical Design:</strong> Perfect five-pointed star geometry with mathematical precision</li>
+                    <li><strong>Personalization:</strong> Each individual can select their unique path and add personal images</li>
+                </ul>
+            </div>
+            
+            <p>This mathematical approach ensures that every American citizen can have their own unique journey through our nation's most patriotic phrase, while the collective result forms a perfect star - symbolizing how individual diversity creates national unity.</p>
         </div>
 
         <div class="video-section">
@@ -169,10 +214,6 @@
         <div class="stats">
             <h2>🖼️ Visual Portfolio</h2>
             <div class="image-gallery">
-                <div class="image-item">
-                    <img src="star-design-core.jpeg" alt="Core star design with mathematical letter arrangement">
-                    <p><strong>Core Star Design</strong><br>Mathematical letter arrangement showing the complete star structure</p>
-                </div>
                 <div class="image-item">
                     <img src="highlighted-paths-sample.jpg" alt="Highlighted paths sample">
                     <p><strong>Path Demonstration</strong><br>Sample of individual paths traced through the framework</p>
