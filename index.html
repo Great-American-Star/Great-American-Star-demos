@@ -10,218 +10,381 @@
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px;
             min-height: 100vh;
         }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
             text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
-        h1 {
+        
+        .main-title {
             font-size: 3em;
+            font-weight: bold;
             color: #ffd700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
+        
         .subtitle {
             font-size: 1.3em;
-            margin-bottom: 40px;
             opacity: 0.9;
+            margin-bottom: 20px;
         }
-        .hero-image {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 40px 0;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+        
+        .description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
         }
-        .hero-image img {
-            width: 100%;
-            max-width: 600px;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
-        .demo-grid {
+        
+        .demos-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
-            margin: 50px 0;
+            margin: 40px 0;
         }
+        
         .demo-card {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            padding: 30px;
+            padding: 25px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        
         .demo-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
+        
         .demo-title {
             font-size: 1.5em;
+            font-weight: bold;
             color: #ffd700;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+        
         .demo-description {
+            font-size: 1em;
+            line-height: 1.5;
             margin-bottom: 20px;
-            line-height: 1.6;
+            opacity: 0.9;
         }
-        .demo-button {
+        
+        .demo-link {
             display: inline-block;
-            background: linear-gradient(45deg, #ff6b6b, #ffd700);
-            color: #000;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            text-decoration: none;
             padding: 12px 25px;
             border-radius: 25px;
-            text-decoration: none;
             font-weight: bold;
             transition: all 0.3s ease;
+            text-align: center;
         }
-        .demo-button:hover {
+        
+        .demo-link:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255,215,0,0.4);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
-        .stats {
-            background: rgba(0,0,0,0.3);
+        
+        .video-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .video-title {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-bottom: 45%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
             border-radius: 10px;
-            padding: 20px;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+        }
+        
+        .gallery {
             margin: 40px 0;
         }
-        .image-gallery {
+        
+        .gallery-title {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .images-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            margin: 30px 0;
         }
-        .image-item {
-            background: rgba(255,255,255,0.1);
+        
+        .image-card {
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 15px;
+            text-align: center;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
         }
-        .image-item img {
+        
+        .image-card img {
             width: 100%;
             height: 200px;
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 10px;
         }
-        .image-item p {
+        
+        .image-caption {
             font-size: 0.9em;
-            line-height: 1.4;
-            margin: 0;
-        }
-        .copyright {
-            margin-top: 50px;
             opacity: 0.8;
+        }
+        
+        .stats-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .stat-label {
             font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+        
+        .copyright {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .contact-info {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2em;
+            }
+            
+            .demos-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>The Great American Star</h1>
-        <div class="subtitle">Interactive Mathematical Art for America's 250th Anniversary</div>
-        
-        <div class="hero-image">
-            <img src="star-design-core.jpeg" alt="The Great American Star - Core Design">
-            <p style="margin-top: 15px; font-size: 1.1em; color: #ffd700;"><strong>The Great American Star</strong><br>Mathematical letter arrangement showing 359,277,250 unique paths through "UNITED STATES of AMERICA 250"</p>
-        </div>
-        
-        <div class="stats">
-            <h2>359,277,250 Unique Paths • 350 Million Americans • One Mathematical Star</h2>
-            <p>Experience the mathematical beauty of Pascal's Triangle transformed into America's most patriotic art installation</p>
+        <div class="header">
+            <h1 class="main-title">The Great American Star</h1>
+            <p class="subtitle">Interactive mathematical art for America's 250th anniversary</p>
+            <p class="description">
+                Features 359,277,250 unique paths through Pascal's Triangle arranged as a patriotic star. 
+                Each path represents a unique journey for every American citizen, celebrating unity through diversity 
+                in honor of our nation's semiquincentennial.
+            </p>
         </div>
 
-        <div class="stats">
-            <h2>America 250 Connection</h2>
-            <p>The Great American Star is designed as the centerpiece mathematical art installation for America's historic 250th anniversary celebration. Launching <strong>June 1st, 2026</strong> to capture the full patriotic season leading to July 4th, this project embodies the official America250 motto <strong>"350 by 250"</strong> - engaging all 350 million Americans by our nation's 250th anniversary.</p>
-            <p>Each of the <strong>359,277,250 unique paths</strong> represents an individual American citizen's journey through our shared national phrase "UNITED STATES of AMERICA 250." This creates a powerful symbol of unity from diversity - <em>E Pluribus Unum</em> - where every person has their own unique mathematical path, yet together we form one beautiful, harmonious star.</p>
-        </div>
-
-        <div class="stats">
-            <h2>🔢 Mathematical Foundation</h2>
-            <p><strong>The Great American Star</strong> transforms Pascal's Triangle mathematics into a stunning five-pointed star formation. The phrase <strong>"UNITEDSTATESOFAMERICA250"</strong> (24 characters, no spaces) is arranged using modified Pascal's Triangle principles, creating a mathematical masterpiece.</p>
-            
-            <div style="text-align: left; max-width: 800px; margin: 0;">
-                <h3 style="color: #ffd700; margin-bottom: 15px;">🎯 Key Mathematical Elements:</h3>
-                <ul style="line-height: 1.8;">
-                    <li><strong>Starting Points:</strong> 50 positions in a central pentagon (representing the 50 states)</li>
-                    <li><strong>Path Structure:</strong> Each path follows Pascal's Triangle rules through 24 character positions</li>
-                    <li><strong>Total Paths:</strong> 359,277,250 unique mathematical journeys (one for each American)</li>
-                    <li><strong>Star Sections:</strong> Five identical sections, each containing 71,855,450 paths</li>
-                    <li><strong>Symmetrical Design:</strong> Perfect five-pointed star geometry with mathematical precision</li>
-                    <li><strong>Personalization:</strong> Each individual can select their unique path and add personal images</li>
-                </ul>
+        <div class="video-section">
+            <h2 class="video-title">🎬 Path Visualization Demo</h2>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/3bjbKlmCZKw" 
+                        title="Great American Star Path Animation" 
+                        allowfullscreen>
+                </iframe>
             </div>
-            
-            <p>This mathematical approach ensures that every American citizen can have their own unique journey through our nation's most patriotic phrase, while the collective result forms a perfect star - symbolizing how individual diversity creates national unity.</p>
+            <p style="margin-top: 15px; opacity: 0.9;">
+                Watch as random paths are highlighted in real-time, showing how individual journeys 
+                flow through Pascal's Triangle from the central pentagon to the star's tips.
+            </p>
         </div>
 
-        <div class="demo-grid">
+        <div class="demos-grid">
             <div class="demo-card">
-                <div class="demo-title">📊 Path Calculator</div>
-                <div class="demo-description">
-                    Calculate the exact number of paths through each section of the star. 
-                    Explore the mathematical foundation behind 359+ million unique journeys.
-                </div>
-                <a href="calculator.html" class="demo-button">Launch Calculator</a>
+                <h3 class="demo-title">🧮 Path Calculator</h3>
+                <p class="demo-description">
+                    Explore the mathematical framework behind The Great American Star. 
+                    Calculate path distributions and understand the combinatorial mathematics 
+                    that creates 359+ million unique journeys.
+                </p>
+                <a href="calculator.html" class="demo-link">Launch Calculator</a>
             </div>
 
             <div class="demo-card">
-                <div class="demo-title">🔺 Interactive Pascal's Triangle</div>
-                <div class="demo-description">
-                    Experience one-fifth of the Great American Star. Watch paths flow through 
-                    the mathematical structure, see letters change colors, and create your own paths.
-                </div>
-                <a href="pascal-triangle.html" class="demo-button">Explore Triangle</a>
+                <h3 class="demo-title">🔺 Interactive Pascal's Triangle</h3>
+                <p class="demo-description">
+                    Experience the mathematical beauty of Pascal's Triangle with interactive 
+                    path tracing, color-coded letters, and real-time path animation. 
+                    Perfect for educational exploration.
+                </p>
+                <a href="pascal-triangle.html" class="demo-link">Explore Triangle</a>
             </div>
 
             <div class="demo-card">
-                <div class="demo-title">✨ Path Animation</div>
-                <div class="demo-description">
-                    Watch the mesmerizing flow of paths through America's mathematical star. 
-                    See how 71+ million paths per section create the complete visualization.
-                </div>
-                <a href="path-animation.html" class="demo-button">Watch Animation</a>
+                <h3 class="demo-title">✨ Path Animation</h3>
+                <p class="demo-description">
+                    Watch mesmerizing animations of paths flowing through the mathematical 
+                    structure. See how individual journeys create the collective beauty 
+                    of The Great American Star.
+                </p>
+                <a href="path-animation.html" class="demo-link">View Animation</a>
             </div>
         </div>
 
-        <div class="stats">
-            <h2>🖼️ Visual Portfolio</h2>
-            <div class="image-gallery">
-                <div class="image-item">
-                    <img src="highlighted-paths-sample.jpg" alt="Highlighted paths sample">
-                    <p><strong>Path Demonstration</strong><br>Sample of individual paths traced through the framework</p>
+        <div class="stats-section">
+            <h2 class="gallery-title">📊 Project Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">359,277,250</div>
+                    <div class="stat-label">Total Unique Paths</div>
                 </div>
-                <div class="image-item">
-                    <img src="navy-blue-visualization.jpg" alt="Navy blue background visualization">
-                    <p><strong>Elegant Presentation</strong><br>Navy blue theme suitable for formal exhibitions</p>
+                <div class="stat-item">
+                    <div class="stat-number">71,855,450</div>
+                    <div class="stat-label">Paths Per Section</div>
                 </div>
-                <div class="image-item">
-                    <img src="patriotic-theme.jpg" alt="Patriotic red, white, and blue theme">
-                    <p><strong>Patriotic Theme</strong><br>Classic American colors for July 4th celebrations</p>
+                <div class="stat-item">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">Character Sequence</div>
                 </div>
-                <div class="image-item">
+                <div class="stat-item">
+                    <div class="stat-number">50</div>
+                    <div class="stat-label">Starting Points</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gallery">
+            <h2 class="gallery-title">🎨 Visual Portfolio</h2>
+            <div class="images-grid">
+                <div class="image-card">
+                    <img src="star-design-core.jpeg" alt="Core Star Design">
+                    <p class="image-caption">Core star design with mathematical letter arrangement</p>
+                </div>
+                <div class="image-card">
+                    <img src="highlighted-paths-sample.jpg" alt="Highlighted Paths Sample">
+                    <p class="image-caption">Sample of highlighted paths showing unique journeys</p>
+                </div>
+                <div class="image-card">
+                    <img src="navy-blue-visualization.jpg" alt="Navy Blue Visualization">
+                    <p class="image-caption">Navy blue background with highlighted paths visualization</p>
+                </div>
+                <div class="image-card">
+                    <img src="patriotic-theme.jpg" alt="Patriotic Theme">
+                    <p class="image-caption">Traditional red, white, and blue patriotic theme</p>
+                </div>
+                <div class="image-card">
                     <img src="trump-presidential-edition.jpg" alt="Trump Presidential Edition">
-                    <p><strong>Personalization Example</strong><br>Custom version with personal photos and messages</p>
+                    <p class="image-caption">Personalized example showing customization capabilities</p>
                 </div>
             </div>
         </div>
 
-        <div class="stats">
-            <h3>🎯 Partnership Opportunities</h3>
-            <p>Transform this mathematical concept into immersive installations, educational tools, and personalized experiences for America's 250th anniversary celebration.</p>
+        <div class="stats-section">
+            <h2 class="gallery-title">🇺🇸 America 250 Connection</h2>
+            <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 20px;">
+                The Great American Star aligns perfectly with America250's official motto <strong>"350 by 250"</strong> 
+                - their goal to engage all 350 million Americans by our nation's 250th anniversary. 
+                Our project creates exactly that: 359,277,250 unique paths representing every American citizen.
+            </p>
+            
+            <h3 style="color: #ffd700; margin: 0;">📚 Project Overview</h3>
+            <p style="font-size: 1em; line-height: 1.6; text-align: left; max-width: 800px; margin: 0;">
+                This mathematical art piece transforms the phrase "UNITED STATES of AMERICA 250" into a five-pointed star 
+                using a modified Pascal's Triangle structure. Each of the 359+ million paths represents a unique journey 
+                through American identity, starting from 50 points (representing the 50 states) and flowing outward to 
+                create a unified symbol of national unity.
+            </p>
+            
+            <p style="font-size: 1em; line-height: 1.6; text-align: left; max-width: 800px; margin: 0;">
+                The project embodies the principle "E Pluribus Unum" (Out of Many, One) by showing how millions of 
+                individual paths combine to form a single, beautiful star - a perfect metaphor for American democracy 
+                and the diverse journeys that make up our national story.
+            </p>
         </div>
 
-        <div class="copyright">
-            <p><strong>© RABBIDANCZIGER@GMAIL.COM</strong></p>
-            <p>Creator: Yehuda Dancziger | Email: rebbidancziger@gmail.com</p>
-            <p>Contact: 845-362-2435 (Mendy Goldmunzer, Point Person)</p>
+        <div class="footer">
+            <div class="copyright">© RABBIDANCZIGER@GMAIL.COM</div>
+            <div class="contact-info">
+                Creator: Yehuda Dancziger | Email: rebbidancziger@gmail.com<br>
+                Point Person: Mendy Goldmunzer | Phone: 845-362-2435
+            </div>
         </div>
     </div>
 </body>
