@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pentagon U Letters - Step 1</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .title {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .pentagon-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 60px;
+            margin: 20px 0;
+            position: relative;
+            width: 600px;
+            height: 600px;
+            margin: 0 auto;
+        }
+
+        .letter-u {
+            position: absolute;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            font-size: 18px;
+            color: #0000ff;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+            user-select: none;
+        }
+
+        .copyright {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            opacity: 0.7;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Step 1: Pentagon of 50 U's</h1>
+        
+        <div class="pentagon-container" id="pentagonContainer">
+            <!-- U letters will be placed here by JavaScript -->
+        </div>
+    </div>
+
+    <div class="copyright">© RABBIDANCZIGER@GMAIL.COM</div>
+
+    <script>
+        function createPentagonUs() {
+            const container = document.getElementById('pentagonContainer');
+            const centerX = 300; // Center of 600px container
+            const centerY = 300;
+            const radius = 200; // Distance from center to pentagon vertices
+            
+            // Pentagon vertices (tip pointing down)
+            // Start from top and go clockwise, with bottom tip at bottom
+            const vertices = [];
+            for (let i = 0; i < 5; i++) {
+                // Start from top (-90 degrees) and rotate clockwise
+                // Add 36 degrees (180/5) to make tip point down
+                const angle = (-90 + 36 + (i * 72)) * Math.PI / 180;
+                vertices.push({
+                    x: centerX + radius * Math.cos(angle),
+                    y: centerY + radius * Math.sin(angle)
+                });
+            }
+            
+            let letterCount = 0;
+            
+            // Place 11 U's on each side (corners counted for both adjacent sides)
+            for (let side = 0; side < 5; side++) {
+                const startVertex = vertices[side];
+                const endVertex = vertices[(side + 1) % 5];
+                
+                // Place 11 letters along this side
+                for (let i = 0; i < 11; i++) {
+                    const t = i / 10; // 0 to 1 along the side
+                    const x = startVertex.x + t * (endVertex.x - startVertex.x);
+                    const y = startVertex.y + t * (endVertex.y - startVertex.y);
+                    
+                    // Skip if this is a corner and we already placed it
+                    // (except for the very first letter)
+                    if (i === 0 && side > 0) continue;
+                    
+                    const letterElement = document.createElement('div');
+                    letterElement.className = 'letter-u';
+                    letterElement.textContent = 'U';
+                    letterElement.style.left = (x - 9) + 'px'; // Center the letter
+                    letterElement.style.top = (y - 9) + 'px';
+                    
+                    container.appendChild(letterElement);
+                    letterCount++;
+                }
+            }
+            
+            console.log(`Placed ${letterCount} U letters in pentagon formation`);
+        }
+        
+        // Create the pentagon when page loads
+        window.addEventListener('load', createPentagonUs);
+    </script>
+</body>
+</html>
