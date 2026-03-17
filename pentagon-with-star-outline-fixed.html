@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Formation with Fixed Alignment</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .title {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .pentagon-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 100px;
+            position: relative;
+            width: 1200px;
+            height: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .letter {
+            position: absolute;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            font-size: 14px;
+            color: #0000ff;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+            user-select: none;
+        }
+
+        .star-outline {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 840px;
+            height: 840px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .star-path {
+            fill: none;
+            stroke: #ff0000;
+            stroke-width: 3;
+            stroke-opacity: 0.7;
+            stroke-dasharray: 5,5;
+        }
+
+        .copyright {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            opacity: 0.7;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .size-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 0.8em;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Star Formation with Fixed Alignment - UNITEDSTATESofAMERICA250</h1>
+        
+        <div class="pentagon-container" id="pentagonContainer">
+            <!-- Star outline SVG - Now positioned relative to container center -->
+            <svg class="star-outline" viewBox="0 0 840 840">
+                <path class="star-path" d="M420,70 L518,308 L770,308 L574,462 L672,700 L420,546 L168,700 L266,462 L70,308 L322,308 Z"/>
+            </svg>
+            
+            <!-- Letters will be placed here by JavaScript -->
+        </div>
+    </div>
+
+    <div class="size-info">
+        <strong>Fixed Alignment:</strong><br>
+        Star & Letters: Both centered<br>
+        Star Size: 840px × 840px<br>
+        Inner Pentagon: ~420px radius<br>
+        Container Center: 600,600
+    </div>
+
+    <div class="copyright">© RABBIDANCZIGER@GMAIL.COM</div>
+
+    <script>
+        function createPentagonLetters() {
+            const container = document.getElementById('pentagonContainer');
+            // Center coordinates - matching the container's center point
+            const centerX = 600; // Center of 1200px container (600px from left edge)
+            const centerY = 600; // Center of 1200px container (600px from top edge)
+            
+            // Define all the rings for "UNITEDSTATESofAMERICA250"
+            const rings = [
+                // UNITED - no gaps
+                { letter: 'U', count: 50, sides: 11, radius: 200, gapSize: 0 },   // Ring 1
+                { letter: 'N', count: 55, sides: 12, radius: 220, gapSize: 0 },   // Ring 2
+                { letter: 'I', count: 60, sides: 13, radius: 240, gapSize: 0 },   // Ring 3
+                { letter: 'T', count: 65, sides: 14, radius: 260, gapSize: 0 },   // Ring 4
+                { letter: 'E', count: 70, sides: 15, radius: 280, gapSize: 0 },   // Ring 5
+                { letter: 'D', count: 75, sides: 16, radius: 300, gapSize: 0 },   // Ring 6
+                
+                // STATES - no gaps
+                { letter: 'S', count: 80, sides: 17, radius: 320, gapSize: 0 },   // Ring 7
+                { letter: 'T', count: 85, sides: 18, radius: 340, gapSize: 0 },   // Ring 8
+                { letter: 'A', count: 90, sides: 19, radius: 360, gapSize: 0 },   // Ring 9
+                { letter: 'T', count: 95, sides: 20, radius: 380, gapSize: 0 },   // Ring 10
+                { letter: 'E', count: 100, sides: 21, radius: 400, gapSize: 0 },  // Ring 11
+                { letter: 'S', count: 105, sides: 22, radius: 420, gapSize: 0 },  // Ring 12
+                
+                // of - small gaps
+                { letter: 'o', count: 110, sides: 23, radius: 440, gapSize: 1 },  // Ring 13 - corner only
+                { letter: 'f', count: 115, sides: 24, radius: 460, gapSize: 2 },  // Ring 14 - corner + 1 each side
+                
+                // AMERICA - progressive gaps
+                { letter: 'A', count: 120, sides: 25, radius: 480, gapSize: 3 },  // Ring 15 - corner + 2 each side
+                { letter: 'M', count: 125, sides: 26, radius: 500, gapSize: 4 },  // Ring 16 - corner + 3 each side
+                { letter: 'E', count: 130, sides: 27, radius: 520, gapSize: 5 },  // Ring 17 - corner + 4 each side
+                { letter: 'R', count: 135, sides: 28, radius: 540, gapSize: 6 },  // Ring 18 - corner + 5 each side
+                { letter: 'I', count: 140, sides: 29, radius: 560, gapSize: 7 },  // Ring 19 - corner + 6 each side
+                { letter: 'C', count: 145, sides: 30, radius: 580, gapSize: 8 },  // Ring 20 - corner + 7 each side
+                { letter: 'A', count: 150, sides: 31, radius: 600, gapSize: 9 },  // Ring 21 - corner + 8 each side
+                
+                // 250 - largest gaps
+                { letter: '2', count: 155, sides: 32, radius: 620, gapSize: 10 }, // Ring 22 - corner + 9 each side
+                { letter: '5', count: 160, sides: 33, radius: 640, gapSize: 11 }, // Ring 23 - corner + 10 each side
+                { letter: '0', count: 165, sides: 34, radius: 660, gapSize: 12 }  // Ring 24 - corner + 11 each side
+            ];
+            
+            let totalCount = 0;
+            
+            // Create each ring
+            rings.forEach((ring, ringIndex) => {
+                // Pentagon vertices for this ring (tip pointing down)
+                const vertices = [];
+                for (let i = 0; i < 5; i++) {
+                    const angle = (-90 + 36 + (i * 72)) * Math.PI / 180;
+                    vertices.push({
+                        x: centerX + ring.radius * Math.cos(angle),
+                        y: centerY + ring.radius * Math.sin(angle)
+                    });
+                }
+                
+                let ringCount = 0;
+                
+                // Place letters on each side of the pentagon
+                for (let side = 0; side < 5; side++) {
+                    const startVertex = vertices[side];
+                    const endVertex = vertices[(side + 1) % 5];
+                    const lettersPerSide = ring.sides;
+                    
+                    for (let i = 0; i < lettersPerSide; i++) {
+                        const t = i / (lettersPerSide - 1); // 0 to 1 along the side
+                        const x = startVertex.x + t * (endVertex.x - startVertex.x);
+                        const y = startVertex.y + t * (endVertex.y - startVertex.y);
+                        
+                        // Skip if this is a corner and we already placed it
+                        if (i === 0 && side > 0) continue;
+                        
+                        // Apply gap pattern based on gapSize
+                        if (ring.gapSize > 0) {
+                            // Calculate positions to skip around corners
+                            const skipStart = 0; // Corner position
+                            const skipEnd = lettersPerSide - 1; // Other corner position
+                            
+                            // Skip letters at start of side (corner + gapSize-1 on each side)
+                            if (i >= skipStart && i < skipStart + ring.gapSize) continue;
+                            
+                            // Skip letters at end of side (corner + gapSize-1 on each side)
+                            if (i > skipEnd - ring.gapSize && i <= skipEnd) continue;
+                        }
+                        
+                        const letterElement = document.createElement('div');
+                        letterElement.className = 'letter';
+                        letterElement.textContent = ring.letter;
+                        letterElement.style.left = (x - 7) + 'px';
+                        letterElement.style.top = (y - 7) + 'px';
+                        
+                        container.appendChild(letterElement);
+                        ringCount++;
+                        totalCount++;
+                    }
+                }
+                
+                console.log(`Ring ${ringIndex + 1}: Placed ${ringCount} ${ring.letter} letters (gap size: ${ring.gapSize})`);
+            });
+            
+            console.log(`Total letters placed: ${totalCount}`);
+            console.log('Star formation: UNITEDSTATESofAMERICA250 with progressive gaps');
+            console.log(`Letters centered at: ${centerX}, ${centerY}`);
+            console.log('Star outline also centered at same point');
+        }
+        
+        // Create the pentagon when page loads
+        window.addEventListener('load', createPentagonLetters);
+    </script>
+</body>
+</html>
