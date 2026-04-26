@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Clean Star - UNITEDSTATES + ofAMERICA250</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a2e;
+            color: white;
+            font-family: 'Courier New', monospace;
+            overflow: auto;
+            min-height: 100vh;
+            min-width: 100vw;
+        }
+
+        .container {
+            width: 3500px;
+            height: 3500px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .star-container {
+            position: absolute;
+            width: 3500px;
+            height: 3500px;
+            transform-origin: center;
+            transition: transform 0.3s ease;
+            left: 0px;
+            top: 0px;
+        }
+
+        .letter {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: Georgia, serif;
+            color: #ff6b6b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .letter:hover {
+            color: #ffd93d;
+            transform: scale(1.2);
+            text-shadow: 0 0 20px rgba(255, 217, 61, 0.8);
+        }
+
+        .letter.highlighted {
+            color: #6bcf7f;
+            transform: scale(1.3);
+            text-shadow: 0 0 25px rgba(107, 207, 127, 1);
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { opacity: 0.8; }
+            to { opacity: 1; }
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div style="position: absolute; top: 0; left: 0; width: 3500px; height: 3500px; z-index: -1;"></div>
+    
+    <div class="container">
+        <div class="star-container" id="starContainer">
+            <!-- Star outline SVG -->
+            <svg height="3500" style="position: absolute; top: 0; left: 0; pointer-events: none;" width="3500">
+                <polygon fill="none" id="starOutline" opacity="0.8" points="" stroke="white" stroke-width="4"></polygon>
+            </svg>
+            <!-- Letters will be positioned here by JavaScript -->
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="control-btn" onclick="zoomIn()">Zoom In</button>
+        <button class="control-btn" onclick="zoomOut()">Zoom Out</button>
+        <button class="control-btn" onclick="resetZoom()">Reset Zoom</button>
+        <button class="control-btn" onclick="animateLetters()">Animate</button>
+        <button class="control-btn" onclick="clearHighlights()">Clear Highlights</button>
+    </div>
+
+    <div class="info">
+        <div>UNITEDSTATES: 12 rings completed</div>
+        <div>U(50) N(55) I(60) T(65) E(70) D(75) S(80) T(85) A(90) T(95) E(100) S(105)</div>
+        <div>Total: 955 letters + 120 ofAMERICA250 paths</div>
+        <div>Click letters to highlight paths</div>
+    </div>
+
+    <script>
+        let currentZoom = 1;
+        let letters = [];
+        let highlightedPaths = [];
+
+        function createUNITEDSTATES() {
+            const container = document.getElementById('starContainer');
+            const centerX = 1750;
+            const centerY = 1750;
+            const innerRadius = 220;
+            const radiusStep = 35;
+            
+            // Pentagon vertices function
+            function getPentagonVertices(radius) {
+                const vertices = [];
+                for (let i = 0; i < 5; i++) {
+                    const angle = (i * 2 * Math.PI / 5) + (Math.PI / 2);
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+                    vertices.push({x, y});
+                }
+                return vertices;
+            }
+
+            let letterIndex = 0;
+            let currentRadius = innerRadius;
+
+            // UNITEDSTATES letter sequence
+            const unitedStatesSequence = [
+                {letter: 'U', count: 50, color: '#ff6b6b'},
+                {letter: 'N', count: 55, color: '#4ecdc4'},
+                {letter: 'I', count: 60, color: '#ff9f43'},
+                {letter: 'T', count: 65, color: '#10ac84'},
+                {letter: 'E', count: 70, color: '#ee5a52'},
+                {letter: 'D', count: 75, color: '#0abde3'},
+                {letter: 'S', count: 80, color: '#feca57'},
+                {letter: 'T', count: 85, color: '#ff6b9d'},
+                {letter: 'A', count: 90, color: '#c44569'},
+                {letter: 'T', count: 95, color: '#f8b500'},
+                {letter: 'E', count: 100, color: '#6c5ce7'},
+                {letter: 'S', count: 105, color: '#a29bfe'}
+            ];
+
+            unitedStatesSequence.forEach((letterData, ringIndex) => {
+                const vertices = getPentagonVertices(currentRadius);
+                const lettersPerSide = (letterData.count + 5) / 5;
+                
+                // Place letters along each side
+                for (let side = 0; side < 5; side++) {
+                    const startVertex = vertices[side];
+                    const endVertex = vertices[(side + 1) % 5];
+                    
+                    for (let i = 0; i < lettersPerSide; i++) {
+                        const t = i / (lettersPerSide - 1);
+                        const x = startVertex.x + t * (endVertex.x - startVertex.x);
+                        const y = startVertex.y + t * (endVertex.y - startVertex.y);
+                        
+                        const letter = document.createElement('div');
+                        letter.className = 'letter';
+                        letter.textContent = letterData.letter;
+                        letter.style.left = (x - 12) + 'px';
+                        letter.style.top = (y - 12) + 'px';
+                        letter.style.color = letterData.color;
+                        letter.dataset.index = letterIndex;
+                        letter.dataset.type = letterData.letter;
+                        
+                        letter.addEventListener('click', () => highlightPath(letterIndex));
+                        
+                        container.appendChild(letter);
+                        letters.push(letter);
+                        letterIndex++;
+                    }
+                }
+
+                // Remove duplicate corners
+                const toRemove = [];
+                for (let side = 1; side < 5; side++) {
+                    toRemove.push(letters.length - (5 - side) * lettersPerSide);
+                }
+                
+                toRemove.reverse().forEach(index => {
+                    if (letters[index]) {
+                        letters[index].remove();
+                        letters.splice(index, 1);
+                        letterIndex--;
+                    }
+                });
+
+                currentRadius += radiusStep;
+            });
+
+            // Update indices
+            letters.forEach((letter, index) => {
+                letter.dataset.index = index;
+            });
+        }
+
+        function addOfAmerica250Paths() {
+            const container = document.getElementById('starContainer');
+            const centerX = 1750;
+            const centerY = 1750;
+            const outerRadius = 1610;
+            const innerRadius = 615;
+            
+            // Path colors - all paths set to orange to match fill-in letters
+            const pathColors = [
+                '#ff9f43', '#ff9f43', '#ff9f43', '#ff9f43', '#ff9f43',
+                '#ff9f43', '#ff9f43', '#ff9f43', '#ff9f43', '#ff9f43'
+            ];
+            
+            // For each of the 5 star tips
+            for (let tip = 0; tip < 5; tip++) {
+                const tipAngle = (tip * 2 * Math.PI / 5) + (Math.PI / 2) + Math.PI;
+                const leftInnerAngle = tipAngle - (Math.PI / 5);
+                const rightInnerAngle = tipAngle + (Math.PI / 5);
+                
+                const tipX = centerX + outerRadius * Math.cos(tipAngle);
+                const tipY = centerY + outerRadius * Math.sin(tipAngle);
+                
+                const leftInnerX = centerX + innerRadius * Math.cos(leftInnerAngle);
+                const leftInnerY = centerY + innerRadius * Math.sin(leftInnerAngle);
+                const rightInnerX = centerX + innerRadius * Math.cos(rightInnerAngle);
+                const rightInnerY = centerY + innerRadius * Math.sin(rightInnerAngle);
+                
+                // Create both paths for this tip
+                createSinglePath(container, leftInnerX, leftInnerY, tipX, tipY, tip, 'left', pathColors);
+                createSinglePath(container, rightInnerX, rightInnerY, tipX, tipY, tip, 'right', pathColors);
+            }
+        }
+        
+        function createSinglePath(container, startX, startY, endX, endY, tipIndex, side, pathColors) {
+            const dirX = endX - startX;
+            const dirY = endY - startY;
+            const pathLength = Math.sqrt(dirX * dirX + dirY * dirY);
+            const unitX = dirX / pathLength;
+            const unitY = dirY / pathLength;
+            
+            const pathIndex = tipIndex * 2 + (side === 'left' ? 0 : 1);
+            const pathColor = pathColors[pathIndex];
+            
+            // Offset adjustments per tip
+            let offsetAdjustment = 0;
+            if (tipIndex === 0) offsetAdjustment = -10;      // Top tip
+            else if (tipIndex === 1) offsetAdjustment = -5;  // Upper Right tip
+            else if (tipIndex === 2) offsetAdjustment = -8;  // Lower Right tip
+            else if (tipIndex === 3) offsetAdjustment = -11; // Lower Left tip
+            else if (tipIndex === 4) offsetAdjustment = -13; // Upper Left tip
+            
+            const letterSequence = [
+                {char: 'o', offset: 40 + offsetAdjustment, size: 24, bold: false},
+                {char: 'f', offset: 70 + offsetAdjustment, size: 24, bold: false},
+                {char: 'A', offset: 105 + offsetAdjustment, size: 28, bold: true},
+                {char: 'M', offset: 140 + offsetAdjustment, size: 28, bold: true},
+                {char: 'E', offset: 175 + offsetAdjustment, size: 28, bold: true},
+                {char: 'R', offset: 210 + offsetAdjustment, size: 28, bold: true},
+                {char: 'I', offset: 245 + offsetAdjustment, size: 28, bold: true},
+                {char: 'C', offset: 280 + offsetAdjustment, size: 28, bold: true},
+                {char: 'A', offset: 315 + offsetAdjustment, size: 28, bold: true},
+                {char: '2', offset: 350 + offsetAdjustment, size: 35, bold: true},
+                {char: '5', offset: 380 + offsetAdjustment, size: 35, bold: true},
+                {char: '0', offset: 410 + offsetAdjustment, size: 35, bold: true}
+            ];
+            
+            // Special adjustments for specific paths
+            const isPath1 = (tipIndex === 0 && side === 'left');
+            const isPath2 = (tipIndex === 0 && side === 'right');
+            const isPath3 = (tipIndex === 1 && side === 'left');
+            const isPath4 = (tipIndex === 1 && side === 'right');
+            const isPath5 = (tipIndex === 2 && side === 'left');
+            const isPath6 = (tipIndex === 2 && side === 'right');
+            const isPath7 = (tipIndex === 3 && side === 'left');
+            const isPath8 = (tipIndex === 3 && side === 'right');
+            const isPath9 = (tipIndex === 4 && side === 'left');
+            const isPath10 = (tipIndex === 4 && side === 'right');
+            
+            letterSequence.forEach((letterData, index) => {
+                let finalOffset = letterData.offset;
+                
+                // Move paths 7 and 8 closer to "S" letters
+                if (isPath7 || isPath8) {
+                    finalOffset -= 4; // Move 4px closer to "S" (2px more)
+                }
+                
+                // Move paths 9 and 10 closer to "S" letters
+                if (isPath9 || isPath10) {
+                    finalOffset -= 3; // Move 3px closer to "S"
+                }
+                
+                // Calculate position along the path
+                let x = startX + unitX * finalOffset;
+                let y = startY + unitY * finalOffset;
+                
+                // Perpendicular adjustments for various paths
+                const perpX = -unitY;
+                const perpY = unitX;
+                
+                // Move entire paths 1, 2, 3, 4, 5, 6, 7, 8, 9, and 10 toward center of tip width
+                if (isPath1 || isPath2 || isPath3 || isPath4 || isPath5 || isPath6 || isPath7 || isPath8 || isPath9 || isPath10) {
+                    let perpOffset;
+                    if (isPath1) {
+                        // Path 1: move inward (toward center of tip width)
+                        perpOffset = 17; // Move 17px inward (restored to previous value)
+                    } else if (isPath2) {
+                        // Path 2: move inward (toward center of tip width)
+                        perpOffset = -8; // Move 8px inward (3px more)
+                    } else if (isPath3) {
+                        // Path 3: move entire path inward (toward center of tip width)
+                        perpOffset = 9; // Move 9px inward for entire path (4px more)
+                    } else if (isPath4) {
+                        // Path 4: move entire path inward (toward center of tip width)
+                        perpOffset = -11; // Move 11px inward (2px more)
+                    } else if (isPath5) {
+                        // Path 5: move entire path inward (toward center of tip width)
+                        perpOffset = 6; // Move 6px inward (reduced from 8px)
+                    } else if (isPath6) {
+                        // Path 6: move entire path inward (toward center of tip width)
+                        perpOffset = -14; // Move 14px inward (6px more)
+                    } else if (isPath7) {
+                        // Path 7: move entire path inward (toward center of tip width)
+                        perpOffset = 10; // Move 10px inward (reduced from 14px)
+                    } else if (isPath8) {
+                        // Path 8: move entire path inward (toward center of tip width)
+                        perpOffset = -14; // Move 14px inward (4px more)
+                    } else if (isPath9) {
+                        // Path 9: move entire path inward (toward center of tip width)
+                        perpOffset = 18; // Move 18px inward (4px more)
+                    } else if (isPath10) {
+                        // Path 10: move entire path inward (toward center of tip width)
+                        perpOffset = -9; // Move 9px inward (reduced from 10px)
+                    }
+                    
+                    x += perpX * perpOffset;
+                    y += perpY * perpOffset;
+                }
+                
+                // Move "250" perpendicular to tip direction in paths 3 and 10 for alignment
+                if ((isPath3 || isPath10) && (letterData.char === '2' || letterData.char === '5' || letterData.char === '0')) {
+                    let perpOffset;
+                    if (isPath3) {
+                        // Path 3: move outward (away from center of tip width toward outer edge)
+                        perpOffset = -4; // Move 4px outward (1px less for perfect alignment)
+                    } else if (isPath10) {
+                        // Path 10: keep current position (good)
+                        perpOffset = 2; // Move 2px outward
+                    }
+                    
+                    x += perpX * perpOffset;
+                    y += perpY * perpOffset;
+                }
+                
+                const letter = document.createElement('div');
+                letter.className = 'letter';
+                letter.textContent = letterData.char;
+                letter.style.left = (x - letterData.size/2) + 'px';
+                letter.style.top = (y - letterData.size/2) + 'px';
+                letter.style.color = pathColor;
+                letter.style.fontSize = letterData.size + 'px';
+                letter.style.fontWeight = letterData.bold ? 'bold' : 'normal';
+                letter.dataset.index = letters.length;
+                letter.dataset.tip = tipIndex;
+                letter.dataset.side = side;
+                letter.dataset.type = letterData.char;
+                
+                letter.addEventListener('click', () => highlightPath(letters.length));
+                
+                container.appendChild(letter);
+                letters.push(letter);
+            });
+        }
+
+        function addFillInLetters() {
+            const container = document.getElementById('starContainer');
+            const centerX = 1750;
+            const centerY = 1750;
+            const outerRadius = 1610;
+            const innerRadius = 615;
+            
+            // Function to add fill-in letters for a specific tip
+            function addTipFillIn(tipIndex) {
+                const tipAngle = (tipIndex * 2 * Math.PI / 5) + (Math.PI / 2) + Math.PI;
+                const leftInnerAngle = tipAngle - (Math.PI / 5);
+                const rightInnerAngle = tipAngle + (Math.PI / 5);
+                
+                const tipX = centerX + outerRadius * Math.cos(tipAngle);
+                const tipY = centerY + outerRadius * Math.sin(tipAngle);
+                
+                const leftInnerX = centerX + innerRadius * Math.cos(leftInnerAngle);
+                const leftInnerY = centerY + innerRadius * Math.sin(leftInnerAngle);
+                const rightInnerX = centerX + innerRadius * Math.cos(rightInnerAngle);
+                const rightInnerY = centerY + innerRadius * Math.sin(rightInnerAngle);
+                
+                // Offset adjustments per tip
+                let offsetAdjustment = 0;
+                if (tipIndex === 0) offsetAdjustment = -10;      // Top tip
+                else if (tipIndex === 1) offsetAdjustment = -5;  // Upper Right tip
+                else if (tipIndex === 2) offsetAdjustment = -8;  // Lower Right tip
+                else if (tipIndex === 3) offsetAdjustment = -11; // Lower Left tip
+                else if (tipIndex === 4) offsetAdjustment = -13; // Upper Left tip
+                
+                // Path perpendicular adjustments
+                let leftPerpOffset, rightPerpOffset;
+                if (tipIndex === 0) { leftPerpOffset = 17; rightPerpOffset = -8; }      // Top tip
+                else if (tipIndex === 1) { leftPerpOffset = 9; rightPerpOffset = -11; } // Upper Right tip
+                else if (tipIndex === 2) { leftPerpOffset = 6; rightPerpOffset = -14; } // Lower Right tip
+                else if (tipIndex === 3) { leftPerpOffset = 10; rightPerpOffset = -14; } // Lower Left tip
+                else if (tipIndex === 4) { leftPerpOffset = 18; rightPerpOffset = -9; } // Upper Left tip
+                
+                // Calculate unit vectors for both paths
+                const leftDirX = tipX - leftInnerX;
+                const leftDirY = tipY - leftInnerY;
+                const leftPathLength = Math.sqrt(leftDirX * leftDirX + leftDirY * leftDirY);
+                const leftUnitX = leftDirX / leftPathLength;
+                const leftUnitY = leftDirY / leftPathLength;
+                const leftPerpX = -leftUnitY;
+                const leftPerpY = leftUnitX;
+                
+                const rightDirX = tipX - rightInnerX;
+                const rightDirY = tipY - rightInnerY;
+                const rightPathLength = Math.sqrt(rightDirX * rightDirX + rightDirY * rightDirY);
+                const rightUnitX = rightDirX / rightPathLength;
+                const rightUnitY = rightDirY / rightPathLength;
+                const rightPerpX = -rightUnitY;
+                const rightPerpY = rightUnitX;
+                
+                // Letter sequence with counts
+                const letterSequence = [
+                    {char: 'o', count: 19, offset: 40, size: 24, bold: false},
+                    {char: 'f', count: 18, offset: 70, size: 24, bold: false},
+                    {char: 'A', count: 17, offset: 105, size: 28, bold: true},
+                    {char: 'M', count: 16, offset: 140, size: 28, bold: true},
+                    {char: 'E', count: 15, offset: 175, size: 28, bold: true},
+                    {char: 'R', count: 14, offset: 210, size: 28, bold: true},
+                    {char: 'I', count: 13, offset: 245, size: 28, bold: true},
+                    {char: 'C', count: 12, offset: 280, size: 28, bold: true},
+                    {char: 'A', count: 11, offset: 315, size: 28, bold: true},
+                    {char: '2', count: 10, offset: 350, size: 35, bold: true},
+                    {char: '5', count: 9, offset: 380, size: 35, bold: true},
+                    {char: '0', count: 8, offset: 410, size: 35, bold: true}
+                ];
+                
+                letterSequence.forEach(letterData => {
+                    // Calculate left path position
+                    const leftLetterOffset = letterData.offset + offsetAdjustment;
+                    let leftLetterX = leftInnerX + leftUnitX * leftLetterOffset + leftPerpX * leftPerpOffset;
+                    let leftLetterY = leftInnerY + leftUnitY * leftLetterOffset + leftPerpY * leftPerpOffset;
+                    
+                    // Calculate right path position
+                    const rightLetterOffset = letterData.offset + offsetAdjustment;
+                    let rightLetterX = rightInnerX + rightUnitX * rightLetterOffset + rightPerpX * rightPerpOffset;
+                    let rightLetterY = rightInnerY + rightUnitY * rightLetterOffset + rightPerpY * rightPerpOffset;
+                    
+                    // Special adjustments for "250" in specific paths
+                    if (tipIndex === 1 && (letterData.char === '2' || letterData.char === '5' || letterData.char === '0')) {
+                        // Path 3 (upper right tip, left side): move outward by 4px
+                        leftLetterX += leftPerpX * (-4);
+                        leftLetterY += leftPerpY * (-4);
+                    }
+                    if (tipIndex === 4 && (letterData.char === '2' || letterData.char === '5' || letterData.char === '0')) {
+                        // Path 10 (upper left tip, right side): move outward by 2px
+                        rightLetterX += rightPerpX * 2;
+                        rightLetterY += rightPerpY * 2;
+                    }
+                    
+                    // Create fill-in letters equally spaced between the exact outer positions
+                    for (let i = 1; i <= letterData.count; i++) {
+                        const t = i / (letterData.count + 1);
+                        
+                        const x = leftLetterX + t * (rightLetterX - leftLetterX);
+                        const y = leftLetterY + t * (rightLetterY - leftLetterY);
+                        
+                        const letter = document.createElement('div');
+                        letter.className = 'letter';
+                        letter.textContent = letterData.char;
+                        letter.style.left = (x - letterData.size/2) + 'px';
+                        letter.style.top = (y - letterData.size/2) + 'px';
+                        letter.style.color = '#ff9f43'; // Orange color for fill-in letters
+                        letter.style.fontSize = letterData.size + 'px';
+                        letter.style.fontWeight = letterData.bold ? 'bold' : 'normal';
+                        letter.dataset.index = letters.length;
+                        letter.dataset.type = 'fill-' + letterData.char;
+                        letter.dataset.tip = tipIndex;
+                        
+                        letter.addEventListener('click', () => highlightPath(letters.length));
+                        
+                        container.appendChild(letter);
+                        letters.push(letter);
+                    }
+                });
+            }
+            
+            // Add fill-in letters for all tips
+            addTipFillIn(0); // Top tip
+            addTipFillIn(1); // Upper right tip
+            addTipFillIn(2); // Lower right tip
+            addTipFillIn(3); // Lower left tip
+            addTipFillIn(4); // Upper left tip
+        }
+
+        function highlightPath(startIndex) {
+            clearHighlights();
+            
+            const pathIndices = [];
+            for (let i = 0; i < 10; i++) {
+                const index = (startIndex + i * 5) % letters.length;
+                pathIndices.push(index);
+            }
+            
+            pathIndices.forEach((index, i) => {
+                setTimeout(() => {
+                    if (letters[index]) {
+                        letters[index].classList.add('highlighted');
+                        highlightedPaths.push(letters[index]);
+                    }
+                }, i * 100);
+            });
+        }
+
+        function clearHighlights() {
+            highlightedPaths.forEach(letter => {
+                letter.classList.remove('highlighted');
+            });
+            highlightedPaths = [];
+        }
+
+        function zoomIn() {
+            currentZoom = Math.min(currentZoom * 1.2, 3);
+            updateZoom();
+        }
+
+        function zoomOut() {
+            currentZoom = Math.max(currentZoom / 1.2, 0.3);
+            updateZoom();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            updateZoom();
+        }
+
+        function updateZoom() {
+            const container = document.getElementById('starContainer');
+            container.style.transform = `scale(${currentZoom})`;
+        }
+
+        function animateLetters() {
+            letters.forEach((letter, index) => {
+                setTimeout(() => {
+                    letter.style.animation = 'pulse 0.5s ease-in-out';
+                    setTimeout(() => {
+                        letter.style.animation = '';
+                    }, 500);
+                }, index * 50);
+            });
+        }
+
+        function createStarOutline() {
+            const centerX = 1750;
+            const centerY = 1750;
+            const outerRadius = 1610;
+            const innerRadius = 615;
+            
+            let points = [];
+            
+            // Create star points (alternating outer and inner)
+            for (let i = 0; i < 10; i++) {
+                const angle = (i * Math.PI / 5) + (Math.PI / 2) + Math.PI;
+                const radius = (i % 2 === 0) ? outerRadius : innerRadius;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                points.push(`${x.toFixed(0)},${y.toFixed(0)}`);
+            }
+            
+            const starOutline = document.getElementById('starOutline');
+            starOutline.setAttribute('points', points.join(' '));
+        }
+
+        // Initialize everything
+        console.log("Starting initialization...");
+        createUNITEDSTATES();
+        console.log("UNITEDSTATES created");
+        addOfAmerica250Paths();
+        console.log("ofAMERICA250 paths added");
+        addFillInLetters();
+        console.log("Fill-in letters added");
+        createStarOutline();
+        console.log("Star outline created");
+
+        // Add mouse wheel zoom
+        document.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                zoomIn();
+            } else {
+                zoomOut();
+            }
+        });
+    </script>
+</body>
+</html>
