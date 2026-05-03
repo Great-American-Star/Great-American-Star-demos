@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patriotic Star - UNITEDSTATESofAMERICA250</title>
+<style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: white;
+            color: black;
+            font-family: 'Courier New', monospace;
+            overflow: auto;
+            min-height: 100vh;
+            min-width: 100vw;
+        }
+
+        .container {
+            width: 3500px;
+            height: 3500px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .star-container {
+            position: absolute;
+            width: 3500px;
+            height: 3500px;
+            transform-origin: center;
+            transition: transform 0.3s ease;
+            left: 0px;
+            top: 0px;
+        }
+
+        .letter {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: Georgia, serif;
+            user-select: none;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Beautiful permanent effects for special positions */
+        .letter.corner-letter {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1)) !important;
+            border: 2px solid rgba(255, 215, 0, 0.4) !important;
+            border-radius: 8px !important;
+            padding: 3px 6px !important;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 15px rgba(255, 215, 0, 0.4) !important;
+            transform: scale(1.05) !important;
+            font-weight: 900 !important;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.3) !important;
+        }
+
+        .letter.outline-letter {
+            background: linear-gradient(135deg, rgba(0, 100, 255, 0.15), rgba(0, 100, 255, 0.08)) !important;
+            border: 2px solid rgba(0, 100, 255, 0.5) !important;
+            border-radius: 6px !important;
+            padding: 2px 5px !important;
+            text-shadow: 0 0 10px rgba(0, 100, 255, 0.9), 0 0 20px rgba(0, 100, 255, 0.5) !important;
+            transform: scale(1.08) !important;
+            box-shadow: 0 0 15px rgba(0, 100, 255, 0.4) !important;
+        }
+
+        .letter.edge-letter {
+            background: linear-gradient(135deg, rgba(255, 100, 150, 0.12), rgba(255, 100, 150, 0.06)) !important;
+            border: 1px solid rgba(255, 100, 150, 0.4) !important;
+            border-radius: 5px !important;
+            padding: 2px 4px !important;
+            text-shadow: 0 0 6px rgba(255, 100, 150, 0.7), 0 0 12px rgba(255, 100, 150, 0.3) !important;
+            transform: scale(1.03) !important;
+            font-style: italic !important;
+            box-shadow: 0 0 8px rgba(255, 100, 150, 0.2) !important;
+        }
+
+        .letter:hover {
+            transform: scale(1.1);
+        }
+
+        .letter.highlighted {
+            color: #00FF00 !important;
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.8) !important;
+            transform: scale(1.3) !important;
+            font-weight: bold !important;
+            font-size: inherit !important;
+            background: none !important;
+            border: none !important;
+            outline: none !important;
+            opacity: 1 !important;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            color: black;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 14px;
+            opacity: 0.7;
+            color: black;
+        }
+
+        .debug {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="star-container" id="starContainer">
+<!-- Star outline SVG -->
+<svg height="3500" style="position: absolute; top: 0; left: 0; pointer-events: none;" width="3500">
+<polygon fill="none" id="starOutline" opacity="0.8" points="" stroke="black" stroke-width="4"></polygon>
+</svg>
+<!-- Letters will be positioned here by JavaScript -->
+</div>
+</div>
+<div class="controls">
+<button class="control-btn" onclick="zoomIn()">Zoom In</button>
+<button class="control-btn" onclick="zoomOut()">Zoom Out</button>
+<button class="control-btn" onclick="resetZoom()">Reset Zoom</button>
+<button class="control-btn" onclick="highlightPath()">Highlight Path</button>
+<button class="control-btn" onclick="clearHighlights()">Clear Highlights</button>
+</div>
+<div class="info">
+<div>UNITEDSTATES: 12 rings completed</div>
+<div>U(50) N(55) I(60) T(65) E(70) D(75) S(80) T(85) A(90) T(95) E(100) S(105)</div>
+<div id="totalCount">Total letters will be displayed after creation</div>
+<div>"Highlight Path": Shows random continuous 24-letter UNITEDSTATESofAMERICA250 sequences</div>
+</div>
+<div class="debug" id="debugInfo">
+        Debug info will appear here...
+    </div>
+<script>
+        let currentZoom = 1;
+        let letters = [];
+        let highlightedPaths = [];
+
+        function debugLog(message) {
+            console.log(message);
+            const debugDiv = document.getElementById('debugInfo');
+            debugDiv.innerHTML += message + '<br>';
+            debugDiv.scrollTop = debugDiv.scrollHeight;
+        }
+
+        function createUNITEDSTATES() {
+            debugLog("Creating UNITEDSTATES...");
+            const container = document.getElementById('starContainer');
+            const centerX = 1750;
+            const centerY = 1750;
+            const innerRadius = 220;
+            const radiusStep = 35;
+            
+            // Pentagon vertices function
+            function getPentagonVertices(radius) {
+                const vertices = [];
+                for (let i = 0; i < 5; i++) {
+                    const angle = (i * 2 * Math.PI / 5) + (Math.PI / 2);
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+                    vertices.push({x, y});
+                }
+                return vertices;
+            }
+
+            let letterIndex = 0;
+            let currentRadius = innerRadius;
+
+            // UNITEDSTATES letter sequence with patriotic colors
+            const unitedStatesSequence = [
+                {letter: 'U', count: 50, color: '#0052CC'},   // Blue - UNITED
+                {letter: 'N', count: 55, color: '#0052CC'},   // Blue - UNITED
+                {letter: 'I', count: 60, color: '#0052CC'},   // Blue - UNITED
+                {letter: 'T', count: 65, color: '#0052CC'},   // Blue - UNITED
+                {letter: 'E', count: 70, color: '#0052CC'},   // Blue - UNITED
+                {letter: 'D', count: 75, color: '#0052CC'},   // Blue - UNITED
+                {letter: 'S', count: 80, color: '#DC143C'},   // Red - STATES
+                {letter: 'T', count: 85, color: '#DC143C'},   // Red - STATES
+                {letter: 'A', count: 90, color: '#DC143C'},   // Red - STATES
+                {letter: 'T', count: 95, color: '#DC143C'},   // Red - STATES
+                {letter: 'E', count: 100, color: '#DC143C'},  // Red - STATES
+                {letter: 'S', count: 105, color: '#DC143C'}   // Red - STATES
+            ];
+
+            unitedStatesSequence.forEach((letterData, ringIndex) => {
+                const vertices = getPentagonVertices(currentRadius);
+                const lettersPerSide = (letterData.count + 5) / 5;
+                
+                // Place letters along each side
+                for (let side = 0; side < 5; side++) {
+                    const startVertex = vertices[side];
+                    const endVertex = vertices[(side + 1) % 5];
+                    
+                    for (let i = 0; i < lettersPerSide; i++) {
+                        const t = i / (lettersPerSide - 1);
+                        const x = startVertex.x + t * (endVertex.x - startVertex.x);
+                        const y = startVertex.y + t * (endVertex.y - startVertex.y);
+                        
+                        const letter = document.createElement('div');
+                        letter.className = 'letter';
+                        letter.textContent = letterData.letter;
+                        letter.style.left = (x - 12) + 'px';
+                        letter.style.top = (y - 12) + 'px';
+                        letter.style.color = letterData.color;
+                        letter.dataset.index = letterIndex;
+                        letter.dataset.type = letterData.letter;
+                        letter.dataset.ring = ringIndex;
+                        
+                        // Add special visual effects for pentagon corner letters
+                        if (i === 0 || i === lettersPerSide - 1) {
+                            letter.classList.add('corner-letter');
+                        }
+                        
+                        container.appendChild(letter);
+                        letters.push(letter);
+                        letterIndex++;
+                    }
+                }
+
+                // Remove duplicate corners
+                const toRemove = [];
+                for (let side = 1; side < 5; side++) {
+                    toRemove.push(letters.length - (5 - side) * lettersPerSide);
+                }
+                
+                toRemove.reverse().forEach(index => {
+                    if (letters[index]) {
+                        letters[index].remove();
+                        letters.splice(index, 1);
+                        letterIndex--;
+                    }
+                });
+
+                currentRadius += radiusStep;
+            });
+
+            // Update indices
+            letters.forEach((letter, index) => {
+                letter.dataset.index = index;
+            });
+            
+            debugLog(`UNITEDSTATES created: ${letters.length} letters`);
+        }
+
+        function addOfAmerica250Paths() {
+            debugLog("Adding ofAMERICA250 paths...");
+            const container = document.getElementById('starContainer');
+            const centerX = 1750;
+            const centerY = 1750;
+            const outerRadius = 1610;
+            const innerRadius = 615;
+            
+            let pathLetterCount = 0;
+            
+            // For each of the 5 star tips
+            for (let tip = 0; tip < 5; tip++) {
+                const tipAngle = (tip * 2 * Math.PI / 5) + (Math.PI / 2) + Math.PI;
+                const leftInnerAngle = tipAngle - (Math.PI / 5);
+                const rightInnerAngle = tipAngle + (Math.PI / 5);
+                
+                const tipX = centerX + outerRadius * Math.cos(tipAngle);
+                const tipY = centerY + outerRadius * Math.sin(tipAngle);
+                
+                const leftInnerX = centerX + innerRadius * Math.cos(leftInnerAngle);
+                const leftInnerY = centerY + innerRadius * Math.sin(leftInnerAngle);
+                const rightInnerX = centerX + innerRadius * Math.cos(rightInnerAngle);
+                const rightInnerY = centerY + innerRadius * Math.sin(rightInnerAngle);
+                
+                // Create both paths for this tip
+                pathLetterCount += createSinglePath(container, leftInnerX, leftInnerY, tipX, tipY, tip, 'left');
+                pathLetterCount += createSinglePath(container, rightInnerX, rightInnerY, tipX, tipY, tip, 'right');
+            }
+            
+            debugLog(`ofAMERICA250 paths added: ${pathLetterCount} letters`);
+        }
+        
+        function createSinglePath(container, startX, startY, endX, endY, tipIndex, side) {
+            const dirX = endX - startX;
+            const dirY = endY - startY;
+            const pathLength = Math.sqrt(dirX * dirX + dirY * dirY);
+            const unitX = dirX / pathLength;
+            const unitY = dirY / pathLength;
+            
+            // Offset adjustments per tip
+            let offsetAdjustment = 0;
+            if (tipIndex === 0) offsetAdjustment = -10;      // Top tip
+            else if (tipIndex === 1) offsetAdjustment = -5;  // Upper Right tip
+            else if (tipIndex === 2) offsetAdjustment = -8;  // Lower Right tip
+            else if (tipIndex === 3) offsetAdjustment = -11; // Lower Left tip
+            else if (tipIndex === 4) offsetAdjustment = -13; // Upper Left tip
+            
+            const letterSequence = [
+                {char: 'o', offset: 40 + offsetAdjustment, size: 24, bold: false, color: '#0052CC'},  // Blue - of
+                {char: 'f', offset: 70 + offsetAdjustment, size: 24, bold: false, color: '#0052CC'},  // Blue - of
+                {char: 'A', offset: 105 + offsetAdjustment, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                {char: 'M', offset: 140 + offsetAdjustment, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                {char: 'E', offset: 175 + offsetAdjustment, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                {char: 'R', offset: 210 + offsetAdjustment, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                {char: 'I', offset: 245 + offsetAdjustment, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                {char: 'C', offset: 280 + offsetAdjustment, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                {char: 'A', offset: 315 + offsetAdjustment, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                {char: '2', offset: 350 + offsetAdjustment, size: 35, bold: true, color: '#FFD700'},  // Gold - 250
+                {char: '5', offset: 380 + offsetAdjustment, size: 35, bold: true, color: '#FFD700'},  // Gold - 250
+                {char: '0', offset: 410 + offsetAdjustment, size: 35, bold: true, color: '#FFD700'}   // Gold - 250
+            ];
+            
+            // Special adjustments for specific paths (your precise calibrations)
+            const isPath1 = (tipIndex === 0 && side === 'left');
+            const isPath2 = (tipIndex === 0 && side === 'right');
+            const isPath3 = (tipIndex === 1 && side === 'left');
+            const isPath4 = (tipIndex === 1 && side === 'right');
+            const isPath5 = (tipIndex === 2 && side === 'left');
+            const isPath6 = (tipIndex === 2 && side === 'right');
+            const isPath7 = (tipIndex === 3 && side === 'left');
+            const isPath8 = (tipIndex === 3 && side === 'right');
+            const isPath9 = (tipIndex === 4 && side === 'left');
+            const isPath10 = (tipIndex === 4 && side === 'right');
+            
+            letterSequence.forEach((letterData, index) => {
+                let finalOffset = letterData.offset;
+                
+                // Move paths 7 and 8 closer to "S" letters (your adjustment)
+                if (isPath7 || isPath8) {
+                    finalOffset -= 4; // Move 4px closer to "S" (2px more)
+                }
+                
+                // Move paths 9 and 10 closer to "S" letters (your adjustment)
+                if (isPath9 || isPath10) {
+                    finalOffset -= 3; // Move 3px closer to "S"
+                }
+                
+                // Calculate position along the path
+                let x = startX + unitX * finalOffset;
+                let y = startY + unitY * finalOffset;
+                
+                // Perpendicular adjustments for various paths (your precise positioning)
+                const perpX = -unitY;
+                const perpY = unitX;
+                
+                // Move entire paths toward center of tip width (your calibrated adjustments)
+                if (isPath1 || isPath2 || isPath3 || isPath4 || isPath5 || isPath6 || isPath7 || isPath8 || isPath9 || isPath10) {
+                    let perpOffset;
+                    if (isPath1) {
+                        // Path 1: move inward (toward center of tip width)
+                        perpOffset = 17; // Move 17px inward (your calibrated value)
+                    } else if (isPath2) {
+                        // Path 2: move inward (toward center of tip width)
+                        perpOffset = -8; // Move 8px inward (your calibrated value)
+                    } else if (isPath3) {
+                        // Path 3: move entire path inward (toward center of tip width)
+                        perpOffset = 9; // Move 9px inward (your calibrated value)
+                    } else if (isPath4) {
+                        // Path 4: move entire path inward (toward center of tip width)
+                        perpOffset = -11; // Move 11px inward (your calibrated value)
+                    } else if (isPath5) {
+                        // Path 5: move entire path inward (toward center of tip width)
+                        perpOffset = 6; // Move 6px inward (your calibrated value)
+                    } else if (isPath6) {
+                        // Path 6: move entire path inward (toward center of tip width)
+                        perpOffset = -14; // Move 14px inward (your calibrated value)
+                    } else if (isPath7) {
+                        // Path 7: move entire path inward (toward center of tip width)
+                        perpOffset = 10; // Move 10px inward (your calibrated value)
+                    } else if (isPath8) {
+                        // Path 8: move entire path inward (toward center of tip width)
+                        perpOffset = -14; // Move 14px inward (your calibrated value)
+                    } else if (isPath9) {
+                        // Path 9: move entire path inward (toward center of tip width)
+                        perpOffset = 18; // Move 18px inward (your calibrated value)
+                    } else if (isPath10) {
+                        // Path 10: move entire path inward (toward center of tip width)
+                        perpOffset = -9; // Move 9px inward (your calibrated value)
+                    }
+                    
+                    x += perpX * perpOffset;
+                    y += perpY * perpOffset;
+                }
+                
+                // Move "250" perpendicular to tip direction in paths 3 and 10 for alignment (your precise adjustment)
+                if ((isPath3 || isPath10) && (letterData.char === '2' || letterData.char === '5' || letterData.char === '0')) {
+                    let perpOffset;
+                    if (isPath3) {
+                        // Path 3: move outward (away from center of tip width toward outer edge)
+                        perpOffset = -4; // Move 4px outward (your calibrated value for perfect alignment)
+                    } else if (isPath10) {
+                        // Path 10: keep current position (your calibrated value)
+                        perpOffset = 2; // Move 2px outward (your calibrated value)
+                    }
+                    
+                    x += perpX * perpOffset;
+                    y += perpY * perpOffset;
+                }
+                
+                const letter = document.createElement('div');
+                letter.className = 'letter outline-letter'; // Add outline-letter class for star-outline paths
+                letter.textContent = letterData.char;
+                letter.style.left = (x - letterData.size/2) + 'px';
+                letter.style.top = (y - letterData.size/2) + 'px';
+                letter.style.color = letterData.color;
+                letter.style.fontSize = letterData.size + 'px';
+                letter.style.fontWeight = letterData.bold ? 'bold' : 'normal';
+                letter.dataset.index = letters.length;
+                letter.dataset.tip = tipIndex;
+                letter.dataset.side = side;
+                letter.dataset.type = letterData.char;
+                letter.dataset.pathType = 'outer';
+                
+                container.appendChild(letter);
+                letters.push(letter);
+            });
+            
+            return letterSequence.length;
+        }
+
+        function highlightPath() {
+            debugLog("=== CREATING TRULY CONTINUOUS PATH ===");
+            clearHighlights();
+            
+            if (letters.length === 0) {
+                debugLog("ERROR: No letters found!");
+                return;
+            }
+            
+            // Step 1: Choose a random starting U letter
+            const uLetters = letters.filter(letter => letter.textContent === 'U' && letter.dataset.type === 'U');
+            if (uLetters.length === 0) {
+                debugLog("ERROR: No U letters found!");
+                return;
+            }
+            
+            const startU = uLetters[Math.floor(Math.random() * uLetters.length)];
+            debugLog(`Starting continuous path from U at index ${startU.dataset.index}`);
+            
+            // Step 2: Build ONE continuous path through all 24 letters
+            const completePath = buildTrulyContinuousPath(startU);
+            
+            debugLog(`Complete continuous path: ${completePath.length} letters`);
+            
+            // Highlight with animation
+            completePath.forEach((letter, index) => {
+                setTimeout(() => {
+                    letter.classList.add('highlighted');
+                    highlightedPaths.push(letter);
+                    debugLog(`✓ Step ${index + 1}: "${letter.textContent}" at index ${letter.dataset.index}`);
+                    
+                    if (index === completePath.length - 1) {
+                        debugLog("=== CONTINUOUS PATH COMPLETE ===");
+                        debugLog(`Final sequence: ${highlightedPaths.map(l => l.textContent).join('')}`);
+                    }
+                }, index * 80);
+            });
+        }
+        
+        function buildTrulyContinuousPath(startU) {
+            debugLog("Building truly continuous 24-letter path...");
+            
+            const path = [startU];
+            let currentLetter = startU;
+            const usedLetters = new Set([startU.dataset.index]);
+            
+            // Complete 24-letter sequence with word boundaries: UNITEDSTATESofAMERICA250
+            const fullSequence = [
+                // UNITEDSTATES (with ring info for pentagon letters)
+                {char: 'N', ring: 1, section: 'UNITEDSTATES', word: 'UNITED'}, 
+                {char: 'I', ring: 2, section: 'UNITEDSTATES', word: 'UNITED'}, 
+                {char: 'T', ring: 3, section: 'UNITEDSTATES', word: 'UNITED'}, 
+                {char: 'E', ring: 4, section: 'UNITEDSTATES', word: 'UNITED'}, 
+                {char: 'D', ring: 5, section: 'UNITEDSTATES', word: 'UNITED'}, 
+                {char: 'S', ring: 6, section: 'UNITEDSTATES', word: 'STATES'}, 
+                {char: 'T', ring: 7, section: 'UNITEDSTATES', word: 'STATES'}, 
+                {char: 'A', ring: 8, section: 'UNITEDSTATES', word: 'STATES'}, 
+                {char: 'T', ring: 9, section: 'UNITEDSTATES', word: 'STATES'}, 
+                {char: 'E', ring: 10, section: 'UNITEDSTATES', word: 'STATES'}, 
+                {char: 'S', ring: 11, section: 'UNITEDSTATES', word: 'STATES'},
+                // ofAMERICA250 (no ring info, from tips)
+                {char: 'o', ring: null, section: 'ofAMERICA250', word: 'of'},
+                {char: 'f', ring: null, section: 'ofAMERICA250', word: 'of'},
+                {char: 'A', ring: null, section: 'ofAMERICA250', word: 'AMERICA'},
+                {char: 'M', ring: null, section: 'ofAMERICA250', word: 'AMERICA'},
+                {char: 'E', ring: null, section: 'ofAMERICA250', word: 'AMERICA'},
+                {char: 'R', ring: null, section: 'ofAMERICA250', word: 'AMERICA'},
+                {char: 'I', ring: null, section: 'ofAMERICA250', word: 'AMERICA'},
+                {char: 'C', ring: null, section: 'ofAMERICA250', word: 'AMERICA'},
+                {char: 'A', ring: null, section: 'ofAMERICA250', word: 'AMERICA'},
+                {char: '2', ring: null, section: 'ofAMERICA250', word: '250'},
+                {char: '5', ring: null, section: 'ofAMERICA250', word: '250'},
+                {char: '0', ring: null, section: 'ofAMERICA250', word: '250'}
+            ];
+            
+            // Determine path style randomly for diversity - increased word-boundary bending probability
+            const pathStyles = [
+                'word-boundary-bending', 'word-boundary-bending', 'word-boundary-bending', // 30% chance
+                'corner-to-outline', 'corner-to-outline', // 20% chance  
+                'standard', 'standard', // 20% chance
+                'zigzag', // 10% chance
+                'straight-line', // 10% chance
+                'mixed-diversity' // 10% chance
+            ];
+            const selectedStyle = pathStyles[Math.floor(Math.random() * pathStyles.length)];
+            debugLog(`Selected path style: ${selectedStyle}`);
+            
+            let previousWord = 'UNITED'; // Starting word
+            
+            fullSequence.forEach((targetInfo, seqIndex) => {
+                const targetChar = targetInfo.char;
+                const targetRing = targetInfo.ring;
+                const section = targetInfo.section;
+                const currentWord = targetInfo.word;
+                
+                // Check if we're at a word boundary
+                const isWordBoundary = (currentWord !== previousWord);
+                if (isWordBoundary) {
+                    debugLog(`Word boundary detected: ${previousWord} → ${currentWord}`);
+                }
+                
+                debugLog(`Looking for ${targetChar} (${section}${targetRing ? `, ring ${targetRing}` : ''}, word: ${currentWord})...`);
+                
+                let candidateLetters = [];
+                
+                if (section === 'UNITEDSTATES') {
+                    // Find pentagon letters in specific ring
+                    candidateLetters = letters.filter(letter => 
+                        letter.textContent === targetChar && 
+                        letter.dataset.type === targetChar &&
+                        parseInt(letter.dataset.ring) === targetRing &&
+                        !usedLetters.has(letter.dataset.index)
+                    );
+                } else {
+                    // Find tip letters (both outer and fill-in)
+                    candidateLetters = letters.filter(letter => 
+                        letter.textContent === targetChar && 
+                        (letter.dataset.type === targetChar || letter.dataset.type === `fill-${targetChar}`) &&
+                        (letter.dataset.pathType === 'outer' || letter.dataset.pathType === 'fill') &&
+                        !usedLetters.has(letter.dataset.index)
+                    );
+                }
+                
+                debugLog(`Found ${candidateLetters.length} unused ${targetChar} candidates`);
+                
+                if (candidateLetters.length === 0) {
+                    debugLog(`ERROR: No unused ${targetChar} letters found!`);
+                    return;
+                }
+                
+                // Find the closest letter to current position for TRUE continuity
+                const currentX = parseFloat(currentLetter.style.left) + 12;
+                const currentY = parseFloat(currentLetter.style.top) + 12;
+                
+                // Calculate distances and sort
+                const letterDistances = candidateLetters.map(candidate => {
+                    const candidateX = parseFloat(candidate.style.left) + 12;
+                    const candidateY = parseFloat(candidate.style.top) + 12;
+                    const distance = Math.sqrt((candidateX - currentX) ** 2 + (candidateY - currentY) ** 2);
+                    
+                    // Determine position type for diversity
+                    let positionType = 'center';
+                    if (candidate.dataset.pathType === 'outer') {
+                        positionType = 'outer';
+                    } else if (candidate.dataset.pathType === 'fill') {
+                        // Calculate if it's corner, edge, or center
+                        const tipIndex = parseInt(candidate.dataset.tip);
+                        if (tipIndex !== undefined) {
+                            const centerX = 1750;
+                            const centerY = 1750;
+                            const tipAngle = (tipIndex * 2 * Math.PI / 5) + (Math.PI / 2) + Math.PI;
+                            const tipCenterX = centerX + 1100 * Math.cos(tipAngle);
+                            const tipCenterY = centerY + 1100 * Math.sin(tipAngle);
+                            
+                            const perpAngle = tipAngle + Math.PI / 2;
+                            const perpDist = Math.abs((candidateX - tipCenterX) * Math.cos(perpAngle) + (candidateY - tipCenterY) * Math.sin(perpAngle));
+                            
+                            if (perpDist > 80) positionType = 'corner';
+                            else if (perpDist > 30) positionType = 'edge';
+                            else positionType = 'center';
+                        }
+                    }
+                    
+                    return { letter: candidate, distance, positionType };
+                }).sort((a, b) => a.distance - b.distance);
+                
+                // Apply path style-specific selection logic
+                let selectedItem;
+                
+                if (selectedStyle === 'word-boundary-bending') {
+                    // Word-boundary bending: Allow more freedom at word boundaries, strict within words
+                    if (isWordBoundary) {
+                        // At word boundaries, allow much more diverse selection for dramatic "bending"
+                        const maxBendDistance = letterDistances[0].distance * 3.0; // Even more freedom for visible bending
+                        const bendCandidates = letterDistances.filter(item => item.distance <= maxBendDistance);
+                        
+                        // Apply strong position-based diversity at word boundaries for dramatic effect
+                        const positionBias = Math.random();
+                        if (section === 'ofAMERICA250') {
+                            if (positionBias < 0.4 && bendCandidates.some(l => l.positionType === 'outer')) {
+                                // 40% chance: dramatic bend to star outline
+                                const outerOptions = bendCandidates.filter(l => l.positionType === 'outer');
+                                selectedItem = outerOptions[Math.floor(Math.random() * outerOptions.length)];
+                                debugLog(`${targetChar}: DRAMATIC WORD BOUNDARY BEND to STAR OUTLINE`);
+                            } else if (positionBias < 0.65 && bendCandidates.some(l => l.positionType === 'corner')) {
+                                // 25% chance: bend to corner
+                                const cornerOptions = bendCandidates.filter(l => l.positionType === 'corner');
+                                selectedItem = cornerOptions[Math.floor(Math.random() * cornerOptions.length)];
+                                debugLog(`${targetChar}: DRAMATIC WORD BOUNDARY BEND to CORNER`);
+                            } else if (positionBias < 0.85 && bendCandidates.some(l => l.positionType === 'edge')) {
+                                // 20% chance: bend to edge
+                                const edgeOptions = bendCandidates.filter(l => l.positionType === 'edge');
+                                selectedItem = edgeOptions[Math.floor(Math.random() * edgeOptions.length)];
+                                debugLog(`${targetChar}: DRAMATIC WORD BOUNDARY BEND to EDGE`);
+                            } else {
+                                // 15% chance: moderate bend
+                                selectedItem = bendCandidates[Math.floor(Math.random() * Math.min(6, bendCandidates.length))];
+                                debugLog(`${targetChar}: MODERATE WORD BOUNDARY BEND`);
+                            }
+                        } else {
+                            // Pentagon word boundaries: allow more pentagon corner/edge selection
+                            const pentagonBendBias = Math.random();
+                            if (pentagonBendBias < 0.6) {
+                                // Try to pick pentagon corner/edge letters for visible bending
+                                selectedItem = bendCandidates[Math.floor(Math.random() * Math.min(6, bendCandidates.length))];
+                                debugLog(`${targetChar}: PENTAGON WORD BOUNDARY BEND (wide selection)`);
+                            } else {
+                                selectedItem = bendCandidates[Math.floor(Math.random() * Math.min(3, bendCandidates.length))];
+                                debugLog(`${targetChar}: PENTAGON WORD BOUNDARY BEND (moderate)`);
+                            }
+                        }
+                    } else {
+                        // Within words, maintain very tight continuity for straight-line effect
+                        const maxStraightDistance = letterDistances[0].distance * 1.1; // Even tighter within words
+                        const straightCandidates = letterDistances.filter(item => item.distance <= maxStraightDistance);
+                        selectedItem = straightCandidates[0]; // Always pick closest within words
+                        debugLog(`${targetChar}: TIGHT STRAIGHT within word "${currentWord}"`);
+                    }
+                } else if (selectedStyle === 'corner-to-outline') {
+                    // Corner-to-outline: Pentagon corners → Star outline paths
+                    if (section === 'UNITEDSTATES') {
+                        // In pentagon: prefer corner positions
+                        const maxCornerDistance = letterDistances[0].distance * 1.5;
+                        const cornerCandidates = letterDistances.filter(item => item.distance <= maxCornerDistance);
+                        
+                        // Try to pick letters that are at pentagon corners/edges
+                        const cornerBias = Math.random();
+                        if (cornerBias < 0.6) {
+                            // Prefer letters that are likely at pentagon corners
+                            selectedItem = cornerCandidates[Math.floor(Math.random() * Math.min(2, cornerCandidates.length))];
+                            debugLog(`${targetChar}: CORNER-TO-OUTLINE (pentagon corner preference)`);
+                        } else {
+                            selectedItem = cornerCandidates[Math.floor(Math.random() * cornerCandidates.length)];
+                            debugLog(`${targetChar}: CORNER-TO-OUTLINE (pentagon general)`);
+                        }
+                    } else {
+                        // In tips: strongly prefer outer (star-outline) positions
+                        const maxOutlineDistance = letterDistances[0].distance * 2.0;
+                        const outlineCandidates = letterDistances.filter(item => item.distance <= maxOutlineDistance);
+                        
+                        const outerOptions = outlineCandidates.filter(l => l.positionType === 'outer');
+                        const cornerOptions = outlineCandidates.filter(l => l.positionType === 'corner');
+                        
+                        if (outerOptions.length > 0 && Math.random() < 0.7) {
+                            // 70% chance: prefer outer (star-outline) letters
+                            selectedItem = outerOptions[Math.floor(Math.random() * outerOptions.length)];
+                            debugLog(`${targetChar}: CORNER-TO-OUTLINE (star outline)`);
+                        } else if (cornerOptions.length > 0 && Math.random() < 0.8) {
+                            // 20% chance: corner letters near outline
+                            selectedItem = cornerOptions[Math.floor(Math.random() * cornerOptions.length)];
+                            debugLog(`${targetChar}: CORNER-TO-OUTLINE (tip corner)`);
+                        } else {
+                            // 10% chance: any close letter
+                            selectedItem = outlineCandidates[Math.floor(Math.random() * Math.min(3, outlineCandidates.length))];
+                            debugLog(`${targetChar}: CORNER-TO-OUTLINE (fallback)`);
+                        }
+                    }
+                } else if (selectedStyle === 'mixed-diversity') {
+                    // Mixed diversity: Combine multiple strategies within one path
+                    const mixStrategy = seqIndex % 4; // Change strategy every 4 letters
+                    const maxMixDistance = letterDistances[0].distance * 1.6;
+                    const mixCandidates = letterDistances.filter(item => item.distance <= maxMixDistance);
+                    
+                    if (section === 'ofAMERICA250') {
+                        if (mixStrategy === 0 && mixCandidates.some(l => l.positionType === 'outer')) {
+                            // Strategy 1: Outer positions
+                            const outerOptions = mixCandidates.filter(l => l.positionType === 'outer');
+                            selectedItem = outerOptions[Math.floor(Math.random() * outerOptions.length)];
+                            debugLog(`${targetChar}: MIXED-DIVERSITY (outer phase)`);
+                        } else if (mixStrategy === 1 && mixCandidates.some(l => l.positionType === 'corner')) {
+                            // Strategy 2: Corner positions
+                            const cornerOptions = mixCandidates.filter(l => l.positionType === 'corner');
+                            selectedItem = cornerOptions[Math.floor(Math.random() * cornerOptions.length)];
+                            debugLog(`${targetChar}: MIXED-DIVERSITY (corner phase)`);
+                        } else if (mixStrategy === 2 && mixCandidates.some(l => l.positionType === 'edge')) {
+                            // Strategy 3: Edge positions
+                            const edgeOptions = mixCandidates.filter(l => l.positionType === 'edge');
+                            selectedItem = edgeOptions[Math.floor(Math.random() * edgeOptions.length)];
+                            debugLog(`${targetChar}: MIXED-DIVERSITY (edge phase)`);
+                        } else {
+                            // Strategy 4: Center positions
+                            const centerOptions = mixCandidates.filter(l => l.positionType === 'center');
+                            selectedItem = centerOptions.length > 0 ? centerOptions[Math.floor(Math.random() * centerOptions.length)] : mixCandidates[0];
+                            debugLog(`${targetChar}: MIXED-DIVERSITY (center phase)`);
+                        }
+                    } else {
+                        selectedItem = mixCandidates[Math.floor(Math.random() * Math.min(4, mixCandidates.length))];
+                        debugLog(`${targetChar}: MIXED-DIVERSITY (pentagon)`);
+                    }
+                } else if (selectedStyle === 'zigzag') {
+                    // Zigzag: Alternate between different position types
+                    const zigzagBias = seqIndex % 3; // Create pattern every 3 letters
+                    const maxZigzagDistance = letterDistances[0].distance * 1.8;
+                    const zigzagCandidates = letterDistances.filter(item => item.distance <= maxZigzagDistance);
+                    
+                    if (section === 'ofAMERICA250') {
+                        if (zigzagBias === 0 && zigzagCandidates.some(l => l.positionType === 'outer')) {
+                            const outerOptions = zigzagCandidates.filter(l => l.positionType === 'outer');
+                            selectedItem = outerOptions[Math.floor(Math.random() * outerOptions.length)];
+                            debugLog(`${targetChar}: ZIGZAG to OUTER`);
+                        } else if (zigzagBias === 1 && zigzagCandidates.some(l => l.positionType === 'corner')) {
+                            const cornerOptions = zigzagCandidates.filter(l => l.positionType === 'corner');
+                            selectedItem = cornerOptions[Math.floor(Math.random() * cornerOptions.length)];
+                            debugLog(`${targetChar}: ZIGZAG to CORNER`);
+                        } else {
+                            const centerOptions = zigzagCandidates.filter(l => l.positionType === 'center' || l.positionType === 'edge');
+                            selectedItem = centerOptions.length > 0 ? centerOptions[Math.floor(Math.random() * centerOptions.length)] : zigzagCandidates[0];
+                            debugLog(`${targetChar}: ZIGZAG to CENTER/EDGE`);
+                        }
+                    } else {
+                        selectedItem = zigzagCandidates[Math.floor(Math.random() * Math.min(3, zigzagCandidates.length))];
+                        debugLog(`${targetChar}: ZIGZAG (pentagon)`);
+                    }
+                } else if (selectedStyle === 'straight-line') {
+                    // Straight-line: Always pick closest for maximum linearity
+                    selectedItem = letterDistances[0];
+                    debugLog(`${targetChar}: STRAIGHT-LINE (closest)`);
+                } else {
+                    // Standard: Original diverse selection logic
+                    const minDistance = letterDistances[0].distance;
+                    const maxContinuousDistance = minDistance * 1.25;
+                    const continuousLetters = letterDistances.filter(item => item.distance <= maxContinuousDistance);
+                    
+                    const positionBias = Math.random();
+                    if (section === 'ofAMERICA250') {
+                        if (positionBias < 0.2 && continuousLetters.some(l => l.positionType === 'outer')) {
+                            const outerOptions = continuousLetters.filter(l => l.positionType === 'outer');
+                            selectedItem = outerOptions[Math.floor(Math.random() * outerOptions.length)];
+                            debugLog(`${targetChar}: STANDARD OUTER position`);
+                        } else if (positionBias < 0.35 && continuousLetters.some(l => l.positionType === 'corner')) {
+                            const cornerOptions = continuousLetters.filter(l => l.positionType === 'corner');
+                            selectedItem = cornerOptions[Math.floor(Math.random() * cornerOptions.length)];
+                            debugLog(`${targetChar}: STANDARD CORNER position`);
+                        } else if (positionBias < 0.5 && continuousLetters.some(l => l.positionType === 'edge')) {
+                            const edgeOptions = continuousLetters.filter(l => l.positionType === 'edge');
+                            selectedItem = edgeOptions[Math.floor(Math.random() * edgeOptions.length)];
+                            debugLog(`${targetChar}: STANDARD EDGE position`);
+                        } else {
+                            selectedItem = continuousLetters[Math.floor(Math.random() * continuousLetters.length)];
+                            debugLog(`${targetChar}: STANDARD ${selectedItem.positionType.toUpperCase()} position`);
+                        }
+                    } else {
+                        selectedItem = continuousLetters[Math.floor(Math.random() * Math.min(3, continuousLetters.length))];
+                        debugLog(`${targetChar}: STANDARD pentagon letter`);
+                    }
+                }
+                
+                const closestLetter = selectedItem.letter;
+                
+                if (closestLetter) {
+                    path.push(closestLetter);
+                    currentLetter = closestLetter;
+                    usedLetters.add(closestLetter.dataset.index);
+                    debugLog(`✓ Selected ${targetChar} (${section}, ${selectedItem.positionType}): distance ${selectedItem.distance.toFixed(1)}px`);
+                } else {
+                    debugLog(`ERROR: Could not find continuous ${targetChar}!`);
+                }
+                
+                // Update previous word for next iteration
+                previousWord = currentWord;
+            });
+            
+            debugLog(`Truly continuous path built: ${path.length} letters`);
+            debugLog(`Path sequence: ${path.map(l => l.textContent).join('')}`);
+            return path;
+        }
+        
+        function buildContinuousUnitedStatesPath(startU) {
+            debugLog("Building continuous UNITEDSTATES path...");
+            
+            const path = [startU];
+            let currentLetter = startU;
+            const usedLetters = new Set([startU.dataset.index]);
+            
+            // UNITEDSTATES sequence after U - with ring information
+            const sequence = [
+                {char: 'N', ring: 1}, {char: 'I', ring: 2}, {char: 'T', ring: 3}, 
+                {char: 'E', ring: 4}, {char: 'D', ring: 5}, {char: 'S', ring: 6}, 
+                {char: 'T', ring: 7}, {char: 'A', ring: 8}, {char: 'T', ring: 9}, 
+                {char: 'E', ring: 10}, {char: 'S', ring: 11}
+            ];
+            
+            sequence.forEach((targetInfo, seqIndex) => {
+                const targetChar = targetInfo.char;
+                const targetRing = targetInfo.ring;
+                
+                debugLog(`Looking for ${targetChar} in ring ${targetRing}...`);
+                
+                // Find all letters of this type in the correct ring that haven't been used
+                const candidateLetters = letters.filter(letter => 
+                    letter.textContent === targetChar && 
+                    letter.dataset.type === targetChar &&
+                    parseInt(letter.dataset.ring) === targetRing &&
+                    !usedLetters.has(letter.dataset.index)
+                );
+                
+                debugLog(`Found ${candidateLetters.length} unused ${targetChar} letters in ring ${targetRing}`);
+                
+                if (candidateLetters.length === 0) {
+                    debugLog(`ERROR: No unused ${targetChar} letters found in ring ${targetRing}!`);
+                    return;
+                }
+                
+                // Find the closest letter to current position with enhanced continuity
+                const currentX = parseFloat(currentLetter.style.left) + 12;
+                const currentY = parseFloat(currentLetter.style.top) + 12;
+                
+                // Calculate distances and sort
+                const letterDistances = candidateLetters.map(candidate => {
+                    const candidateX = parseFloat(candidate.style.left) + 12;
+                    const candidateY = parseFloat(candidate.style.top) + 12;
+                    const distance = Math.sqrt((candidateX - currentX) ** 2 + (candidateY - currentY) ** 2);
+                    return { letter: candidate, distance };
+                }).sort((a, b) => a.distance - b.distance);
+                
+                // Choose from closest candidates for better continuity
+                const minDistance = letterDistances[0].distance;
+                const closeLetters = letterDistances.filter(item => item.distance <= minDistance * 1.2);
+                
+                // Add slight randomness for diversity while maintaining continuity
+                const selectedItem = closeLetters[Math.floor(Math.random() * closeLetters.length)];
+                const closestLetter = selectedItem.letter;
+                
+                if (closestLetter) {
+                    path.push(closestLetter);
+                    currentLetter = closestLetter;
+                    usedLetters.add(closestLetter.dataset.index);
+                    debugLog(`✓ Selected ${targetChar} (ring ${targetRing}) at index ${closestLetter.dataset.index}, distance ${selectedItem.distance.toFixed(1)}`);
+                } else {
+                    debugLog(`ERROR: Could not select ${targetChar} from ring ${targetRing}!`);
+                }
+            });
+            
+            debugLog(`UNITEDSTATES path built: ${path.length} letters`);
+            debugLog(`Path sequence: ${path.map(l => l.textContent).join('')}`);
+            return path;
+        }
+        
+        function buildContinuousOfAmericaPath(lastUnitedStatesLetter) {
+            debugLog("Building diverse continuous ofAMERICA250 path...");
+            
+            const lastX = parseFloat(lastUnitedStatesLetter.style.left) + 12;
+            const lastY = parseFloat(lastUnitedStatesLetter.style.top) + 12;
+            
+            // Find ALL ofAMERICA250 letters (both outer paths and fill-in letters)
+            const allOfAmericaLetters = letters.filter(letter => 
+                letter.dataset.pathType === 'outer' || letter.dataset.pathType === 'fill'
+            );
+            
+            if (allOfAmericaLetters.length === 0) {
+                debugLog("ERROR: No ofAMERICA250 letters found!");
+                return [];
+            }
+            
+            debugLog(`Found ${allOfAmericaLetters.length} total ofAMERICA250 letters (outer + fill-in)`);
+            
+            // Find the closest 'o' letter to start the ofAMERICA250 sequence
+            const oLetters = allOfAmericaLetters.filter(letter => 
+                letter.textContent === 'o' && (letter.dataset.type === 'o' || letter.dataset.type === 'fill-o')
+            );
+            
+            if (oLetters.length === 0) {
+                debugLog("ERROR: No 'o' letters found!");
+                return [];
+            }
+            
+            // Enhanced diversity: categorize 'o' letters by position type
+            const outerOLetters = oLetters.filter(l => l.dataset.pathType === 'outer');
+            const fillOLetters = oLetters.filter(l => l.dataset.pathType === 'fill');
+            
+            // Separate fill letters by position (corner, edge, center)
+            const cornerOLetters = [];
+            const edgeOLetters = [];
+            const centerOLetters = [];
+            
+            fillOLetters.forEach(oLetter => {
+                const tipIndex = parseInt(oLetter.dataset.tip);
+                const letterX = parseFloat(oLetter.style.left) + 12;
+                const letterY = parseFloat(oLetter.style.top) + 12;
+                
+                // Calculate position relative to tip geometry
+                const centerX = 1750;
+                const centerY = 1750;
+                const tipAngle = (tipIndex * 2 * Math.PI / 5) + (Math.PI / 2) + Math.PI;
+                const tipCenterX = centerX + 1100 * Math.cos(tipAngle);
+                const tipCenterY = centerY + 1100 * Math.sin(tipAngle);
+                
+                // Distance from tip center line
+                const perpAngle = tipAngle + Math.PI / 2;
+                const perpDist = Math.abs((letterX - tipCenterX) * Math.cos(perpAngle) + (letterY - tipCenterY) * Math.sin(perpAngle));
+                
+                // Distance from pentagon center
+                const distFromCenter = Math.sqrt((letterX - centerX) ** 2 + (letterY - centerY) ** 2);
+                
+                if (perpDist > 80) {
+                    cornerOLetters.push(oLetter); // Far from center line = corner-ish
+                } else if (perpDist > 30 || distFromCenter > 1400) {
+                    edgeOLetters.push(oLetter); // Medium distance = edge
+                } else {
+                    centerOLetters.push(oLetter); // Close to center line = center
+                }
+            });
+            
+            debugLog(`'o' letter distribution: ${outerOLetters.length} outer, ${cornerOLetters.length} corner, ${edgeOLetters.length} edge, ${centerOLetters.length} center`);
+            
+            // Choose starting strategy randomly for maximum diversity
+            const strategies = ['closest', 'outer-corner', 'corner-fill', 'edge-fill', 'center-fill', 'random-mix'];
+            const strategy = strategies[Math.floor(Math.random() * strategies.length)];
+            
+            let candidateOLetters = [];
+            switch (strategy) {
+                case 'closest':
+                    candidateOLetters = oLetters;
+                    break;
+                case 'outer-corner':
+                    candidateOLetters = outerOLetters.length > 0 ? outerOLetters : oLetters;
+                    break;
+                case 'corner-fill':
+                    candidateOLetters = cornerOLetters.length > 0 ? cornerOLetters : oLetters;
+                    break;
+                case 'edge-fill':
+                    candidateOLetters = edgeOLetters.length > 0 ? edgeOLetters : oLetters;
+                    break;
+                case 'center-fill':
+                    candidateOLetters = centerOLetters.length > 0 ? centerOLetters : oLetters;
+                    break;
+                case 'random-mix':
+                    candidateOLetters = oLetters;
+                    break;
+            }
+            
+            // Find closest candidates from chosen strategy
+            const oDistances = candidateOLetters.map(oLetter => {
+                const oX = parseFloat(oLetter.style.left) + 12;
+                const oY = parseFloat(oLetter.style.top) + 12;
+                const distance = Math.sqrt((oX - lastX) ** 2 + (oY - lastY) ** 2);
+                return { letter: oLetter, distance, type: oLetter.dataset.pathType };
+            }).sort((a, b) => a.distance - b.distance);
+            
+            // For continuity, prioritize truly close 'o' letters
+            const maxContinuousStartDistance = 250; // Maximum distance for continuous connection
+            const continuousOLetters = oDistances.filter(item => item.distance <= maxContinuousStartDistance);
+            
+            // Choose from continuous options first, fallback to strategy if needed
+            const finalOOptions = continuousOLetters.length > 0 ? continuousOLetters : oDistances.slice(0, 3);
+            const closestO = finalOOptions[Math.floor(Math.random() * finalOOptions.length)].letter;
+            
+            debugLog(`Selected 'o' at distance ${finalOOptions.find(item => item.letter === closestO).distance.toFixed(1)}px from last S`);
+            
+            debugLog(`Starting ofAMERICA250 from 'o' using ${strategy} strategy (${closestO.dataset.pathType})`);
+            
+            // Build continuous path through ofAMERICA250 sequence
+            const path = [closestO];
+            let currentLetter = closestO;
+            
+            // ofAMERICA250 sequence after 'o'
+            const sequence = ['f', 'A', 'M', 'E', 'R', 'I', 'C', 'A', '2', '5', '0'];
+            
+            sequence.forEach((targetChar, seqIndex) => {
+                // Find all letters of this type (both outer and fill-in)
+                const candidateLetters = allOfAmericaLetters.filter(letter => 
+                    letter.textContent === targetChar && 
+                    (letter.dataset.type === targetChar || letter.dataset.type === `fill-${targetChar}`)
+                );
+                
+                if (candidateLetters.length === 0) {
+                    debugLog(`ERROR: No ${targetChar} letters found in ofAMERICA250!`);
+                    return;
+                }
+                
+                // Enhanced selection with position-based diversity
+                const currentX = parseFloat(currentLetter.style.left) + 12;
+                const currentY = parseFloat(currentLetter.style.top) + 12;
+                
+                // Categorize candidates by position type
+                const outerCandidates = candidateLetters.filter(l => l.dataset.pathType === 'outer');
+                const fillCandidates = candidateLetters.filter(l => l.dataset.pathType === 'fill');
+                
+                // Further categorize fill candidates
+                const cornerCandidates = [];
+                const edgeCandidates = [];
+                const centerCandidates = [];
+                
+                fillCandidates.forEach(candidate => {
+                    const tipIndex = parseInt(candidate.dataset.tip);
+                    const letterX = parseFloat(candidate.style.left) + 12;
+                    const letterY = parseFloat(candidate.style.top) + 12;
+                    
+                    const centerX = 1750;
+                    const centerY = 1750;
+                    const tipAngle = (tipIndex * 2 * Math.PI / 5) + (Math.PI / 2) + Math.PI;
+                    const tipCenterX = centerX + 1100 * Math.cos(tipAngle);
+                    const tipCenterY = centerY + 1100 * Math.sin(tipAngle);
+                    
+                    const perpAngle = tipAngle + Math.PI / 2;
+                    const perpDist = Math.abs((letterX - tipCenterX) * Math.cos(perpAngle) + (letterY - tipCenterY) * Math.sin(perpAngle));
+                    const distFromCenter = Math.sqrt((letterX - centerX) ** 2 + (letterY - centerY) ** 2);
+                    
+                    if (perpDist > 80) {
+                        cornerCandidates.push(candidate);
+                    } else if (perpDist > 30 || distFromCenter > 1400) {
+                        edgeCandidates.push(candidate);
+                    } else {
+                        centerCandidates.push(candidate);
+                    }
+                });
+                
+                // Calculate distances for all candidates
+                const letterDistances = candidateLetters.map(candidate => {
+                    const candidateX = parseFloat(candidate.style.left) + 12;
+                    const candidateY = parseFloat(candidate.style.top) + 12;
+                    const distance = Math.sqrt((candidateX - currentX) ** 2 + (candidateY - currentY) ** 2);
+                    
+                    // Determine position type
+                    let positionType = 'center';
+                    if (outerCandidates.includes(candidate)) positionType = 'outer';
+                    else if (cornerCandidates.includes(candidate)) positionType = 'corner';
+                    else if (edgeCandidates.includes(candidate)) positionType = 'edge';
+                    
+                    return { letter: candidate, distance, positionType };
+                }).sort((a, b) => a.distance - b.distance);
+                
+                // Enhanced selection: bias towards different position types for diversity
+                const minDistance = letterDistances[0].distance;
+                const maxContinuousDistance = minDistance * 1.3; // Safe range to maintain continuity
+                const continuousLetters = letterDistances.filter(item => item.distance <= maxContinuousDistance);
+                
+                // Apply position-based selection bias
+                let selectedItem;
+                const positionBias = Math.random();
+                
+                if (positionBias < 0.25 && continuousLetters.some(l => l.positionType === 'outer')) {
+                    // 25% chance: prefer outer (star-outline) letters
+                    const outerOptions = continuousLetters.filter(l => l.positionType === 'outer');
+                    selectedItem = outerOptions[Math.floor(Math.random() * outerOptions.length)];
+                    debugLog(`${targetChar}: chose OUTER (star-outline) position`);
+                } else if (positionBias < 0.45 && continuousLetters.some(l => l.positionType === 'corner')) {
+                    // 20% chance: prefer corner letters
+                    const cornerOptions = continuousLetters.filter(l => l.positionType === 'corner');
+                    selectedItem = cornerOptions[Math.floor(Math.random() * cornerOptions.length)];
+                    debugLog(`${targetChar}: chose CORNER position`);
+                } else if (positionBias < 0.65 && continuousLetters.some(l => l.positionType === 'edge')) {
+                    // 20% chance: prefer edge letters
+                    const edgeOptions = continuousLetters.filter(l => l.positionType === 'edge');
+                    selectedItem = edgeOptions[Math.floor(Math.random() * edgeOptions.length)];
+                    debugLog(`${targetChar}: chose EDGE position`);
+                } else {
+                    // 35% chance: choose from all continuous options (including center)
+                    selectedItem = continuousLetters[Math.floor(Math.random() * continuousLetters.length)];
+                    debugLog(`${targetChar}: chose ${selectedItem.positionType.toUpperCase()} position (random)`);
+                }
+                
+                const closestLetter = selectedItem.letter;
+                
+                if (closestLetter) {
+                    path.push(closestLetter);
+                    currentLetter = closestLetter;
+                    debugLog(`${targetChar} (${selectedItem.positionType}): distance ${selectedItem.distance.toFixed(1)} from previous letter`);
+                } else {
+                    debugLog(`ERROR: Could not find adjacent ${targetChar} in ofAMERICA250!`);
+                }
+            });
+            
+            debugLog(`ofAMERICA250 path built: ${path.length} letters with enhanced position diversity`);
+            return path;
+        }
+        
+        function getClosestLetter(letterArray, currentX, currentY) {
+            let closestLetter = null;
+            let minDistance = Infinity;
+            
+            letterArray.forEach(candidate => {
+                const candidateX = parseFloat(candidate.style.left) + 12;
+                const candidateY = parseFloat(candidate.style.top) + 12;
+                
+                const distance = Math.sqrt(
+                    (candidateX - currentX) ** 2 + 
+                    (candidateY - currentY) ** 2
+                );
+                
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestLetter = candidate;
+                }
+            });
+            
+            return closestLetter;
+        }
+
+        function clearHighlights() {
+            highlightedPaths.forEach(letter => {
+                letter.classList.remove('highlighted');
+            });
+            highlightedPaths = [];
+            debugLog("Highlights cleared - Highlight Path button ready");
+        }
+
+        function zoomIn() {
+            currentZoom = Math.min(currentZoom * 1.2, 3);
+            updateZoom();
+        }
+
+        function zoomOut() {
+            currentZoom = Math.max(currentZoom / 1.2, 0.3);
+            updateZoom();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            updateZoom();
+        }
+
+        function updateZoom() {
+            const container = document.getElementById('starContainer');
+            container.style.transform = `scale(${currentZoom})`;
+        }
+
+        function createStarOutline() {
+            debugLog("Creating star outline...");
+            const centerX = 1750;
+            const centerY = 1750;
+            const outerRadius = 1610;
+            const innerRadius = 615;
+            
+            let points = [];
+            
+            // Create star points (alternating outer and inner)
+            for (let i = 0; i < 10; i++) {
+                const angle = (i * Math.PI / 5) + (Math.PI / 2) + Math.PI;
+                const radius = (i % 2 === 0) ? outerRadius : innerRadius;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                points.push(`${x.toFixed(0)},${y.toFixed(0)}`);
+            }
+            
+            const starOutline = document.getElementById('starOutline');
+            starOutline.setAttribute('points', points.join(' '));
+            debugLog("Star outline created");
+        }
+
+        function addFillInLetters() {
+            debugLog("Adding fill-in letters...");
+            const container = document.getElementById('starContainer');
+            const centerX = 1750;
+            const centerY = 1750;
+            const outerRadius = 1610;
+            const innerRadius = 615;
+            
+            let fillInCount = 0;
+            
+            // Function to add fill-in letters for a specific tip
+            function addTipFillIn(tipIndex) {
+                const tipAngle = (tipIndex * 2 * Math.PI / 5) + (Math.PI / 2) + Math.PI;
+                const leftInnerAngle = tipAngle - (Math.PI / 5);
+                const rightInnerAngle = tipAngle + (Math.PI / 5);
+                
+                const tipX = centerX + outerRadius * Math.cos(tipAngle);
+                const tipY = centerY + outerRadius * Math.sin(tipAngle);
+                
+                const leftInnerX = centerX + innerRadius * Math.cos(leftInnerAngle);
+                const leftInnerY = centerY + innerRadius * Math.sin(leftInnerAngle);
+                const rightInnerX = centerX + innerRadius * Math.cos(rightInnerAngle);
+                const rightInnerY = centerY + innerRadius * Math.sin(rightInnerAngle);
+                
+                // Offset adjustments per tip
+                let offsetAdjustment = 0;
+                if (tipIndex === 0) offsetAdjustment = -10;
+                else if (tipIndex === 1) offsetAdjustment = -5;
+                else if (tipIndex === 2) offsetAdjustment = -8;
+                else if (tipIndex === 3) offsetAdjustment = -11;
+                else if (tipIndex === 4) offsetAdjustment = -13;
+                
+                // Calculate unit vectors for both paths
+                const leftDirX = tipX - leftInnerX;
+                const leftDirY = tipY - leftInnerY;
+                const leftPathLength = Math.sqrt(leftDirX * leftDirX + leftDirY * leftDirY);
+                const leftUnitX = leftDirX / leftPathLength;
+                const leftUnitY = leftDirY / leftPathLength;
+                const leftPerpX = -leftUnitY;
+                const leftPerpY = leftUnitX;
+                
+                const rightDirX = tipX - rightInnerX;
+                const rightDirY = tipY - rightInnerY;
+                const rightPathLength = Math.sqrt(rightDirX * rightDirX + rightDirY * rightDirY);
+                const rightUnitX = rightDirX / rightPathLength;
+                const rightUnitY = rightDirY / rightPathLength;
+                const rightPerpX = -rightUnitY;
+                const rightPerpY = rightUnitX;
+                
+                // Path perpendicular adjustments (your precise calibrations)
+                let leftPerpOffset, rightPerpOffset;
+                if (tipIndex === 0) { leftPerpOffset = 17; rightPerpOffset = -8; }      // Top tip
+                else if (tipIndex === 1) { leftPerpOffset = 9; rightPerpOffset = -11; } // Upper Right tip
+                else if (tipIndex === 2) { leftPerpOffset = 6; rightPerpOffset = -14; } // Lower Right tip
+                else if (tipIndex === 3) { leftPerpOffset = 10; rightPerpOffset = -14; } // Lower Left tip
+                else if (tipIndex === 4) { leftPerpOffset = 18; rightPerpOffset = -9; } // Upper Left tip
+                
+                // Letter sequence with counts and patriotic colors
+                const letterSequence = [
+                    {char: 'o', count: 19, offset: 40, size: 24, bold: false, color: '#0052CC'},  // Blue - of
+                    {char: 'f', count: 18, offset: 70, size: 24, bold: false, color: '#0052CC'},  // Blue - of
+                    {char: 'A', count: 17, offset: 105, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                    {char: 'M', count: 16, offset: 140, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                    {char: 'E', count: 15, offset: 175, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                    {char: 'R', count: 14, offset: 210, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                    {char: 'I', count: 13, offset: 245, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                    {char: 'C', count: 12, offset: 280, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                    {char: 'A', count: 11, offset: 315, size: 28, bold: true, color: '#DC143C'},  // Red - AMERICA
+                    {char: '2', count: 10, offset: 350, size: 35, bold: true, color: '#FFD700'},  // Gold - 250
+                    {char: '5', count: 9, offset: 380, size: 35, bold: true, color: '#FFD700'},   // Gold - 250
+                    {char: '0', count: 8, offset: 410, size: 35, bold: true, color: '#FFD700'}    // Gold - 250
+                ];
+                
+                letterSequence.forEach(letterData => {
+                    // Calculate left path position with your precise adjustments
+                    let leftLetterOffset = letterData.offset + offsetAdjustment;
+                    
+                    // Move paths 7 and 8 closer to "S" letters (your adjustment)
+                    if (tipIndex === 3) { // Lower Left tip (paths 7 and 8)
+                        leftLetterOffset -= 4; // Move 4px closer to "S"
+                    }
+                    
+                    // Move paths 9 and 10 closer to "S" letters (your adjustment)
+                    if (tipIndex === 4) { // Upper Left tip (paths 9 and 10)
+                        leftLetterOffset -= 3; // Move 3px closer to "S"
+                    }
+                    
+                    let leftLetterX = leftInnerX + leftUnitX * leftLetterOffset + leftPerpX * leftPerpOffset;
+                    let leftLetterY = leftInnerY + leftUnitY * leftLetterOffset + leftPerpY * leftPerpOffset;
+                    
+                    // Calculate right path position with your precise adjustments
+                    let rightLetterOffset = letterData.offset + offsetAdjustment;
+                    
+                    // Move paths 7 and 8 closer to "S" letters (your adjustment)
+                    if (tipIndex === 3) { // Lower Left tip (paths 7 and 8)
+                        rightLetterOffset -= 4; // Move 4px closer to "S"
+                    }
+                    
+                    // Move paths 9 and 10 closer to "S" letters (your adjustment)
+                    if (tipIndex === 4) { // Upper Left tip (paths 9 and 10)
+                        rightLetterOffset -= 3; // Move 3px closer to "S"
+                    }
+                    
+                    let rightLetterX = rightInnerX + rightUnitX * rightLetterOffset + rightPerpX * rightPerpOffset;
+                    let rightLetterY = rightInnerY + rightUnitY * rightLetterOffset + rightPerpY * rightPerpOffset;
+                    
+                    // Special adjustments for "250" in specific paths (your precise calibrations)
+                    if (tipIndex === 1 && (letterData.char === '2' || letterData.char === '5' || letterData.char === '0')) {
+                        // Path 3 (upper right tip, left side): move outward by 4px (your calibrated value)
+                        leftLetterX += leftPerpX * (-4);
+                        leftLetterY += leftPerpY * (-4);
+                    }
+                    if (tipIndex === 4 && (letterData.char === '2' || letterData.char === '5' || letterData.char === '0')) {
+                        // Path 10 (upper left tip, right side): move outward by 2px (your calibrated value)
+                        rightLetterX += rightPerpX * 2;
+                        rightLetterY += rightPerpY * 2;
+                    }
+                    
+                    // Create fill-in letters equally spaced between the exact outer positions
+                    for (let i = 1; i <= letterData.count; i++) {
+                        const t = i / (letterData.count + 1);
+                        
+                        const x = leftLetterX + t * (rightLetterX - leftLetterX);
+                        const y = leftLetterY + t * (rightLetterY - leftLetterY);
+                        
+                        const letter = document.createElement('div');
+                        letter.className = 'letter';
+                        letter.textContent = letterData.char;
+                        letter.style.left = (x - letterData.size/2) + 'px';
+                        letter.style.top = (y - letterData.size/2) + 'px';
+                        letter.style.color = letterData.color;
+                        letter.style.fontSize = letterData.size + 'px';
+                        letter.style.fontWeight = letterData.bold ? 'bold' : 'normal';
+                        letter.dataset.index = letters.length;
+                        letter.dataset.type = 'fill-' + letterData.char;
+                        letter.dataset.tip = tipIndex;
+                        letter.dataset.pathType = 'fill';
+                        
+                        // Add special visual effects for fill-in letters based on position
+                        const centerX = 1750;
+                        const centerY = 1750;
+                        const tipAngle = (tipIndex * 2 * Math.PI / 5) + (Math.PI / 2) + Math.PI;
+                        const tipCenterX = centerX + 1100 * Math.cos(tipAngle);
+                        const tipCenterY = centerY + 1100 * Math.sin(tipAngle);
+                        
+                        // Distance from tip center line
+                        const perpAngle = tipAngle + Math.PI / 2;
+                        const perpDist = Math.abs((x - tipCenterX) * Math.cos(perpAngle) + (y - tipCenterY) * Math.sin(perpAngle));
+                        
+                        // Distance from pentagon center
+                        const distFromCenter = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+                        
+                        if (perpDist > 80) {
+                            letter.classList.add('corner-letter'); // Far from center line = corner-ish
+                        } else if (perpDist > 30 || distFromCenter > 1400) {
+                            letter.classList.add('edge-letter'); // Medium distance = edge
+                        }
+                        // Center letters get no special class (normal appearance)
+                        
+                        container.appendChild(letter);
+                        letters.push(letter);
+                        fillInCount++;
+                    }
+                });
+            }
+            
+            // Add fill-in letters for all tips
+            addTipFillIn(0); // Top tip
+            addTipFillIn(1); // Upper right tip
+            addTipFillIn(2); // Lower right tip
+            addTipFillIn(3); // Lower left tip
+            addTipFillIn(4); // Upper left tip
+            
+            debugLog(`Fill-in letters added: ${fillInCount} letters`);
+        }
+
+        // Initialize everything when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            debugLog("=== STARTING INITIALIZATION ===");
+            createUNITEDSTATES();
+            addOfAmerica250Paths();
+            addFillInLetters();
+            createStarOutline();
+            
+            // Update info display
+            document.getElementById('totalCount').textContent = `Total: ${letters.length} letters`;
+            
+            debugLog(`=== INITIALIZATION COMPLETE: ${letters.length} total letters ===`);
+        });
+
+        // Add mouse wheel zoom
+        document.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                zoomIn();
+            } else {
+                zoomOut();
+            }
+        });
+</script>
+</body>
+</html>
