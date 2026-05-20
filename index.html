@@ -91,6 +91,80 @@
             box-shadow: 0 12px 48px rgba(255, 215, 0, 0.4);
         }
 
+        /* FEATURED STAR SECTION */
+        .featured-star-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(220, 20, 60, 0.2));
+            border: 3px solid #ffd700;
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 12px 48px rgba(255, 215, 0, 0.3);
+        }
+
+        .featured-star-section h2 {
+            color: #ffd700;
+            font-size: 2.4em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .featured-star-section p {
+            font-size: 1.15em;
+            margin-bottom: 10px;
+            opacity: 0.95;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background: #DC143C;
+            color: white;
+            font-size: 0.85em;
+            font-weight: bold;
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .featured-link {
+            display: inline-block;
+            background: #ffd700;
+            color: #000;
+            padding: 18px 48px;
+            text-decoration: none;
+            border-radius: 35px;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin: 15px 5px 5px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .featured-link:hover {
+            background: #ffed4e;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .feature-list li {
+            padding: 6px 0;
+            font-size: 1.05em;
+        }
+
+        .feature-list li::before {
+            content: "✅ ";
+        }
+
         .section {
             background: rgba(255, 255, 255, 0.1);
             margin: 30px 0;
@@ -250,6 +324,15 @@
             .image-gallery {
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             }
+
+            .featured-star-section h2 {
+                font-size: 1.8em;
+            }
+
+            .featured-link {
+                font-size: 1.1em;
+                padding: 14px 32px;
+            }
         }
     </style>
 </head>
@@ -269,6 +352,22 @@
             <p style="font-size: 1.1em; margin-bottom: 15px;">The Great American Star embodies the spirit of unity and personal connection - engaging Americans through the beauty of mathematics and individual representation.</p>
         </div>
 
+        <!-- ⭐ FEATURED: THE FULL INTERACTIVE STAR -->
+        <div class="featured-star-section">
+            <div class="featured-badge">⭐ New — The Full Star</div>
+            <h2>The Complete Great American Star</h2>
+            <p>This is the real thing — the full five-pointed star with all 359,277,250 unique paths. Trace a random path, animate paths, or <strong>create your own personal path</strong> through America's story.</p>
+            <ul class="feature-list">
+                <li>Full five-pointed star — the complete mathematical artwork</li>
+                <li>Trace a random path through all 24 letters</li>
+                <li>Animated path visualization</li>
+                <li>Create your own personal path — click through each row</li>
+                <li>Zoom in and out to explore the detail</li>
+            </ul>
+            <a href="star_510.html" class="featured-link" target="_blank">🌟 Open The Full Star</a>
+            <p style="margin-top: 15px; font-size: 0.95em; opacity: 0.8;">Work in progress — actively being developed</p>
+        </div>
+
         <!-- Core Star Design Image -->
         <div class="core-image-section">
             <h2>The Great American Star Design</h2>
@@ -278,7 +377,7 @@
 
         <!-- Interactive Demonstrations -->
         <div class="section">
-            <h2>🔬 Interactive Demonstrations</h2>
+            <h2>🔬 Additional Demonstrations</h2>
             <div class="demo-grid">
                 <div class="demo-card">
                     <h3>Path Calculator</h3>
