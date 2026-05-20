@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patriotic Star - UNITEDSTATESofAMERICA250</title>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        background: white;
+        color: black;
+        font-family: 'Courier New', monospace;
+        overflow: auto;
+        min-height: 100vh;
+        min-width: 100vw;
+    }
+    .container {
+        width: 3500px;
+        height: 3500px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .star-container {
+        position: absolute;
+        width: 3500px;
+        height: 3500px;
+        transform-origin: center;
+        transition: transform 0.3s ease;
+        left: 0px;
+        top: 0px;
+    }
+    .letter {
+        position: absolute;
+        font-size: 24px;
+        font-weight: bold;
+        font-family: Georgia, serif;
+        user-select: none;
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+    .letter:hover { transform: scale(1.1); }
+    .letter.highlighted {
+        color: #00FF00 !important;
+        text-shadow: 0 0 15px rgba(0, 255, 0, 0.8) !important;
+        transform: scale(1.3) !important;
+    }
+    .letter.special-corner {
+        font-weight: 900 !important;
+        text-shadow:
+            0 0 15px rgba(220, 20, 60, 1.0),
+            0 0 25px rgba(220, 20, 60, 0.8),
+            0 0 35px rgba(220, 20, 60, 0.6),
+            0 0 45px rgba(220, 20, 60, 0.4) !important;
+        filter: brightness(1.2) contrast(1.2) drop-shadow(0 0 8px rgba(220, 20, 60, 0.8)) !important;
+    }
+    .letter.special-outline {
+        font-weight: 900 !important;
+        text-shadow:
+            0 0 15px rgba(220, 20, 60, 1.0),
+            0 0 25px rgba(220, 20, 60, 0.8),
+            0 0 35px rgba(220, 20, 60, 0.6),
+            0 0 45px rgba(220, 20, 60, 0.4) !important;
+        filter: brightness(1.2) contrast(1.2) drop-shadow(0 0 8px rgba(220, 20, 60, 0.8)) !important;
+    }
+    .letter.special-outline[style*="#FFD700"] {
+        text-shadow:
+            0 0 15px rgba(220, 20, 60, 1.0),
+            0 0 25px rgba(220, 20, 60, 0.8),
+            0 0 35px rgba(220, 20, 60, 0.6),
+            0 0 12px rgba(255, 140, 0, 0.7),
+            0 0 20px rgba(255, 140, 0, 0.5) !important;
+        filter: brightness(1.3) contrast(1.3) drop-shadow(0 0 10px rgba(220, 20, 60, 0.9)) !important;
+        -webkit-text-stroke: 0.3px rgba(139, 69, 19, 0.5);
+    }
+    .letter.path-candidate {
+        outline: 2px dashed rgba(0, 180, 0, 0.8);
+        background: rgba(0, 255, 0, 0.1);
+        border-radius: 3px;
+        cursor: pointer !important;
+    }
+    .letter.path-selected {
+        color: #00FF00 !important;
+        text-shadow: 0 0 12px rgba(0, 255, 0, 0.9) !important;
+        transform: scale(1.25) !important;
+        outline: none;
+        background: none;
+    }
+    .controls {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 440px;
+        gap: 4px;
+    }
+    .control-btn {
+        background: rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        color: black;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 13px;
+    }
+    .control-btn:hover { background: rgba(0, 0, 0, 0.2); transform: translateY(-2px); }
+    .control-btn.active {
+        background: rgba(0, 150, 0, 0.2);
+        border-color: rgba(0, 150, 0, 0.7);
+        color: #005500;
+        font-weight: bold;
+    }
+    .info {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        font-size: 14px;
+        opacity: 0.7;
+        color: black;
+    }
+    .debug { display: none; }
+    #pathCreationPanel {
+        position: fixed;
+        top: 20px;
+        left: 460px;
+        background: rgba(255, 255, 255, 0.97);
+        border: 2px solid rgba(0, 150, 0, 0.6);
+        border-radius: 8px;
+        padding: 14px 18px;
+        z-index: 1001;
+        font-size: 13px;
+        color: black;
+        min-width: 290px;
+        display: none;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+    #pathCreationPanel h3 { margin: 0 0 8px 0; font-size: 14px; color: #005500; }
+    #pathCreationPanel .panel-row { margin: 4px 0; line-height: 1.4; }
+    #pathCreationPanel button {
+        background: rgba(0,0,0,0.1);
+        border: 1px solid rgba(0,0,0,0.3);
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 8px;
+        font-size: 12px;
+    }
+    @media print {
+        body { background: white !important; }
+        .letter { text-shadow: none !important; filter: none !important; font-weight: bold !important; }
+        .letter.special-corner, .letter.special-outline {
+            text-shadow: 0 0 15px rgba(220,20,60,1.0), 0 0 25px rgba(220,20,60,0.8) !important;
+            filter: brightness(1.2) drop-shadow(0 0 8px rgba(220,20,60,0.8)) !important;
+            font-weight: 900 !important;
+        }
+        .controls, .info, .debug, #pathCreationPanel { display: none !important; }
+        svg polygon, svg path, svg line { stroke: black !important; opacity: 1 !important; }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="star-container" id="starContainer">
+<svg height="3500" style="position: absolute; top: 0; left: 0; pointer-events: none;" width="3500">
+<defs>
+    <filter id="superGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur result="coloredBlur" stdDeviation="15"></feGaussianBlur>
+        <feMerge>
+            <feMergeNode in="coloredBlur"></feMergeNode>
+            <feMergeNode in="SourceGraphic"></feMergeNode>
+        </feMerge>
+    </filter>
+</defs>
+<g id="tipTriangles" fill="none" stroke="black" stroke-width="4" opacity="0.8"></g>
+<g id="tipLines" fill="none" stroke="black" stroke-width="4" opacity="0.8"></g>
+<polygon fill="none" id="outerStarOutline" opacity="0.8" points="" stroke="black" stroke-width="8"></polygon>
+<polygon fill="none" id="pentagonOutline" opacity="0.8" points="" stroke="black" stroke-width="4"></polygon>
+</svg>
+</div>
+</div>
+
+<div class="controls">
+    <button class="control-btn" onclick="zoomIn()">Zoom In</button>
+    <button class="control-btn" onclick="zoomOut()">Zoom Out</button>
+    <button class="control-btn" onclick="resetZoom()">Reset Zoom</button>
+    <button class="control-btn" id="traceBtn" onclick="highlightPath()">Trace Random Path</button>
+    <button class="control-btn" id="animBtn" onclick="togglePathAnimation()">Start Path Animation</button>
+    <button class="control-btn" id="createPathBtn" onclick="toggleCreatePath()">Create a Path</button>
+    <button class="control-btn" onclick="clearHighlights()">Clear Highlights</button>
+    <button class="control-btn" onclick="downloadVersion()">Download</button>
+</div>
+
+<div id="pathCreationPanel">
+    <h3>Create a Path — Click Through Each Row</h3>
+    <div class="panel-row">Click on one cell in each row to create your custom path.</div>
+    <div class="panel-row">Current row: <strong id="currentRowDisplay">0 — U (choose any)</strong></div>
+    <div class="panel-row" id="choicesDisplay">Green borders show valid next positions.</div>
+    <div class="panel-row" id="pathSoFarDisplay" style="font-family:Georgia,serif;letter-spacing:2px;color:#006600;font-weight:bold;margin-top:6px;min-height:20px;"></div>
+    <button onclick="resetPathCreation()">Reset Path Creation</button>
+</div>
+
+<div class="info">
+    <div>UNITEDSTATES: 12 rings | ofAMERICA250: 5 tips × 2 paths + fill-in</div>
+    <div id="totalCount">Total letters will be displayed after creation</div>
+    <div>"Trace Random Path": random continuous 24-letter UNITEDSTATESofAMERICA250</div>
+</div>
+<div class="debug" id="debugInfo"></div>
+
+<script>
+    let currentZoom = 1;
+    let letters = [];
+    let highlightedPaths = [];
+    let animationInterval = null;
+    let isAnimating = false;
+
+    let pathCreationMode = false;
+    let pathCreationStep = 0;
+    let pathCreationSelected = [];
+    let pathCandidateElements = [];
+
+    function debugLog(msg) { console.log(msg); }
+
+    // ==================== LETTER CREATION ====================
+
+    function createUNITEDSTATES() {
+        const container = document.getElementById('starContainer');
+        const centerX = 1750, centerY = 1750;
+        const innerRadius = 220, radiusStep = 35;
+
+        function getPentagonVertices(radius) {
+            const verts = [];
+            for (let i = 0; i < 5; i++) {
+                const angle = (i * 2 * Math.PI / 5) + (Math.PI / 2);
+                verts.push({ x: centerX + radius * Math.cos(angle), y: centerY + radius * Math.sin(angle) });
+            }
+            return verts;
+        }
+
+        let letterIndex = 0, currentRadius = innerRadius;
+
+        const seq = [
+            {letter:'U', count:50,  color:'#0052CC'},
+            {letter:'N', count:55,  color:'#0052CC'},
+            {letter:'I', count:60,  color:'#0052CC'},
+            {letter:'T', count:65,  color:'#0052CC'},
+            {letter:'E', count:70,  color:'#0052CC'},
+            {letter:'D', count:75,  color:'#0052CC'},
+            {letter:'S', count:80,  color:'#DC143C'},
+            {letter:'T', count:85,  color:'#DC143C'},
+            {letter:'A', count:90,  color:'#DC143C'},
+            {letter:'T', count:95,  color:'#DC143C'},
+            {letter:'E', count:100, color:'#DC143C'},
+            {letter:'S', count:105, color:'#DC143C'}
+        ];
+
+        seq.forEach((ld, ringIndex) => {
+            const verts = getPentagonVertices(currentRadius);
+            const lps = (ld.count + 5) / 5;
+
+            for (let side = 0; side < 5; side++) {
+                const sv = verts[side], ev = verts[(side+1)%5];
+                for (let i = 0; i < lps; i++) {
+                    const t = i / (lps - 1);
+                    const x = sv.x + t*(ev.x - sv.x);
+                    const y = sv.y + t*(ev.y - sv.y);
+                    const el = document.createElement('div');
+                    el.className = 'letter';
+                    el.textContent = ld.letter;
+                    el.style.left = (x-12)+'px';
+                    el.style.top  = (y-12)+'px';
+                    el.style.color = ld.color;
+                    el.dataset.index = letterIndex;
+                    el.dataset.type  = ld.letter;
+                    el.dataset.ring  = ringIndex;
+                    el.dataset.side  = side;
+                    el.dataset.position = i;
+                    container.appendChild(el);
+                    letters.push(el);
+                    letterIndex++;
+                }
+            }
+
+            const toRemove = [];
+            for (let side = 1; side < 5; side++) toRemove.push(letters.length - (5-side)*lps);
+            toRemove.reverse().forEach(idx => {
+                if (letters[idx]) { letters[idx].remove(); letters.splice(idx,1); letterIndex--; }
+            });
+            currentRadius += radiusStep;
+        });
+
+        letters.forEach((l,i) => { l.dataset.index = i; });
+
+        seq.forEach((ld, ringIndex) => {
+            const ringLetters = letters.filter(l => parseInt(l.dataset.ring) === ringIndex);
+            if (!ringLetters.length) return;
+            const verts = getPentagonVertices(innerRadius + ringIndex * radiusStep);
+            verts.forEach(v => {
+                let closest = null, minD = Infinity;
+                ringLetters.forEach(l => {
+                    const lx = parseFloat(l.style.left)+12, ly = parseFloat(l.style.top)+12;
+                    const d = Math.sqrt((lx-v.x)**2+(ly-v.y)**2);
+                    if (d < minD) { minD = d; closest = l; }
+                });
+                if (closest && !closest.classList.contains('special-corner'))
+                    closest.classList.add('special-corner');
+            });
+        });
+    }
+
+    function addOfAmerica250Paths() {
+        const container = document.getElementById('starContainer');
+        const centerX = 1750, centerY = 1750;
+        const outerRadius = 1610, innerRadius = 615;
+
+        for (let tip = 0; tip < 5; tip++) {
+            const tipAngle = (tip * 2*Math.PI/5) + (Math.PI/2) + Math.PI;
+            const liAngle  = tipAngle - Math.PI/5;
+            const riAngle  = tipAngle + Math.PI/5;
+            const tipX = centerX + outerRadius*Math.cos(tipAngle);
+            const tipY = centerY + outerRadius*Math.sin(tipAngle);
+            const liX  = centerX + innerRadius*Math.cos(liAngle);
+            const liY  = centerY + innerRadius*Math.sin(liAngle);
+            const riX  = centerX + innerRadius*Math.cos(riAngle);
+            const riY  = centerY + innerRadius*Math.sin(riAngle);
+            createSinglePath(container, liX, liY, tipX, tipY, tip, 'left');
+            createSinglePath(container, riX, riY, tipX, tipY, tip, 'right');
+        }
+    }
+
+    function createSinglePath(container, startX, startY, endX, endY, tipIndex, side) {
+        const dirX = endX-startX, dirY = endY-startY;
+        const len  = Math.sqrt(dirX*dirX+dirY*dirY);
+        const uX = dirX/len, uY = dirY/len;
+        const pX = -uY, pY = uX;
+
+        const p1  = tipIndex===0 && side==='left';
+        const p2  = tipIndex===0 && side==='right';
+        const p3  = tipIndex===1 && side==='left';
+        const p4  = tipIndex===1 && side==='right';
+        const p5  = tipIndex===2 && side==='left';
+        const p6  = tipIndex===2 && side==='right';
+        const p7  = tipIndex===3 && side==='left';
+        const p8  = tipIndex===3 && side==='right';
+        const p9  = tipIndex===4 && side==='left';
+        const p10 = tipIndex===4 && side==='right';
+
+        let offAdj = 0;
+        if (tipIndex===0) offAdj=-10;
+        else if (tipIndex===1) offAdj=-5;
+        else if (tipIndex===2) offAdj=-8;
+        else if (tipIndex===3) offAdj=-11;
+        else if (tipIndex===4) offAdj=-13;
+
+        const lseq = [
+            {char:'o', off:40+offAdj,  sz:24, bold:false, color:'#0052CC'},
+            {char:'f', off:70+offAdj,  sz:24, bold:false, color:'#0052CC'},
+            {char:'A', off:105+offAdj, sz:28, bold:true,  color:'#DC143C'},
+            {char:'M', off:140+offAdj, sz:28, bold:true,  color:'#DC143C'},
+            {char:'E', off:175+offAdj, sz:28, bold:true,  color:'#DC143C'},
+            {char:'R', off:210+offAdj, sz:28, bold:true,  color:'#DC143C'},
+            {char:'I', off:245+offAdj, sz:28, bold:true,  color:'#DC143C'},
+            {char:'C', off:280+offAdj, sz:28, bold:true,  color:'#DC143C'},
+            {char:'A', off:315+offAdj, sz:28, bold:true,  color:'#DC143C'},
+            {char:'2', off:350+offAdj, sz:35, bold:true,  color:'#FFD700'},
+            {char:'5', off:380+offAdj, sz:35, bold:true,  color:'#FFD700'},
+            {char:'0', off:410+offAdj, sz:35, bold:true,  color:'#FFD700'}
+        ];
+
+        lseq.forEach(ld => {
+            let finalOff = ld.off;
+            if (p7||p8) finalOff -= 4;
+            if (p9||p10) finalOff -= 3;
+
+            let x = startX + uX*finalOff;
+            let y = startY + uY*finalOff;
+
+            let perpOff = 0;
+            if (p1)  perpOff=17;
+            else if (p2)  perpOff=-8;
+            else if (p3)  perpOff=9;
+            else if (p4)  perpOff=-11;
+            else if (p5)  perpOff=6;
+            else if (p6)  perpOff=-14;
+            else if (p7)  perpOff=10;
+            else if (p8)  perpOff=-14;
+            else if (p9)  perpOff=18;
+            else if (p10) perpOff=-9;
+
+            x += pX*perpOff;
+            y += pY*perpOff;
+
+            if ((p3||p10) && (ld.char==='2'||ld.char==='5'||ld.char==='0')) {
+                if (p3)  { x += pX*(-4); y += pY*(-4); }
+                if (p10) { x += pX*2;    y += pY*2; }
+            }
+
+            const el = document.createElement('div');
+            el.className = 'letter special-outline';
+            el.textContent = ld.char;
+            el.style.left = (x - ld.sz/2)+'px';
+            el.style.top  = (y - ld.sz/2)+'px';
+            el.style.color = ld.color;
+            el.style.fontSize = ld.sz+'px';
+            el.style.fontWeight = ld.bold ? 'bold' : 'normal';
+            el.dataset.index    = letters.length;
+            el.dataset.tip      = tipIndex;
+            el.dataset.side     = side;
+            el.dataset.type     = ld.char;
+            el.dataset.pathType = 'outer';
+            container.appendChild(el);
+            letters.push(el);
+        });
+    }
+
+    function addFillInLetters() {
+        const container = document.getElementById('starContainer');
+        const centerX = 1750, centerY = 1750;
+        const outerRadius = 1610, innerRadius = 615;
+
+        function addTipFillIn(tipIndex) {
+            const tipAngle = (tipIndex * 2*Math.PI/5) + (Math.PI/2) + Math.PI;
+            const liAngle  = tipAngle - Math.PI/5;
+            const riAngle  = tipAngle + Math.PI/5;
+            const tipX = centerX + outerRadius*Math.cos(tipAngle);
+            const tipY = centerY + outerRadius*Math.sin(tipAngle);
+            const liX  = centerX + innerRadius*Math.cos(liAngle);
+            const liY  = centerY + innerRadius*Math.sin(liAngle);
+            const riX  = centerX + innerRadius*Math.cos(riAngle);
+            const riY  = centerY + innerRadius*Math.sin(riAngle);
+
+            let offAdj = 0;
+            if (tipIndex===0) offAdj=-10;
+            else if (tipIndex===1) offAdj=-5;
+            else if (tipIndex===2) offAdj=-8;
+            else if (tipIndex===3) offAdj=-11;
+            else if (tipIndex===4) offAdj=-13;
+
+            let lPerp, rPerp;
+            if (tipIndex===0) { lPerp=17;  rPerp=-8; }
+            else if (tipIndex===1) { lPerp=9;   rPerp=-11; }
+            else if (tipIndex===2) { lPerp=6;   rPerp=-14; }
+            else if (tipIndex===3) { lPerp=10;  rPerp=-14; }
+            else if (tipIndex===4) { lPerp=18;  rPerp=-9; }
+
+            const ldX=tipX-liX, ldY=tipY-liY, lLen=Math.sqrt(ldX*ldX+ldY*ldY);
+            const luX=ldX/lLen, luY=ldY/lLen, lpX=-luY, lpY=luX;
+            const rdX=tipX-riX, rdY=tipY-riY, rLen=Math.sqrt(rdX*rdX+rdY*rdY);
+            const ruX=rdX/rLen, ruY=rdY/rLen, rpX=-ruY, rpY=ruX;
+
+            const lseq = [
+                {char:'o', cnt:19, off:40,  sz:24, bold:false, color:'#0052CC'},
+                {char:'f', cnt:18, off:70,  sz:24, bold:false, color:'#0052CC'},
+                {char:'A', cnt:17, off:105, sz:28, bold:true,  color:'#DC143C'},
+                {char:'M', cnt:16, off:140, sz:28, bold:true,  color:'#DC143C'},
+                {char:'E', cnt:15, off:175, sz:28, bold:true,  color:'#DC143C'},
+                {char:'R', cnt:14, off:210, sz:28, bold:true,  color:'#DC143C'},
+                {char:'I', cnt:13, off:245, sz:28, bold:true,  color:'#DC143C'},
+                {char:'C', cnt:12, off:280, sz:28, bold:true,  color:'#DC143C'},
+                {char:'A', cnt:11, off:315, sz:28, bold:true,  color:'#DC143C'},
+                {char:'2', cnt:10, off:350, sz:35, bold:true,  color:'#FFD700'},
+                {char:'5', cnt:9,  off:380, sz:35, bold:true,  color:'#FFD700'},
+                {char:'0', cnt:8,  off:410, sz:35, bold:true,  color:'#FFD700'}
+            ];
+
+            lseq.forEach(ld => {
+                const lo = ld.off + offAdj;
+                let lx = liX + luX*lo + lpX*lPerp;
+                let ly = liY + luY*lo + lpY*lPerp;
+                let rx = riX + ruX*lo + rpX*rPerp;
+                let ry = riY + ruY*lo + rpY*rPerp;
+
+                if (tipIndex===1 && (ld.char==='2'||ld.char==='5'||ld.char==='0')) {
+                    lx += lpX*(-4); ly += lpY*(-4);
+                }
+                if (tipIndex===4 && (ld.char==='2'||ld.char==='5'||ld.char==='0')) {
+                    rx += rpX*2; ry += rpY*2;
+                }
+
+                for (let i = 1; i <= ld.cnt; i++) {
+                    const t = i/(ld.cnt+1);
+                    const x = lx + t*(rx-lx);
+                    const y = ly + t*(ry-ly);
+                    const el = document.createElement('div');
+                    el.className = 'letter';
+                    el.textContent = ld.char;
+                    el.style.left = (x - ld.sz/2)+'px';
+                    el.style.top  = (y - ld.sz/2)+'px';
+                    el.style.color = ld.color;
+                    el.style.fontSize = ld.sz+'px';
+                    el.style.fontWeight = ld.bold ? 'bold' : 'normal';
+                    el.dataset.index    = letters.length;
+                    el.dataset.type     = 'fill-'+ld.char;
+                    el.dataset.tip      = tipIndex;
+                    el.dataset.pathType = 'fill';
+                    container.appendChild(el);
+                    letters.push(el);
+                }
+            });
+        }
+
+        for (let t = 0; t < 5; t++) addTipFillIn(t);
+    }
+
+    // ==================== STAR OUTLINE ====================
+
+    function createStarOutline() {
+        const cx = 1750, cy = 1750;
+        const outerR = 1640, innerR = 615;
+
+        const outerStarOR = 1680, outerStarIR = 630;
+        const outerPts = [];
+        for (let i = 0; i < 10; i++) {
+            const angle = (i*Math.PI/5) + (Math.PI/2) + Math.PI;
+            const r = (i%2===0) ? outerStarOR : outerStarIR;
+            outerPts.push(`${(cx+r*Math.cos(angle)).toFixed(0)},${(cy+r*Math.sin(angle)).toFixed(0)}`);
+        }
+        document.getElementById('outerStarOutline').setAttribute('points', outerPts.join(' '));
+
+        const pentPts = [];
+        for (let i = 0; i < 5; i++) {
+            const angle = (i*2*Math.PI/5) + (Math.PI/2);
+            pentPts.push(`${(cx+195*Math.cos(angle)).toFixed(0)},${(cy+195*Math.sin(angle)).toFixed(0)}`);
+        }
+        document.getElementById('pentagonOutline').setAttribute('points', pentPts.join(' '));
+
+        const tipLinesG     = document.getElementById('tipLines');
+        const tipTrianglesG = document.getElementById('tipTriangles');
+        tipLinesG.innerHTML = '';
+        tipTrianglesG.innerHTML = '';
+
+        for (let tip = 0; tip < 5; tip++) {
+            const tipAngle = (tip*2*Math.PI/5) + (Math.PI/2) + Math.PI;
+            const liAngle  = tipAngle - Math.PI/5;
+            const riAngle  = tipAngle + Math.PI/5;
+            const tipX = cx + outerR*Math.cos(tipAngle);
+            const tipY = cy + outerR*Math.sin(tipAngle);
+            const liX  = cx + innerR*Math.cos(liAngle);
+            const liY  = cy + innerR*Math.sin(liAngle);
+            const riX  = cx + innerR*Math.cos(riAngle);
+            const riY  = cy + innerR*Math.sin(riAngle);
+
+            let offAdj = 0;
+            if (tip===0) offAdj=-10;
+            else if (tip===1) offAdj=-5;
+            else if (tip===2) offAdj=-8;
+            else if (tip===3) offAdj=-11;
+            else if (tip===4) offAdj=-13;
+
+            const lineOff = 430 + offAdj;
+
+            const ldX=tipX-liX, ldY=tipY-liY, lLen=Math.sqrt(ldX*ldX+ldY*ldY);
+            const luX=ldX/lLen, luY=ldY/lLen;
+            const rdX=tipX-riX, rdY=tipY-riY, rLen=Math.sqrt(rdX*rdX+rdY*rdY);
+            const ruX=rdX/rLen, ruY=rdY/rLen;
+
+            const lx = liX + luX*lineOff;
+            const ly = liY + luY*lineOff;
+            const rx = riX + ruX*lineOff;
+            const ry = riY + ruY*lineOff;
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+            line.setAttribute('x1', lx.toFixed(1)); line.setAttribute('y1', ly.toFixed(1));
+            line.setAttribute('x2', rx.toFixed(1)); line.setAttribute('y2', ry.toFixed(1));
+            tipLinesG.appendChild(line);
+
+            const tri = document.createElementNS('http://www.w3.org/2000/svg','path');
+            tri.setAttribute('d', `M${lx.toFixed(1)},${ly.toFixed(1)} L${tipX.toFixed(1)},${tipY.toFixed(1)} L${rx.toFixed(1)},${ry.toFixed(1)}`);
+            tipTrianglesG.appendChild(tri);
+        }
+    }
+
+    // ==================== PATH BUILDING ====================
+
+    function buildContinuousUnitedStatesPath(startU) {
+        const path = [startU];
+        let cur = startU;
+        const used = new Set([startU.dataset.index]);
+
+        const seq = [
+            {c:'N',r:1},{c:'I',r:2},{c:'T',r:3},{c:'E',r:4},{c:'D',r:5},{c:'S',r:6},
+            {c:'T',r:7},{c:'A',r:8},{c:'T',r:9},{c:'E',r:10},{c:'S',r:11}
+        ];
+
+        seq.forEach(({c:tc, r:tr}) => {
+            const cands = letters.filter(l =>
+                l.textContent===tc && l.dataset.type===tc &&
+                parseInt(l.dataset.ring)===tr && !used.has(l.dataset.index)
+            );
+            if (!cands.length) return;
+
+            const cx = parseFloat(cur.style.left)+12, cy = parseFloat(cur.style.top)+12;
+            let chosen = null, minD = Infinity;
+            cands.forEach(c => {
+                const dx = parseFloat(c.style.left)+12-cx, dy = parseFloat(c.style.top)+12-cy;
+                const d = Math.sqrt(dx*dx+dy*dy);
+                if (d < minD) { minD = d; chosen = c; }
+            });
+            if (chosen) { path.push(chosen); cur = chosen; used.add(chosen.dataset.index); }
+        });
+
+        return path;
+    }
+
+    function buildContinuousOfAmericaPath(lastUS) {
+        const lx = parseFloat(lastUS.style.left)+12, ly = parseFloat(lastUS.style.top)+12;
+        const allOA = letters.filter(l => l.dataset.pathType==='outer' || l.dataset.pathType==='fill');
+        if (!allOA.length) return [];
+
+        const oLetters = allOA.filter(l => l.textContent==='o' && (l.dataset.type==='o'||l.dataset.type==='fill-o'));
+        if (!oLetters.length) return [];
+
+        let startO = null, minD = Infinity;
+        oLetters.forEach(o => {
+            const dx = parseFloat(o.style.left)+12-lx, dy = parseFloat(o.style.top)+12-ly;
+            const d = Math.sqrt(dx*dx+dy*dy);
+            if (d < minD) { minD = d; startO = o; }
+        });
+        if (!startO) return [];
+
+        const tipIndex = parseInt(startO.dataset.tip);
+        const path = [startO];
+        let cur = startO;
+
+        ['f','A','M','E','R','I','C','A','2','5','0'].forEach(tc => {
+            let cands = allOA.filter(l =>
+                l.textContent===tc &&
+                (l.dataset.type===tc || l.dataset.type===`fill-${tc}`) &&
+                parseInt(l.dataset.tip)===tipIndex
+            );
+            if (!cands.length) cands = allOA.filter(l =>
+                l.textContent===tc && (l.dataset.type===tc || l.dataset.type===`fill-${tc}`)
+            );
+            if (!cands.length) return;
+
+            const cx=parseFloat(cur.style.left)+12, cy=parseFloat(cur.style.top)+12;
+            let chosen = null, minD = Infinity;
+            cands.forEach(c => {
+                const dx = parseFloat(c.style.left)+12-cx, dy = parseFloat(c.style.top)+12-cy;
+                const d = Math.sqrt(dx*dx+dy*dy);
+                if (d < minD) { minD = d; chosen = c; }
+            });
+            if (chosen) { path.push(chosen); cur = chosen; }
+        });
+
+        return path;
+    }
+
+    // ==================== PATH HIGHLIGHTING ====================
+
+    function highlightPath() {
+        if (pathCreationMode) return;
+        clearHighlightsOnly();
+        if (!letters.length) return;
+
+        const uLetters = letters.filter(l => l.textContent==='U' && l.dataset.type==='U');
+        if (!uLetters.length) return;
+
+        const startU = uLetters[Math.floor(Math.random()*uLetters.length)];
+        const usPath = buildContinuousUnitedStatesPath(startU);
+        const lastUS = usPath[usPath.length-1];
+        const ofPath = buildContinuousOfAmericaPath(lastUS);
+        const full   = [...usPath, ...ofPath];
+
+        full.forEach((l, i) => {
+            setTimeout(() => {
+                l.classList.add('highlighted');
+                highlightedPaths.push(l);
+            }, i*80);
+        });
+    }
+
+    // ==================== PATH ANIMATION ====================
+
+    function togglePathAnimation() {
+        isAnimating ? stopPathAnimation() : startPathAnimation();
+    }
+
+    function startPathAnimation() {
+        if (pathCreationMode) return;
+        isAnimating = true;
+        document.getElementById('animBtn').textContent = 'Stop Path Animation';
+        document.getElementById('animBtn').classList.add('active');
+
+        function runNext() {
+            if (!isAnimating) return;
+            clearHighlightsOnly();
+
+            const uLetters = letters.filter(l => l.textContent==='U' && l.dataset.type==='U');
+            if (!uLetters.length) return;
+            const startU = uLetters[Math.floor(Math.random()*uLetters.length)];
+            const usPath = buildContinuousUnitedStatesPath(startU);
+            const lastUS = usPath[usPath.length-1];
+            const ofPath = buildContinuousOfAmericaPath(lastUS);
+            const full   = [...usPath, ...ofPath];
+
+            full.forEach((l, i) => {
+                setTimeout(() => {
+                    if (!isAnimating) return;
+                    l.classList.add('highlighted');
+                    highlightedPaths.push(l);
+                }, i * 80);
+            });
+
+            animationInterval = setTimeout(runNext, full.length * 80 + 1500);
+        }
+
+        runNext();
+    }
+
+    function stopPathAnimation() {
+        isAnimating = false;
+        if (animationInterval) { clearTimeout(animationInterval); animationInterval = null; }
+        document.getElementById('animBtn').textContent = 'Start Path Animation';
+        document.getElementById('animBtn').classList.remove('active');
+    }
+
+    function clearHighlightsOnly() {
+        highlightedPaths.forEach(l => l.classList.remove('highlighted'));
+        highlightedPaths = [];
+    }
+
+    // ==================== CREATE A PATH ====================
+
+    function toggleCreatePath() {
+        pathCreationMode ? exitPathCreationMode() : enterPathCreationMode();
+    }
+
+    function enterPathCreationMode() {
+        stopPathAnimation();
+        clearHighlights();
+        pathCreationMode = true;
+        pathCreationStep = 0;
+        pathCreationSelected = [];
+        pathCandidateElements = [];
+        document.getElementById('createPathBtn').textContent = 'Exit Create Path';
+        document.getElementById('createPathBtn').classList.add('active');
+        document.getElementById('pathCreationPanel').style.display = 'block';
+        showCandidatesForStep(0);
+        updatePathPanel();
+    }
+
+    function exitPathCreationMode() {
+        pathCreationMode = false;
+        clearPathCandidates();
+        pathCreationSelected.forEach(l => l.classList.remove('path-selected'));
+        pathCreationSelected = [];
+        pathCreationStep = 0;
+        document.getElementById('createPathBtn').textContent = 'Create a Path';
+        document.getElementById('createPathBtn').classList.remove('active');
+        document.getElementById('pathCreationPanel').style.display = 'none';
+    }
+
+    function resetPathCreation() {
+        pathCreationSelected.forEach(l => l.classList.remove('path-selected'));
+        pathCreationSelected = [];
+        pathCreationStep = 0;
+        clearPathCandidates();
+        clearHighlightsOnly();
+        showCandidatesForStep(0);
+        updatePathPanel();
+    }
+
+    function clearPathCandidates() {
+        pathCandidateElements.forEach(l => {
+            l.classList.remove('path-candidate');
+            l.onclick = null;
+        });
+        pathCandidateElements = [];
+    }
+
+    function showCandidatesForStep(step) {
+        clearPathCandidates();
+        let candidates = [];
+
+        if (step === 0) {
+            candidates = letters.filter(l => l.textContent==='U' && l.dataset.type==='U');
+
+        } else if (step >= 1 && step <= 11) {
+            const usSeq = ['N','I','T','E','D','S','T','A','T','E','S'];
+            const tc = usSeq[step-1], tr = step;
+            const prev = pathCreationSelected[pathCreationSelected.length-1];
+            if (!prev) return;
+            const px = parseFloat(prev.style.left)+12, py = parseFloat(prev.style.top)+12;
+
+            const ring = letters.filter(l =>
+                l.textContent===tc && l.dataset.type===tc && parseInt(l.dataset.ring)===tr
+            );
+            ring.sort((a,b) => {
+                const ax=parseFloat(a.style.left)+12, ay=parseFloat(a.style.top)+12;
+                const bx=parseFloat(b.style.left)+12, by=parseFloat(b.style.top)+12;
+                return Math.sqrt((ax-px)**2+(ay-py)**2) - Math.sqrt((bx-px)**2+(by-py)**2);
+            });
+            const isCorner = prev.classList.contains('special-corner');
+            candidates = ring.slice(0, isCorner ? 3 : 2);
+
+        } else if (step === 12) {
+            const prev = pathCreationSelected[pathCreationSelected.length-1];
+            if (!prev) return;
+            const px = parseFloat(prev.style.left)+12, py = parseFloat(prev.style.top)+12;
+            const allOA = letters.filter(l => l.dataset.pathType==='outer'||l.dataset.pathType==='fill');
+            const oL = allOA.filter(l => l.textContent==='o' && (l.dataset.type==='o'||l.dataset.type==='fill-o'));
+            oL.sort((a,b) => {
+                const ax=parseFloat(a.style.left)+12, ay=parseFloat(a.style.top)+12;
+                const bx=parseFloat(b.style.left)+12, by=parseFloat(b.style.top)+12;
+                return Math.sqrt((ax-px)**2+(ay-py)**2) - Math.sqrt((bx-px)**2+(by-py)**2);
+            });
+            candidates = oL.slice(0, 2);
+
+        } else if (step >= 13 && step <= 23) {
+            const ofSeq = ['f','A','M','E','R','I','C','A','2','5','0'];
+            const tc = ofSeq[step-13];
+            const prev = pathCreationSelected[pathCreationSelected.length-1];
+            if (!prev) return;
+            const px = parseFloat(prev.style.left)+12, py = parseFloat(prev.style.top)+12;
+
+            const oLetter = pathCreationSelected[12];
+            const tipIdx  = oLetter ? parseInt(oLetter.dataset.tip) : -1;
+            const allOA   = letters.filter(l => l.dataset.pathType==='outer'||l.dataset.pathType==='fill');
+
+            let tipCands = allOA.filter(l =>
+                l.textContent===tc &&
+                (l.dataset.type===tc || l.dataset.type===`fill-${tc}`) &&
+                (tipIdx===-1 || parseInt(l.dataset.tip)===tipIdx)
+            );
+            if (!tipCands.length) tipCands = allOA.filter(l =>
+                l.textContent===tc && (l.dataset.type===tc || l.dataset.type===`fill-${tc}`)
+            );
+            tipCands.sort((a,b) => {
+                const ax=parseFloat(a.style.left)+12, ay=parseFloat(a.style.top)+12;
+                const bx=parseFloat(b.style.left)+12, by=parseFloat(b.style.top)+12;
+                return Math.sqrt((ax-px)**2+(ay-py)**2) - Math.sqrt((bx-px)**2+(by-py)**2);
+            });
+            const prevIsOuter = prev.dataset.pathType==='outer';
+            candidates = tipCands.slice(0, prevIsOuter ? 1 : Math.min(2, tipCands.length));
+        }
+
+        candidates.forEach(l => {
+            l.classList.add('path-candidate');
+            l.onclick = e => { e.stopPropagation(); if (pathCreationMode) selectPathLetter(l); };
+            pathCandidateElements.push(l);
+        });
+
+        updatePathPanel(candidates.length);
+    }
+
+    function selectPathLetter(letter) {
+        clearPathCandidates();
+        letter.classList.add('path-selected');
+        pathCreationSelected.push(letter);
+        pathCreationStep++;
+
+        if (pathCreationStep >= 24) {
+            updatePathPanel(0, true);
+            return;
+        }
+        showCandidatesForStep(pathCreationStep);
+        updatePathPanel();
+    }
+
+    function updatePathPanel(numChoices, complete) {
+        const names = ['U','N','I','T','E','D','S','T','A','T','E','S','o','f','A','M','E','R','I','C','A','2','5','0'];
+        const rowEl  = document.getElementById('currentRowDisplay');
+        const choEl  = document.getElementById('choicesDisplay');
+        const pathEl = document.getElementById('pathSoFarDisplay');
+
+        if (complete) {
+            rowEl.textContent = 'Complete! 🎉';
+            choEl.textContent = 'Your path is complete. Click "Reset Path Creation" to start again.';
+        } else {
+            const step = pathCreationStep;
+            rowEl.textContent = `${step} — choose "${names[step] || '?'}"`;
+            choEl.textContent = numChoices !== undefined
+                ? `${numChoices} valid choice${numChoices!==1?'s':''} shown (green borders).`
+                : 'Green borders show valid next positions.';
+        }
+        pathEl.textContent = pathCreationSelected.map(l=>l.textContent).join('');
+    }
+
+    // ==================== CONTROLS ====================
+
+    function clearHighlights() {
+        stopPathAnimation();
+        clearHighlightsOnly();
+    }
+
+    function zoomIn()    { currentZoom = Math.min(currentZoom*1.2, 3);   updateZoom(); }
+    function zoomOut()   { currentZoom = Math.max(currentZoom/1.2, 0.3); updateZoom(); }
+    function resetZoom() { currentZoom = 1; updateZoom(); }
+    function updateZoom() {
+        document.getElementById('starContainer').style.transform = `scale(${currentZoom})`;
+    }
+
+    // ==================== DOWNLOAD ====================
+
+    function downloadVersion() {
+        const opts = [
+            {name:'HTML (Interactive)', fmt:'html'},
+            {name:'SVG (Vector)',        fmt:'svg'},
+            {name:'PNG (Image)',         fmt:'png'}
+        ];
+        const ch = prompt(`Choose download format:\n${opts.map((o,i)=>`${i+1}. ${o.name}`).join('\n')}\n\nEnter number (1-3):`);
+        if (ch && ch>=1 && ch<=3) generateDownload(opts[ch-1].fmt);
+    }
+
+    function generateDownload(fmt) {
+        const container = document.getElementById('starContainer');
+
+        if (fmt==='html') {
+            const html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Patriotic Star</title><style>
+body{margin:0;padding:0;background:white;font-family:Georgia,serif;}
+.star-container{position:relative;width:3500px;height:3500px;}
+.letter{position:absolute;font-size:24px;font-weight:bold;font-family:Georgia,serif;user-select:none;}
+.letter.special-corner,.letter.special-outline{font-weight:900!important;
+text-shadow:0 0 15px rgba(220,20,60,1.0),0 0 25px rgba(220,20,60,0.8),0 0 35px rgba(220,20,60,0.6),0 0 45px rgba(220,20,60,0.4)!important;
+filter:brightness(1.2) contrast(1.2) drop-shadow(0 0 8px rgba(220,20,60,0.8))!important;}
+.letter.highlighted{color:#00FF00!important;text-shadow:0 0 15px rgba(0,255,0,0.8)!important;transform:scale(1.3)!important;}
+.letter.path-selected{color:#00FF00!important;text-shadow:0 0 12px rgba(0,255,0,0.9)!important;}
+</style></head><body>${container.outerHTML}</body></html>`;
+            downloadFile(new Blob([html],{type:'text/html'}), 'patriotic_star.html');
+
+        } else if (fmt==='svg') {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+            svg.setAttribute('width','3500'); svg.setAttribute('height','3500');
+            svg.setAttribute('xmlns','http://www.w3.org/2000/svg');
+
+            const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+            const filt = document.createElementNS('http://www.w3.org/2000/svg','filter');
+            filt.setAttribute('id','superGlow'); filt.setAttribute('x','-50%'); filt.setAttribute('y','-50%');
+            filt.setAttribute('width','200%'); filt.setAttribute('height','200%');
+            const blur = document.createElementNS('http://www.w3.org/2000/svg','feGaussianBlur');
+            blur.setAttribute('result','coloredBlur'); blur.setAttribute('stdDeviation','15');
+            const merge = document.createElementNS('http://www.w3.org/2000/svg','feMerge');
+            const mn1 = document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');
+            mn1.setAttribute('in','coloredBlur');
+            const mn2 = document.createElementNS('http://www.w3.org/2000/svg','feMergeNode');
+            mn2.setAttribute('in','SourceGraphic');
+            merge.appendChild(mn1); merge.appendChild(mn2);
+            filt.appendChild(blur); filt.appendChild(merge);
+            defs.appendChild(filt); svg.appendChild(defs);
+
+            const starSvg = container.querySelector('svg');
+            if (starSvg) {
+                ['polygon','path','line'].forEach(tag =>
+                    starSvg.querySelectorAll(tag).forEach(el => svg.appendChild(el.cloneNode(true)))
+                );
+            }
+
+            letters.forEach(l => {
+                const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+                text.setAttribute('x', parseFloat(l.style.left)+12);
+                text.setAttribute('y', parseFloat(l.style.top)+24);
+                text.setAttribute('font-family','Georgia, serif');
+                text.setAttribute('font-size', l.style.fontSize||'24px');
+                text.setAttribute('font-weight', l.style.fontWeight||'bold');
+                text.setAttribute('fill', l.style.color);
+                text.setAttribute('text-anchor','middle');
+                text.textContent = l.textContent;
+                const isSpecial = l.classList.contains('special-corner')||l.classList.contains('special-outline');
+                const isHL = l.classList.contains('highlighted')||l.classList.contains('path-selected');
+                if (isHL) { text.setAttribute('fill','#00FF00'); text.setAttribute('filter','url(#superGlow)'); }
+                else if (isSpecial) { text.setAttribute('filter','url(#superGlow)'); text.setAttribute('stroke','rgba(220,20,60,0.8)'); text.setAttribute('stroke-width','0.5'); }
+                svg.appendChild(text);
+            });
+
+            downloadFile(new Blob([new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml'}), 'patriotic_star.svg');
+
+        } else if (fmt==='png') {
+            const canvas = document.createElement('canvas');
+            canvas.width = 3500; canvas.height = 3500;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'white'; ctx.fillRect(0,0,3500,3500);
+
+            const starSvg = container.querySelector('svg');
+            if (starSvg) {
+                const svgStr = new XMLSerializer().serializeToString(starSvg);
+                const img = new Image();
+                img.onload = () => { ctx.drawImage(img,0,0); drawLettersOnCanvas(ctx,canvas); };
+                img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgStr)));
+            } else {
+                drawLettersOnCanvas(ctx, canvas);
+            }
+        }
+    }
+
+    function drawLettersOnCanvas(ctx, canvas) {
+        letters.forEach(l => {
+            const x = parseFloat(l.style.left)+12;
+            const y = parseFloat(l.style.top)+24;
+            const fs = parseInt(l.style.fontSize)||24;
+            ctx.font = `${l.style.fontWeight||'bold'} ${fs}px Georgia, serif`;
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            const isSpecial = l.classList.contains('special-corner')||l.classList.contains('special-outline');
+            const isHL = l.classList.contains('highlighted')||l.classList.contains('path-selected');
+            if (isHL) {
+                ctx.shadowColor='rgba(0,255,0,0.9)'; ctx.shadowBlur=15;
+                ctx.fillStyle='#00FF00'; ctx.fillText(l.textContent,x,y);
+                ctx.shadowBlur=0;
+            } else if (isSpecial) {
+                ctx.shadowColor='rgba(220,20,60,1.0)'; ctx.shadowBlur=15;
+                ctx.fillStyle=l.style.color; ctx.fillText(l.textContent,x,y);
+                ctx.shadowBlur=25; ctx.shadowColor='rgba(220,20,60,0.8)'; ctx.fillText(l.textContent,x,y);
+                ctx.shadowBlur=35; ctx.shadowColor='rgba(220,20,60,0.6)'; ctx.fillText(l.textContent,x,y);
+                ctx.shadowBlur=0;
+            } else {
+                ctx.shadowBlur=0; ctx.fillStyle=l.style.color; ctx.fillText(l.textContent,x,y);
+            }
+        });
+        canvas.toBlob(blob => downloadFile(blob,'patriotic_star.png'),'image/png');
+    }
+
+    function downloadFile(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href=url; a.download=filename;
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // ==================== INIT ====================
+
+    window.addEventListener('DOMContentLoaded', function() {
+        createUNITEDSTATES();
+        addOfAmerica250Paths();
+        addFillInLetters();
+        createStarOutline();
+        document.getElementById('totalCount').textContent = `Total: ${letters.length} letters`;
+    });
+
+    document.addEventListener('wheel', e => {
+        e.preventDefault();
+        e.deltaY < 0 ? zoomIn() : zoomOut();
+    }, {passive: false});
+</script>
+</body>
+</html>
