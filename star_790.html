@@ -714,27 +714,32 @@
                 ctx.font='italic '+(110*sc)+'px Georgia, serif';
                 ctx.fillText('In Celebration of Freedom 250',W/2,titleH*0.54);
                 ctx.shadowBlur=0;
-                // UNITED STATES - outline + glow
-                var xRight=W-80*sc;
-                var yUS=titleH+starSz*0.22;
-                var yAnniv=titleH+starSz*0.29;
-                ctx.font='bold '+(140*sc)+'px Georgia, serif';ctx.textAlign='right';
-                // Black outline stroke
-                ctx.strokeStyle='rgba(0,0,0,1.0)';ctx.lineWidth=14*sc;ctx.lineJoin='round';
-                ctx.strokeText('UNITED STATES of AMERICA',xRight,yUS);
-                ctx.strokeText('250th ANNIVERSARY',xRight,yAnniv);
-                // Dark glow
+                // UNITED STATES - outline + glow, split into 3 lines
+                var xRight=W-120*sc;
+                var yLine1=titleH+starSz*0.22;
+                var yLine2=titleH+starSz*0.30;
+                var yLine3=titleH+starSz*0.38;
+                ctx.font='bold '+(150*sc)+'px Georgia, serif';ctx.textAlign='right';
+                // Black outline stroke for all 3 lines
+                ctx.strokeStyle='rgba(0,0,0,1.0)';ctx.lineWidth=16*sc;ctx.lineJoin='round';
+                ctx.strokeText('UNITED STATES',xRight,yLine1);
+                ctx.strokeText('of AMERICA',xRight,yLine2);
+                ctx.fillStyle='rgba(255,215,0,1.0)';ctx.font='bold '+(130*sc)+'px Georgia, serif';
+                ctx.strokeText('250th ANNIVERSARY',xRight,yLine3);
+                // Dark glow + fill
                 ctx.shadowColor='rgba(0,0,0,0.95)';ctx.shadowBlur=25*sc;
-                ctx.fillStyle='rgba(255,255,255,0.98)';
-                ctx.fillText('UNITED STATES of AMERICA',xRight,yUS);
-                ctx.fillStyle='rgba(255,215,0,1.0)';
-                ctx.fillText('250th ANNIVERSARY',xRight,yAnniv);
+                ctx.fillStyle='rgba(255,255,255,0.98)';ctx.font='bold '+(150*sc)+'px Georgia, serif';
+                ctx.fillText('UNITED STATES',xRight,yLine1);
+                ctx.fillText('of AMERICA',xRight,yLine2);
+                ctx.fillStyle='rgba(255,215,0,1.0)';ctx.font='bold '+(130*sc)+'px Georgia, serif';
+                ctx.fillText('250th ANNIVERSARY',xRight,yLine3);
                 // Draw again for brightness
                 ctx.shadowBlur=0;
-                ctx.fillStyle='rgba(255,255,255,0.98)';
-                ctx.fillText('UNITED STATES of AMERICA',xRight,yUS);
-                ctx.fillStyle='rgba(255,215,0,1.0)';
-                ctx.fillText('250th ANNIVERSARY',xRight,yAnniv);
+                ctx.fillStyle='rgba(255,255,255,0.98)';ctx.font='bold '+(150*sc)+'px Georgia, serif';
+                ctx.fillText('UNITED STATES',xRight,yLine1);
+                ctx.fillText('of AMERICA',xRight,yLine2);
+                ctx.fillStyle='rgba(255,215,0,1.0)';ctx.font='bold '+(130*sc)+'px Georgia, serif';
+                ctx.fillText('250th ANNIVERSARY',xRight,yLine3);
                 ctx.shadowBlur=0;
                 var yYear=titleH+starSz*0.58;
                 var yearFontSize=240*sc;
@@ -787,7 +792,14 @@
                 var pngName=sc===1?'patriotic_star_18x24.png':sc===2?'patriotic_star_18x24_large.png':'patriotic_star_18x24_poster.png';
                 try{
                     var _li=new Image();
-                _li.onload=function(){ctx.drawImage(_li,200*sc,titleH+starSz*0.12,1100*sc,1100*sc*_li.height/_li.width);
+                _li.onload=function(){var logoW=1000*sc;
+                var logoX=150*sc;
+                var logoY=titleH+starSz*0.20;
+                var logoH=logoW*_li.height/_li.width;
+                // Dark background behind logo for contrast
+                ctx.fillStyle='rgba(0,0,40,0.55)';
+                ctx.fillRect(logoX-20*sc, logoY-20*sc, logoW+40*sc, logoH+40*sc);
+                ctx.drawImage(_li,logoX,logoY,logoW,logoH);
                 canvas.toBlob(function(blob){
                         if(blob){downloadFile(blob,pngName);}
                         else{alert('PNG too large for browser. Use Standard size.');}
