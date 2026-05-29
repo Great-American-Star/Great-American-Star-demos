@@ -714,66 +714,65 @@
                 ctx.font='italic '+(110*sc)+'px Georgia, serif';
                 ctx.fillText('In Celebration of Freedom 250',W/2,titleH*0.68);
                 ctx.shadowBlur=0;
-                // UNITED STATES - 4 lines, centered vertically in right tip
-                var xCenter=W-700*sc;
-                // Center block around middle of right tip (starSz*0.30)
-                // Line spacing: 160px each
-                var lineH=160*sc;
-                var blockTop=titleH+starSz*0.30-lineH*2;
-                var yLine1=blockTop+lineH*0;
-                var yLine2=blockTop+lineH*1;
-                var yLine3=blockTop+lineH*2;
-                var yLine4=blockTop+lineH*3;
+                // UNITED STATES - 5 lines, centered in right tip
+                // Right tip center X = W*0.775
+                var xCenter=W*0.775;
+                // 5 lines with proper spacing
+                // Total block height: 170+100+220+180+140 = 810px
+                // Center at starSz*0.30
+                var blockCenter=titleH+starSz*0.30;
+                var y1=blockCenter-405*sc;        // UNITED STATES
+                var y2=y1+170*sc;                 // of
+                var y3=y2+110*sc;                 // AMERICA
+                var y4=y3+230*sc;                 // 250th
+                var y5=y4+190*sc;                 // ANNIVERSARY
                 ctx.textAlign='center';
-                ctx.strokeStyle='rgba(0,0,0,1.0)';ctx.lineWidth=16*sc;ctx.lineJoin='round';
-                // Line 1: UNITED STATES of (with small 'of')
+                ctx.strokeStyle='rgba(0,0,0,1.0)';ctx.lineWidth=14*sc;ctx.lineJoin='round';
+                // Stroke all lines
                 ctx.font='bold '+(130*sc)+'px Georgia, serif';
-                ctx.strokeText('UNITED STATES',xCenter,yLine1);
-                // Draw 'of' smaller inline - use separate smaller text after
-                ctx.font='bold '+(80*sc)+'px Georgia, serif';
-                ctx.strokeText('of',xCenter,yLine1+90*sc);
-                // Line 2: AMERICA - very big
-                ctx.font='bold '+(190*sc)+'px Georgia, serif';
-                ctx.strokeText('AMERICA',xCenter,yLine2);
-                // Line 3: 250 with superscript th
+                ctx.strokeText('UNITED STATES',xCenter,y1);
+                ctx.font='bold '+(75*sc)+'px Georgia, serif';
+                ctx.strokeText('of',xCenter,y2);
+                ctx.font='bold '+(200*sc)+'px Georgia, serif';
+                ctx.strokeText('AMERICA',xCenter,y3);
+                // 250th - draw 250 then superscript th
                 ctx.font='bold '+(160*sc)+'px Georgia, serif';
-                ctx.strokeText('250',xCenter,yLine3);
-                ctx.font='bold '+(80*sc)+'px Georgia, serif';
-                ctx.strokeText('th',xCenter,yLine3-80*sc);
-                // Line 4: ANNIVERSARY
+                ctx.strokeText('250',xCenter-30*sc,y4);
+                ctx.font='bold '+(70*sc)+'px Georgia, serif';
+                ctx.strokeText('th',xCenter+110*sc,y4-90*sc);
                 ctx.font='bold '+(110*sc)+'px Georgia, serif';
-                ctx.strokeText('ANNIVERSARY',xCenter,yLine4);
-                // Glow + fill
-                ctx.shadowColor='rgba(0,0,0,0.95)';ctx.shadowBlur=25*sc;
+                ctx.strokeText('ANNIVERSARY',xCenter,y5);
+                // Glow + fill (white for UNITED STATES, of, AMERICA; gold for 250th, ANNIVERSARY)
+                ctx.shadowColor='rgba(0,0,0,0.95)';ctx.shadowBlur=20*sc;
                 ctx.fillStyle='rgba(255,255,255,0.98)';
                 ctx.font='bold '+(130*sc)+'px Georgia, serif';
-                ctx.fillText('UNITED STATES',xCenter,yLine1);
-                ctx.font='bold '+(80*sc)+'px Georgia, serif';
-                ctx.fillText('of',xCenter,yLine1+90*sc);
-                ctx.font='bold '+(190*sc)+'px Georgia, serif';
-                ctx.fillText('AMERICA',xCenter,yLine2);
+                ctx.fillText('UNITED STATES',xCenter,y1);
+                ctx.font='bold '+(75*sc)+'px Georgia, serif';
+                ctx.fillText('of',xCenter,y2);
+                ctx.font='bold '+(200*sc)+'px Georgia, serif';
+                ctx.fillText('AMERICA',xCenter,y3);
                 ctx.fillStyle='rgba(255,215,0,1.0)';
                 ctx.font='bold '+(160*sc)+'px Georgia, serif';
-                ctx.fillText('250',xCenter,yLine3);
-                ctx.font='bold '+(80*sc)+'px Georgia, serif';
-                ctx.fillText('th',xCenter,yLine3-80*sc);
+                ctx.fillText('250',xCenter-30*sc,y4);
+                ctx.font='bold '+(70*sc)+'px Georgia, serif';
+                ctx.fillText('th',xCenter+110*sc,y4-90*sc);
                 ctx.font='bold '+(110*sc)+'px Georgia, serif';
-                ctx.fillText('ANNIVERSARY',xCenter,yLine4);
+                ctx.fillText('ANNIVERSARY',xCenter,y5);
                 ctx.shadowBlur=0;
                 ctx.fillStyle='rgba(255,255,255,0.98)';
                 ctx.font='bold '+(130*sc)+'px Georgia, serif';
-                ctx.fillText('UNITED STATES',xCenter,yLine1);
-                ctx.font='bold '+(80*sc)+'px Georgia, serif';
-                ctx.fillText('of',xCenter,yLine1+90*sc);
-                ctx.font='bold '+(190*sc)+'px Georgia, serif';
-                ctx.fillText('AMERICA',xCenter,yLine2);
+                ctx.fillText('UNITED STATES',xCenter,y1);
+                ctx.font='bold '+(75*sc)+'px Georgia, serif';
+                ctx.fillText('of',xCenter,y2);
+                ctx.font='bold '+(200*sc)+'px Georgia, serif';
+                ctx.fillText('AMERICA',xCenter,y3);
                 ctx.fillStyle='rgba(255,215,0,1.0)';
                 ctx.font='bold '+(160*sc)+'px Georgia, serif';
-                ctx.fillText('250',xCenter,yLine3);
-                ctx.font='bold '+(80*sc)+'px Georgia, serif';
-                ctx.fillText('th',xCenter,yLine3-80*sc);
+                ctx.fillText('250',xCenter-30*sc,y4);
+                ctx.font='bold '+(70*sc)+'px Georgia, serif';
+                ctx.fillText('th',xCenter+110*sc,y4-90*sc);
                 ctx.font='bold '+(110*sc)+'px Georgia, serif';
-                ctx.fillText('ANNIVERSARY',xCenter,yLine4);
+                ctx.fillText('ANNIVERSARY',xCenter,y5);
                 ctx.shadowBlur=0;
                 var yYear=titleH+starSz*0.58;
                 var yearFontSize=240*sc;
@@ -826,10 +825,10 @@
                 var pngName=sc===1?'patriotic_star_18x24.png':sc===2?'patriotic_star_18x24_large.png':'patriotic_star_18x24_poster.png';
                 try{
                     var _li=new Image();
-                _li.onload=function(){var logoW=1300*sc;
-                var logoX=200*sc;
-                var logoY=titleH+starSz*0.30-logoW*_li.height/_li.width/2;
+                _li.onload=function(){var logoW=1200*sc;
                 var logoH=logoW*_li.height/_li.width;
+                var logoX=W*0.225-logoW/2;
+                var logoY=titleH+starSz*0.30-logoH/2;
                 // Light white background behind logo for contrast
                 ctx.fillStyle='rgba(255,255,255,0.25)';
                 ctx.fillRect(logoX-20*sc, logoY-20*sc, logoW+40*sc, logoH+40*sc);
