@@ -718,10 +718,19 @@
                 ctx.fillText('UNITED STATES of AMERICA',W-60*sc,titleH*0.25);
                 ctx.fillStyle='rgba(255,215,0,1.0)';ctx.font='bold '+(60*sc)+'px Georgia, serif';
                 ctx.fillText('250th ANNIVERSARY',W-60*sc,titleH*0.42);
-                ctx.shadowBlur=20*sc;ctx.fillStyle='rgba(255,255,255,0.95)';
-                ctx.font='bold '+(180*sc)+'px Georgia, serif';ctx.textAlign='left';
-                ctx.fillText('1776',80*sc,titleH+starSz*0.45);
-                ctx.textAlign='right';ctx.fillText('2026',W-80*sc,titleH+starSz*0.45);
+                ctx.shadowBlur=0;
+                var yYear=titleH+starSz*0.58;
+                var yearFontSize=240*sc;
+                ctx.font='bold '+yearFontSize+'px Georgia, serif';
+                var w1776=ctx.measureText('1776').width;
+                var w2026=ctx.measureText('2026').width;
+                ctx.fillStyle='rgba(0,0,40,0.55)';
+                ctx.fillRect(60*sc, yYear-yearFontSize*0.85, w1776+40*sc, yearFontSize*1.0);
+                ctx.fillRect(W-80*sc-w2026-20*sc, yYear-yearFontSize*0.85, w2026+40*sc, yearFontSize*1.0);
+                ctx.shadowBlur=20*sc;ctx.fillStyle='rgba(255,255,255,0.98)';
+                ctx.font='bold '+(240*sc)+'px Georgia, serif';ctx.textAlign='left';
+                ctx.fillText('1776',80*sc,yYear);
+                ctx.textAlign='right';ctx.fillText('2026',W-80*sc,yYear);
                 ctx.shadowBlur=0;
                 // Step 9: personal message
                 var pt=getPersonalText();
