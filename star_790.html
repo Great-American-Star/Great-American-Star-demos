@@ -720,12 +720,12 @@
                 // 5 lines with proper spacing
                 // Total block height: 170+100+220+180+140 = 810px
                 // Center at starSz*0.30
-                var blockCenter=titleH+starSz*0.30;
-                var y1=blockCenter-405*sc;        // UNITED STATES
-                var y2=y1+170*sc;                 // of
-                var y3=y2+110*sc;                 // AMERICA
-                var y4=y3+230*sc;                 // 250th
-                var y5=y4+190*sc;                 // ANNIVERSARY
+                var blockCenter=titleH+starSz*0.10;
+                var y1=blockCenter-380*sc;        // UNITED STATES
+                var y2=y1+160*sc;                 // of
+                var y3=y2+130*sc;                 // AMERICA
+                var y4=y3+240*sc;                 // 250th
+                var y5=y4+185*sc;                 // ANNIVERSARY
                 ctx.textAlign='center';
                 ctx.strokeStyle='rgba(0,0,0,1.0)';ctx.lineWidth=14*sc;ctx.lineJoin='round';
                 // Stroke all lines
@@ -739,7 +739,7 @@
                 ctx.font='bold '+(160*sc)+'px Georgia, serif';
                 ctx.strokeText('250',xCenter-30*sc,y4);
                 ctx.font='bold '+(70*sc)+'px Georgia, serif';
-                ctx.strokeText('th',xCenter+110*sc,y4-90*sc);
+                ctx.strokeText('th',xCenter+130*sc,y4-100*sc);
                 ctx.font='bold '+(110*sc)+'px Georgia, serif';
                 ctx.strokeText('ANNIVERSARY',xCenter,y5);
                 // Glow + fill (white for UNITED STATES, of, AMERICA; gold for 250th, ANNIVERSARY)
@@ -755,7 +755,7 @@
                 ctx.font='bold '+(160*sc)+'px Georgia, serif';
                 ctx.fillText('250',xCenter-30*sc,y4);
                 ctx.font='bold '+(70*sc)+'px Georgia, serif';
-                ctx.fillText('th',xCenter+110*sc,y4-90*sc);
+                ctx.fillText('th',xCenter+130*sc,y4-100*sc);
                 ctx.font='bold '+(110*sc)+'px Georgia, serif';
                 ctx.fillText('ANNIVERSARY',xCenter,y5);
                 ctx.shadowBlur=0;
@@ -770,7 +770,7 @@
                 ctx.font='bold '+(160*sc)+'px Georgia, serif';
                 ctx.fillText('250',xCenter-30*sc,y4);
                 ctx.font='bold '+(70*sc)+'px Georgia, serif';
-                ctx.fillText('th',xCenter+110*sc,y4-90*sc);
+                ctx.fillText('th',xCenter+130*sc,y4-100*sc);
                 ctx.font='bold '+(110*sc)+'px Georgia, serif';
                 ctx.fillText('ANNIVERSARY',xCenter,y5);
                 ctx.shadowBlur=0;
@@ -828,7 +828,7 @@
                 _li.onload=function(){var logoW=1200*sc;
                 var logoH=logoW*_li.height/_li.width;
                 var logoX=W*0.225-logoW/2;
-                var logoY=titleH+starSz*0.30-logoH/2;
+                var logoY=titleH+starSz*0.10-logoH/2;
                 // Light white background behind logo for contrast
                 ctx.fillStyle='rgba(255,255,255,0.25)';
                 ctx.fillRect(logoX-20*sc, logoY-20*sc, logoW+40*sc, logoH+40*sc);
