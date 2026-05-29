@@ -714,10 +714,10 @@
                 ctx.font='italic '+(90*sc)+'px Georgia, serif';
                 ctx.fillText('In Celebration of Freedom 250',W/2,titleH*0.54);
                 ctx.shadowBlur=12*sc;ctx.fillStyle='rgba(255,255,255,0.98)';
-                ctx.font='bold '+(80*sc)+'px Georgia, serif';ctx.textAlign='right';
-                ctx.fillText('UNITED STATES of AMERICA',W-60*sc,titleH*0.25);
-                ctx.fillStyle='rgba(255,215,0,1.0)';ctx.font='bold '+(60*sc)+'px Georgia, serif';
-                ctx.fillText('250th ANNIVERSARY',W-60*sc,titleH*0.42);
+                ctx.font='bold '+(100*sc)+'px Georgia, serif';ctx.textAlign='right';
+                ctx.fillText('UNITED STATES of AMERICA',W-60*sc,titleH*0.30);
+                ctx.fillStyle='rgba(255,215,0,1.0)';ctx.font='bold '+(80*sc)+'px Georgia, serif';
+                ctx.fillText('250th ANNIVERSARY',W-60*sc,titleH*0.52);
                 ctx.shadowBlur=0;
                 var yYear=titleH+starSz*0.58;
                 var yearFontSize=240*sc;
@@ -770,7 +770,7 @@
                 var pngName=sc===1?'patriotic_star_18x24.png':sc===2?'patriotic_star_18x24_large.png':'patriotic_star_18x24_poster.png';
                 try{
                     var _li=new Image();
-                _li.onload=function(){ctx.drawImage(_li,60*sc,30*sc,650*sc,650*sc*_li.height/_li.width);
+                _li.onload=function(){ctx.drawImage(_li,40*sc,20*sc,850*sc,850*sc*_li.height/_li.width);
                 canvas.toBlob(function(blob){
                         if(blob){downloadFile(blob,pngName);}
                         else{alert('PNG too large for browser. Use Standard size.');}
