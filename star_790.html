@@ -554,42 +554,19 @@
         var pt=getPersonalText();if(pt){var ta3=document.getElementById('personalTextArea');var pSz=ta3?parseInt(ta3.style.fontSize)||64:64;var pAl=ta3?ta3.style.textAlign||'center':'center';var pCol=ta3?ta3.style.color||'#1a1a1a':'#1a1a1a';var pWt=ta3?ta3.style.fontWeight||'normal':'normal';var pSt=ta3?ta3.style.fontStyle||'normal':'normal';// Extract lines with their font sizes
                     var tempDiv=document.createElement('div');
                     tempDiv.innerHTML=pt;
-                    // Parse HTML into lines with font sizes
-                    var ptLines2d=(function(){
-                        var res=[];
-                        // Step 1: extract font-size tagged segments
-                        var h=pt;
-                        // Normalize line breaks: <br>, </div>, </p> -> special marker
-                        h=h.replace(/<br\s*\/?>/gi,'|||NL|||');
-                        h=h.replace(/<\/div>/gi,'|||NL|||');
-                        h=h.replace(/<\/p>/gi,'|||NL|||');
-                        // Split by span tags to get font sizes
-                        var chunks=[];
-                        var re=/<span[^>]*style=['][^']*font-size:\s*([\d.]+)px[^']*['][^>]*>(.*?)<\/span>/gi;
-                        var lastIdx=0,m;
-                        while((m=re.exec(h))!==null){
-                            if(m.index>lastIdx)chunks.push({html:h.slice(lastIdx,m.index),size:pSz});
-                            chunks.push({html:m[2],size:parseFloat(m[1])||pSz});
-                            lastIdx=m.index+m[0].length;
-                        }
-                        if(lastIdx<h.length)chunks.push({html:h.slice(lastIdx),size:pSz});
-                        // Step 2: build lines from chunks
-                        var curLine={text:'',size:pSz};
-                        chunks.forEach(function(chunk){
-                            var segs=chunk.html.split('|||NL|||');
-                            segs.forEach(function(seg,si){
-                                var t=seg.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
-                                if(t){if(!curLine.text)curLine.size=chunk.size;curLine.text+=t;}
-                                if(si<segs.length-1){res.push({text:curLine.text,size:curLine.size});curLine={text:'',size:chunk.size};}
-                            });
-                        });
-                        if(curLine.text)res.push(curLine);
-                        // Remove empty lines at end, keep empty lines in middle
-                        while(res.length>0&&!res[res.length-1].text.trim())res.pop();
-                        return res.length>0?res:[{text:pt.replace(/<[^>]+>/g,'').trim(),size:pSz}];
-                    })();
-                    var ptPlain=ptLines2d.map(function(l){return l.text;}).join('
-');ctx.shadowBlur=0;ctx.textAlign=pAl;ctx.fillStyle=pCol;var pX=pAl==='left'?200:pAl==='right'?3300:1750;var ptY=2950+pSz;ptLines2d.forEach(function(line){var lineText=line.text;var lineSize=line.size;if(lineText.trim()){ctx.font=pSt+' '+pWt+' '+lineSize+'px Georgia, serif';ctx.fillText(lineText,pX,ptY);}ptY+=lineSize*1.4;});}
+                    var lines=[];
+                    function extractLines(node,curSize){
+                        if(node.nodeType===3){var t=node.textContent.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');if(t)lines.push({text:t,size:curSize});}
+                        else if(node.nodeName==='BR'){lines.push({text:'\n',size:curSize});}
+                        else{var sz=curSize;if(node.style&&node.style.fontSize){sz=parseInt(node.style.fontSize)||curSize;}
+                        node.childNodes.forEach(function(c){extractLines(c,sz);});
+                        if(node.nodeName==='DIV'||node.nodeName==='P'){lines.push({text:'\n',size:sz});}}
+                    }
+                    tempDiv.childNodes.forEach(function(c){extractLines(c,pSz);});
+                    var ptPlain=lines.map(function(l){return l.text;}).join('').replace(/\n+$/,'').trim();
+                    var ptLines2d=[];var curLine={text:'',size:pSz};
+                    lines.forEach(function(l){if(l.text==='\n'){ptLines2d.push(curLine);curLine={text:'',size:l.size};}else{if(!curLine.text)curLine.size=l.size;curLine.text+=l.text;}});
+                    if(curLine.text)ptLines2d.push(curLine);ctx.shadowBlur=0;ctx.textAlign=pAl;ctx.fillStyle=pCol;var pX=pAl==='left'?200:pAl==='right'?3300:1750;var ptY=2950+pSz;ptLines2d.forEach(function(line){var lineText=line.text;var lineSize=line.size;if(lineText.trim()){ctx.font=pSt+' '+pWt+' '+lineSize+'px Georgia, serif';ctx.fillText(lineText,pX,ptY);}ptY+=lineSize*1.4;});}
         // Draw title banner above star
         ctx.save();
         ctx.fillStyle='rgba(0,0,50,0.55)';
@@ -852,42 +829,19 @@
                     // Extract lines with their font sizes
                     var tempDiv=document.createElement('div');
                     tempDiv.innerHTML=pt;
-                    // Parse HTML into lines with font sizes
-                    var ptLines2d=(function(){
-                        var res=[];
-                        // Step 1: extract font-size tagged segments
-                        var h=pt;
-                        // Normalize line breaks: <br>, </div>, </p> -> special marker
-                        h=h.replace(/<br\s*\/?>/gi,'|||NL|||');
-                        h=h.replace(/<\/div>/gi,'|||NL|||');
-                        h=h.replace(/<\/p>/gi,'|||NL|||');
-                        // Split by span tags to get font sizes
-                        var chunks=[];
-                        var re=/<span[^>]*style=['][^']*font-size:\s*([\d.]+)px[^']*['][^>]*>(.*?)<\/span>/gi;
-                        var lastIdx=0,m;
-                        while((m=re.exec(h))!==null){
-                            if(m.index>lastIdx)chunks.push({html:h.slice(lastIdx,m.index),size:pSz});
-                            chunks.push({html:m[2],size:parseFloat(m[1])||pSz});
-                            lastIdx=m.index+m[0].length;
-                        }
-                        if(lastIdx<h.length)chunks.push({html:h.slice(lastIdx),size:pSz});
-                        // Step 2: build lines from chunks
-                        var curLine={text:'',size:pSz};
-                        chunks.forEach(function(chunk){
-                            var segs=chunk.html.split('|||NL|||');
-                            segs.forEach(function(seg,si){
-                                var t=seg.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
-                                if(t){if(!curLine.text)curLine.size=chunk.size;curLine.text+=t;}
-                                if(si<segs.length-1){res.push({text:curLine.text,size:curLine.size});curLine={text:'',size:chunk.size};}
-                            });
-                        });
-                        if(curLine.text)res.push(curLine);
-                        // Remove empty lines at end, keep empty lines in middle
-                        while(res.length>0&&!res[res.length-1].text.trim())res.pop();
-                        return res.length>0?res:[{text:pt.replace(/<[^>]+>/g,'').trim(),size:pSz}];
-                    })();
-                    var ptPlain=ptLines2d.map(function(l){return l.text;}).join('
-');
+                    var lines=[];
+                    function extractLines(node,curSize){
+                        if(node.nodeType===3){var t=node.textContent.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');if(t)lines.push({text:t,size:curSize});}
+                        else if(node.nodeName==='BR'){lines.push({text:'\n',size:curSize});}
+                        else{var sz=curSize;if(node.style&&node.style.fontSize){sz=parseInt(node.style.fontSize)||curSize;}
+                        node.childNodes.forEach(function(c){extractLines(c,sz);});
+                        if(node.nodeName==='DIV'||node.nodeName==='P'){lines.push({text:'\n',size:sz});}}
+                    }
+                    tempDiv.childNodes.forEach(function(c){extractLines(c,pSz);});
+                    var ptPlain=lines.map(function(l){return l.text;}).join('').replace(/\n+$/,'').trim();
+                    var ptLines2d=[];var curLine={text:'',size:pSz};
+                    lines.forEach(function(l){if(l.text==='\n'){ptLines2d.push(curLine);curLine={text:'',size:l.size};}else{if(!curLine.text)curLine.size=l.size;curLine.text+=l.text;}});
+                    if(curLine.text)ptLines2d.push(curLine);
                     ctx.shadowBlur=0;ctx.font=pSt+' '+pWt+' '+pSz+'px Georgia, serif';
                     ctx.textAlign=pAl;ctx.fillStyle=pCol;
                     var pX=pAl==='left'?300*sc:pAl==='right'?(W-300*sc):W/2;
@@ -953,42 +907,19 @@
                 // Extract lines with their font sizes
                     var tempDiv=document.createElement('div');
                     tempDiv.innerHTML=pt;
-                    // Parse HTML into lines with font sizes
-                    var ptLines2d=(function(){
-                        var res=[];
-                        // Step 1: extract font-size tagged segments
-                        var h=pt;
-                        // Normalize line breaks: <br>, </div>, </p> -> special marker
-                        h=h.replace(/<br\s*\/?>/gi,'|||NL|||');
-                        h=h.replace(/<\/div>/gi,'|||NL|||');
-                        h=h.replace(/<\/p>/gi,'|||NL|||');
-                        // Split by span tags to get font sizes
-                        var chunks=[];
-                        var re=/<span[^>]*style=['][^']*font-size:\s*([\d.]+)px[^']*['][^>]*>(.*?)<\/span>/gi;
-                        var lastIdx=0,m;
-                        while((m=re.exec(h))!==null){
-                            if(m.index>lastIdx)chunks.push({html:h.slice(lastIdx,m.index),size:pSz});
-                            chunks.push({html:m[2],size:parseFloat(m[1])||pSz});
-                            lastIdx=m.index+m[0].length;
-                        }
-                        if(lastIdx<h.length)chunks.push({html:h.slice(lastIdx),size:pSz});
-                        // Step 2: build lines from chunks
-                        var curLine={text:'',size:pSz};
-                        chunks.forEach(function(chunk){
-                            var segs=chunk.html.split('|||NL|||');
-                            segs.forEach(function(seg,si){
-                                var t=seg.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
-                                if(t){if(!curLine.text)curLine.size=chunk.size;curLine.text+=t;}
-                                if(si<segs.length-1){res.push({text:curLine.text,size:curLine.size});curLine={text:'',size:chunk.size};}
-                            });
-                        });
-                        if(curLine.text)res.push(curLine);
-                        // Remove empty lines at end, keep empty lines in middle
-                        while(res.length>0&&!res[res.length-1].text.trim())res.pop();
-                        return res.length>0?res:[{text:pt.replace(/<[^>]+>/g,'').trim(),size:pSz}];
-                    })();
-                    var ptPlain=ptLines2d.map(function(l){return l.text;}).join('
-');
+                    var lines=[];
+                    function extractLines(node,curSize){
+                        if(node.nodeType===3){var t=node.textContent.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');if(t)lines.push({text:t,size:curSize});}
+                        else if(node.nodeName==='BR'){lines.push({text:'\n',size:curSize});}
+                        else{var sz=curSize;if(node.style&&node.style.fontSize){sz=parseInt(node.style.fontSize)||curSize;}
+                        node.childNodes.forEach(function(c){extractLines(c,sz);});
+                        if(node.nodeName==='DIV'||node.nodeName==='P'){lines.push({text:'\n',size:sz});}}
+                    }
+                    tempDiv.childNodes.forEach(function(c){extractLines(c,pSz);});
+                    var ptPlain=lines.map(function(l){return l.text;}).join('').replace(/\n+$/,'').trim();
+                    var ptLines2d=[];var curLine={text:'',size:pSz};
+                    lines.forEach(function(l){if(l.text==='\n'){ptLines2d.push(curLine);curLine={text:'',size:l.size};}else{if(!curLine.text)curLine.size=l.size;curLine.text+=l.text;}});
+                    if(curLine.text)ptLines2d.push(curLine);
                 ctx.shadowBlur=0;ctx.font=pSt+' '+pWt+' '+(pSz*ssc)+'px Georgia, serif';
                 ctx.textAlign=pAl;ctx.fillStyle=pCol;
                 var pX=pAl==='left'?300:pAl==='right'?(canvasW-300):canvasW/2;
