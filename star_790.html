@@ -91,7 +91,7 @@
 <button onclick="applyMsgCmd('italic')" style="padding:3px 10px;border:1.5px solid #aaa;border-radius:4px;cursor:pointer;font-style:italic;font-size:13px;background:white;"><em>I</em></button>
 <button onclick="applyMsgCmd('underline')" style="padding:3px 10px;border:1.5px solid #aaa;border-radius:4px;cursor:pointer;text-decoration:underline;font-size:13px;background:white;">U</button>
 <label style="font-size:11px;color:#aabbdd;">Color:</label>
-<input id="msgColor" onchange="applyMsgColor()" style="width:28px;height:28px;border:none;border-radius:4px;cursor:pointer;padding:0;" type="color" value="#1a1a1a"/>
+<input id="msgColor" onchange="applyMsgColor()" style="width:28px;height:28px;border:none;border-radius:4px;cursor:pointer;padding:0;" type="color" value="#ffffff"/><span style="font-size:11px;color:rgba(255,255,255,0.7);margin-left:6px;">Bg:</span><input id="msgBgColor" onchange="applyMsgBgColor()" style="width:28px;height:28px;border:none;border-radius:4px;cursor:pointer;padding:0;margin-left:2px;" type="color" value="#1B2A6B"/>
 <label style="font-size:11px;color:#aabbdd;">Align:</label>
 <button onclick="applyMsgCmd('justifyLeft')" style="padding:3px 8px;border:1px solid #aaa;border-radius:4px;cursor:pointer;font-size:12px;background:white;">⇤</button>
 <button onclick="applyMsgCmd('justifyCenter')" style="padding:3px 8px;border:1px solid #aaa;border-radius:4px;cursor:pointer;font-size:12px;background:white;">↔</button>
@@ -100,7 +100,7 @@
 </div>
 <button onclick="closeMsgPanel()" style="margin-left:auto;padding:5px 14px;background:#0052CC;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;">Close</button>
 </div>
-<div contenteditable="true" data-placeholder="Type your personal message here..." id="personalTextArea" style="width:100%;min-height:100px;max-height:220px;overflow-y:auto;font-family:Georgia,serif;font-size:64px;line-height:1.5;color:white;text-align:center;border:2px solid rgba(100,150,255,0.8);border-radius:6px;background:rgba(0,10,50,0.85);outline:none;padding:8px;box-sizing:border-box;text-shadow:0 1px 3px rgba(0,0,0,0.8);"></div>
+<input type="hidden" id="msgBgColorValue" value="#1B2A6B"/><div contenteditable="true" data-placeholder="Type your personal message here..." id="personalTextArea" style="width:100%;min-height:100px;max-height:220px;overflow-y:auto;font-family:Georgia,serif;font-size:64px;line-height:1.5;color:white;text-align:center;border:2px solid rgba(100,150,255,0.8);border-radius:6px;background:rgba(0,10,50,0.85);outline:none;padding:8px;box-sizing:border-box;text-shadow:0 1px 3px rgba(0,0,0,0.8);"></div>
 </div>
 </div>
 <!-- Preview Modal -->
@@ -295,7 +295,7 @@
     function applyMsgCmd(cmd){document.getElementById('personalTextArea').focus();document.execCommand(cmd,false,null);}
     function applyMsgFontSize(){var sz=document.getElementById('msgFontSize').value;document.getElementById('personalTextArea').focus();var sel=window.getSelection();if(sel&&sel.rangeCount>0&&!sel.isCollapsed){var range=sel.getRangeAt(0);var span=document.createElement('span');span.style.fontSize=sz;try{range.surroundContents(span);}catch(e){}}else{document.getElementById('personalTextArea').style.fontSize=sz;}}
     function applyMsgColor(){var col=document.getElementById('msgColor').value;document.getElementById('personalTextArea').focus();var sel=window.getSelection();if(sel&&sel.rangeCount>0&&!sel.isCollapsed){document.execCommand('foreColor',false,col);}else{document.getElementById('personalTextArea').style.color=col;}}
-    function clearMsgFormatting(){document.getElementById('personalTextArea').focus();document.execCommand('removeFormat',false,null);}
+    function clearMsgFormatting(){document.getElementById('personalTextArea').focus();document.execCommand('removeFormat',false,null);}function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;document.getElementById('personalTextArea').style.background=col;document.getElementById('msgBgColorValue').value=col;}function getMsgBgColor(){var el=document.getElementById('msgBgColor');return el?el.value:'#1B2A6B';}
     function getPersonalText(){var ta=document.getElementById('personalTextArea');return ta?ta.innerHTML.trim():'';}
 
     function createSVG(){
@@ -815,7 +815,7 @@
                     ctx.shadowBlur=0;ctx.font=pSt+' '+pWt+' '+pSz+'px Georgia, serif';
                     ctx.textAlign=pAl;ctx.fillStyle=pCol;
                     var pX=pAl==='left'?300*sc:pAl==='right'?(W-300*sc):W/2;
-                    var ptLines=ptPlain.split('\n'),ptY=titleH+starSz+pSz*1.2;
+                    var msgBg=getMsgBgColor?getMsgBgColor():'#1B2A6B';var msgBgR=parseInt(msgBg.slice(1,3),16),msgBgG=parseInt(msgBg.slice(3,5),16),msgBgB=parseInt(msgBg.slice(5,7),16);ctx.fillStyle='rgba('+msgBgR+','+msgBgG+','+msgBgB+',0.92)';var msgAreaH=(ptPlain.split('\n').length)*pSz*1.5+80*sc;ctx.fillRect(0,titleH+starSz,W,msgAreaH);var ptLines=ptPlain.split('\n'),ptY=titleH+starSz+pSz*1.2;
                     ptLines.forEach(function(line){if(line.trim())ctx.fillText(line,pX,ptY);ptY+=pSz*1.4;});
                 }
                 // Step 10: watermark
