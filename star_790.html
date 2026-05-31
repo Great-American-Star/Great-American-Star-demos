@@ -555,17 +555,21 @@
                     var tempDiv=document.createElement('div');
                     tempDiv.innerHTML=pt;
                     var lines=[];
-                    function extractLines(node,curSize){
+                    var extractLines=function(node,curSize){
                         if(node.nodeType===3){var t=node.textContent.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');if(t)lines.push({text:t,size:curSize});}
-                        else if(node.nodeName==='BR'){lines.push({text:'\n',size:curSize});}
-                        else{var sz=curSize;if(node.style&&node.style.fontSize){sz=parseInt(node.style.fontSize)||curSize;}
-                        node.childNodes.forEach(function(c){extractLines(c,sz);});
-                        if(node.nodeName==='DIV'||node.nodeName==='P'){lines.push({text:'\n',size:sz});}}
-                    }
-                    tempDiv.childNodes.forEach(function(c){extractLines(c,pSz);});
-                    var ptPlain=lines.map(function(l){return l.text;}).join('').replace(/\n+$/,'').trim();
+                        else if(node.nodeName==='BR'){lines.push({text:'
+',size:curSize});}
+                        else{var sz=curSize;if(node.style&&node.style.fontSize){var fs=parseFloat(node.style.fontSize);if(fs>0)sz=fs;}
+                        for(var i=0;i<node.childNodes.length;i++)extractLines(node.childNodes[i],sz);
+                        if(node.nodeName==='DIV'||node.nodeName==='P'){lines.push({text:'
+',size:sz});}}
+                    };
+                    for(var i=0;i<tempDiv.childNodes.length;i++)extractLines(tempDiv.childNodes[i],pSz);
+                    var ptPlain=lines.map(function(l){return l.text;}).join('').replace(/
++$/,'').trim();
                     var ptLines2d=[];var curLine={text:'',size:pSz};
-                    lines.forEach(function(l){if(l.text==='\n'){ptLines2d.push(curLine);curLine={text:'',size:l.size};}else{if(!curLine.text)curLine.size=l.size;curLine.text+=l.text;}});
+                    lines.forEach(function(l){if(l.text==='
+'){ptLines2d.push(curLine);curLine={text:'',size:l.size};}else{if(!curLine.text)curLine.size=l.size;curLine.text+=l.text;}});
                     if(curLine.text)ptLines2d.push(curLine);ctx.shadowBlur=0;ctx.textAlign=pAl;ctx.fillStyle=pCol;var pX=pAl==='left'?200:pAl==='right'?3300:1750;var ptY=2950+pSz;ptLines2d.forEach(function(line){var lineText=line.text;var lineSize=line.size;if(lineText.trim()){ctx.font=pSt+' '+pWt+' '+lineSize+'px Georgia, serif';ctx.fillText(lineText,pX,ptY);}ptY+=lineSize*1.4;});}
         // Draw title banner above star
         ctx.save();
@@ -830,17 +834,21 @@
                     var tempDiv=document.createElement('div');
                     tempDiv.innerHTML=pt;
                     var lines=[];
-                    function extractLines(node,curSize){
+                    var extractLines=function(node,curSize){
                         if(node.nodeType===3){var t=node.textContent.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');if(t)lines.push({text:t,size:curSize});}
-                        else if(node.nodeName==='BR'){lines.push({text:'\n',size:curSize});}
-                        else{var sz=curSize;if(node.style&&node.style.fontSize){sz=parseInt(node.style.fontSize)||curSize;}
-                        node.childNodes.forEach(function(c){extractLines(c,sz);});
-                        if(node.nodeName==='DIV'||node.nodeName==='P'){lines.push({text:'\n',size:sz});}}
-                    }
-                    tempDiv.childNodes.forEach(function(c){extractLines(c,pSz);});
-                    var ptPlain=lines.map(function(l){return l.text;}).join('').replace(/\n+$/,'').trim();
+                        else if(node.nodeName==='BR'){lines.push({text:'
+',size:curSize});}
+                        else{var sz=curSize;if(node.style&&node.style.fontSize){var fs=parseFloat(node.style.fontSize);if(fs>0)sz=fs;}
+                        for(var i=0;i<node.childNodes.length;i++)extractLines(node.childNodes[i],sz);
+                        if(node.nodeName==='DIV'||node.nodeName==='P'){lines.push({text:'
+',size:sz});}}
+                    };
+                    for(var i=0;i<tempDiv.childNodes.length;i++)extractLines(tempDiv.childNodes[i],pSz);
+                    var ptPlain=lines.map(function(l){return l.text;}).join('').replace(/
++$/,'').trim();
                     var ptLines2d=[];var curLine={text:'',size:pSz};
-                    lines.forEach(function(l){if(l.text==='\n'){ptLines2d.push(curLine);curLine={text:'',size:l.size};}else{if(!curLine.text)curLine.size=l.size;curLine.text+=l.text;}});
+                    lines.forEach(function(l){if(l.text==='
+'){ptLines2d.push(curLine);curLine={text:'',size:l.size};}else{if(!curLine.text)curLine.size=l.size;curLine.text+=l.text;}});
                     if(curLine.text)ptLines2d.push(curLine);
                     ctx.shadowBlur=0;ctx.font=pSt+' '+pWt+' '+pSz+'px Georgia, serif';
                     ctx.textAlign=pAl;ctx.fillStyle=pCol;
@@ -908,17 +916,21 @@
                     var tempDiv=document.createElement('div');
                     tempDiv.innerHTML=pt;
                     var lines=[];
-                    function extractLines(node,curSize){
+                    var extractLines=function(node,curSize){
                         if(node.nodeType===3){var t=node.textContent.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');if(t)lines.push({text:t,size:curSize});}
-                        else if(node.nodeName==='BR'){lines.push({text:'\n',size:curSize});}
-                        else{var sz=curSize;if(node.style&&node.style.fontSize){sz=parseInt(node.style.fontSize)||curSize;}
-                        node.childNodes.forEach(function(c){extractLines(c,sz);});
-                        if(node.nodeName==='DIV'||node.nodeName==='P'){lines.push({text:'\n',size:sz});}}
-                    }
-                    tempDiv.childNodes.forEach(function(c){extractLines(c,pSz);});
-                    var ptPlain=lines.map(function(l){return l.text;}).join('').replace(/\n+$/,'').trim();
+                        else if(node.nodeName==='BR'){lines.push({text:'
+',size:curSize});}
+                        else{var sz=curSize;if(node.style&&node.style.fontSize){var fs=parseFloat(node.style.fontSize);if(fs>0)sz=fs;}
+                        for(var i=0;i<node.childNodes.length;i++)extractLines(node.childNodes[i],sz);
+                        if(node.nodeName==='DIV'||node.nodeName==='P'){lines.push({text:'
+',size:sz});}}
+                    };
+                    for(var i=0;i<tempDiv.childNodes.length;i++)extractLines(tempDiv.childNodes[i],pSz);
+                    var ptPlain=lines.map(function(l){return l.text;}).join('').replace(/
++$/,'').trim();
                     var ptLines2d=[];var curLine={text:'',size:pSz};
-                    lines.forEach(function(l){if(l.text==='\n'){ptLines2d.push(curLine);curLine={text:'',size:l.size};}else{if(!curLine.text)curLine.size=l.size;curLine.text+=l.text;}});
+                    lines.forEach(function(l){if(l.text==='
+'){ptLines2d.push(curLine);curLine={text:'',size:l.size};}else{if(!curLine.text)curLine.size=l.size;curLine.text+=l.text;}});
                     if(curLine.text)ptLines2d.push(curLine);
                 ctx.shadowBlur=0;ctx.font=pSt+' '+pWt+' '+(pSz*ssc)+'px Georgia, serif';
                 ctx.textAlign=pAl;ctx.fillStyle=pCol;
