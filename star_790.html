@@ -100,7 +100,7 @@
 </div>
 <button onclick="closeMsgPanel()" style="margin-left:auto;padding:5px 14px;background:#0052CC;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;">Close</button>
 </div>
-<input type="hidden" id="msgBgColorValue" value="#1B2A6B"/><div contenteditable="true" data-placeholder="Type your personal message here..." id="personalTextArea" onkeydown="if(event.key==='Enter'){event.preventDefault();document.execCommand('insertHTML',false,'<br style=\"font-size:1px\">');return false;}" onkeyup="updateMsgFontSizeDisplay()" onclick="updateMsgFontSizeDisplay()" style="width:100%;min-height:80px;max-height:600px;overflow-y:auto;font-family:Georgia,serif;font-size:64px;line-height:1.2;color:white;text-align:center;border:2px solid rgba(100,150,255,0.8);border-radius:6px;background:rgba(0,10,50,0.85);outline:none;padding:8px;box-sizing:border-box;text-shadow:0 1px 3px rgba(0,0,0,0.8);"></div>
+<input type="hidden" id="msgBgColorValue" value="#1B2A6B"/><div contenteditable="true" data-placeholder="Type your personal message here..." id="personalTextArea" onkeydown="if(event.key==='Enter'){event.preventDefault();document.execCommand('insertHTML',false,'<br>');return false;}" onkeyup="updateMsgFontSizeDisplay()" onclick="updateMsgFontSizeDisplay()" style="width:100%;min-height:100px;max-height:220px;overflow-y:auto;font-family:Georgia,serif;font-size:64px;line-height:1.5;color:white;text-align:center;border:2px solid rgba(100,150,255,0.8);border-radius:6px;background:rgba(0,10,50,0.85);outline:none;padding:8px;box-sizing:border-box;text-shadow:0 1px 3px rgba(0,0,0,0.8);"></div>
 </div>
 </div>
 <!-- Preview Modal -->
