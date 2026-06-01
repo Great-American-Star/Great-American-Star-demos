@@ -100,7 +100,7 @@
 </div>
 <button onclick="closeMsgPanel()" style="margin-left:auto;padding:5px 14px;background:#0052CC;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;">Close</button>
 </div>
-<input type="hidden" id="msgBgColorValue" value="#1B2A6B"/><div contenteditable="true" data-placeholder="Type your personal message here..." id="personalTextArea" onkeydown="if(event.key==='Enter'){event.preventDefault();document.execCommand('insertHTML',false,'<br><br>');return false;}" style="width:100%;min-height:100px;max-height:220px;overflow-y:auto;font-family:Georgia,serif;font-size:64px;line-height:1.5;color:white;text-align:center;border:2px solid rgba(100,150,255,0.8);border-radius:6px;background:rgba(0,10,50,0.85);outline:none;padding:8px;box-sizing:border-box;text-shadow:0 1px 3px rgba(0,0,0,0.8);"></div>
+<input type="hidden" id="msgBgColorValue" value="#1B2A6B"/><div contenteditable="true" data-placeholder="Type your personal message here..." id="personalTextArea" onkeydown="if(event.key==='Enter'){event.preventDefault();document.execCommand('insertHTML',false,'<br>');return false;}" onkeyup="updateMsgFontSizeDisplay()" onclick="updateMsgFontSizeDisplay()" style="width:100%;min-height:100px;max-height:220px;overflow-y:auto;font-family:Georgia,serif;font-size:64px;line-height:1.5;color:white;text-align:center;border:2px solid rgba(100,150,255,0.8);border-radius:6px;background:rgba(0,10,50,0.85);outline:none;padding:8px;box-sizing:border-box;text-shadow:0 1px 3px rgba(0,0,0,0.8);"></div>
 </div>
 </div>
 <!-- Preview Modal -->
@@ -295,7 +295,30 @@
     function applyMsgCmd(cmd){document.getElementById('personalTextArea').focus();document.execCommand(cmd,false,null);}
     function applyMsgFontSize(){var sz=document.getElementById('msgFontSize').value;document.getElementById('personalTextArea').focus();var sel=window.getSelection();if(sel&&sel.rangeCount>0&&!sel.isCollapsed){var range=sel.getRangeAt(0);var span=document.createElement('span');span.style.fontSize=sz;try{range.surroundContents(span);}catch(e){}}else{document.getElementById('personalTextArea').style.fontSize=sz;}}
     function applyMsgColor(){var col=document.getElementById('msgColor').value;document.getElementById('personalTextArea').focus();var sel=window.getSelection();if(sel&&sel.rangeCount>0&&!sel.isCollapsed){document.execCommand('foreColor',false,col);}else{document.getElementById('personalTextArea').style.color=col;}}
-    function clearMsgFormatting(){document.getElementById('personalTextArea').focus();document.execCommand('removeFormat',false,null);}function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;document.getElementById('personalTextArea').style.background=col;document.getElementById('msgBgColorValue').value=col;}function getMsgBgColor(){var el=document.getElementById('msgBgColor');return el?el.value:'#1B2A6B';}
+    function clearMsgFormatting(){document.getElementById('personalTextArea').focus();document.execCommand('removeFormat',false,null);}function updateMsgFontSizeDisplay(){
+    var sel=window.getSelection();
+    if(!sel||sel.rangeCount===0)return;
+    var node=sel.getRangeAt(0).startContainer;
+    // Walk up to find a span with font-size
+    var el=node.nodeType===3?node.parentElement:node;
+    var sz=null;
+    while(el&&el.id!=='personalTextArea'){
+        if(el.style&&el.style.fontSize){sz=el.style.fontSize;break;}
+        el=el.parentElement;
+    }
+    // If no span found, use the textarea default
+    if(!sz){var ta=document.getElementById('personalTextArea');sz=ta?ta.style.fontSize||'64px':'64px';}
+    var pxVal=parseFloat(sz)||64;
+    var sel2=document.getElementById('msgFontSize');
+    if(sel2){
+        // Find closest option
+        var opts=sel2.options;
+        var best=0,bestDiff=9999;
+        for(var i=0;i<opts.length;i++){var v=parseFloat(opts[i].value);var d=Math.abs(v-pxVal);if(d<bestDiff){bestDiff=d;best=i;}}
+        sel2.selectedIndex=best;
+    }
+}
+function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;document.getElementById('personalTextArea').style.background=col;document.getElementById('msgBgColorValue').value=col;}function getMsgBgColor(){var el=document.getElementById('msgBgColor');return el?el.value:'#1B2A6B';}
     function getPersonalText(){var ta=document.getElementById('personalTextArea');return ta?ta.innerHTML.trim():'';}
 
     function createSVG(){
