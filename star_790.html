@@ -446,7 +446,6 @@ function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;d
         });return path;
     }
     function highlightPath(){if(pathCreationMode)return;clearHighlightsOnly();if(!letters.length)return;var uL=letters.filter(function(l){return l.textContent==='U'&&l.dataset.type==='U';});if(!uL.length)return;var su=uL[Math.floor(Math.random()*uL.length)];var usp=buildContinuousUnitedStatesPath(su);var full=usp.concat(buildContinuousOfAmericaPath(usp[usp.length-1]));var glowColors=['#ff0000','#ff6600','#ffcc00','#00cc00','#00ccff','#0066ff','#cc00ff','#ff00aa','#ff3300','#00ff88'];
-        var glowColor=glowColors[Math.floor(Math.random()*glowColors.length)];
         full.forEach(function(l,i){setTimeout(function(){l.classList.add('highlighted');l.style.textShadow='0 0 4px '+glowColor+',0 0 12px '+glowColor+',0 0 25px '+glowColor;l.style.filter='brightness(1.5) drop-shadow(0 0 10px '+glowColor+')';l.dataset.origColor=l.style.color;l.style.color=pathColor;highlightedPaths.push(l);},i*80);});}
     var animPathColors=['#2914c2','#DC143C','#FFD700','#00CED1','#FF69B4','#FF8C00','#32CD32','#9400D3','#FF4500','#1E90FF','#FF1493','#00FA9A'];
     function getRandomAnimColor(){return animPathColors[Math.floor(Math.random()*animPathColors.length)];}
@@ -468,7 +467,6 @@ function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;d
         var pathId=Date.now()+Math.random();
         var pathLetters=[];
         var glowColors=['#ff0000','#ff6600','#ffcc00','#00cc00','#00ccff','#0066ff','#cc00ff','#ff00aa','#ff3300','#00ff88'];
-        var glowColor=glowColors[Math.floor(Math.random()*glowColors.length)];
         full.forEach(function(l,i){
             setTimeout(function(){
                 if(!isAnimating)return;
@@ -476,7 +474,9 @@ function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;d
                     l.dataset.origColor=l.style.color;
                 }
                 l.classList.add('highlighted');
-                l.style.color=col;
+                l.style.color='#2914c2';
+                l.style.textShadow='0 0 5px '+glowColor+',0 0 15px '+glowColor+',0 0 30px '+glowColor;
+                l.style.filter='brightness(1.6) drop-shadow(0 0 12px '+glowColor+')';
                 l.dataset.pathId=pathId;
                 if(highlightedPaths.indexOf(l)===-1)highlightedPaths.push(l);
                 pathLetters.push(l);
