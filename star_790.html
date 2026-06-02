@@ -641,7 +641,61 @@ function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;d
     function previewFull(){previewScale=1.0;document.getElementById('previewZoomLabel').textContent='100%';renderPreview();}
     function closePreview(){document.getElementById('previewModal').style.display='none';}
 
-    function toggleFullscreen(){
+    function loadDemoImages(){
+    var btn=document.getElementById('demoImgBtn');
+    btn.textContent='Loading...';btn.disabled=true;
+    var urls=[
+        'https://www.evisaprime.com/wp-content/uploads/2025/03/Statue_of_Liberty_National_Monument.jpg',
+        'https://live.staticflickr.com/4826/45194221734_150ae952af_z.jpg',
+        'https://geographic.media/wp-content/uploads/us0225-1.jpg',
+        'https://www.restorationchamp.com/wp-content/uploads/2021/11/usa-lincoln-memorial-scaled.jpg',
+        'https://pixy.org/src/21/217721.jpg',
+        'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/58/5d/00/caption.jpg?w=1200&h=700&s=1'
+    ];
+    var loaded=0;
+    function tryLoad(url,cb){
+        var img=new Image();img.crossOrigin='anonymous';
+        img.onload=function(){cb(img);};
+        img.onerror=function(){
+            // Try proxy
+            var proxy='https://images.weserv.nl/?url='+encodeURIComponent(url)+'&w=800';
+            var img2=new Image();img2.crossOrigin='anonymous';
+            img2.onload=function(){cb(img2);};
+            img2.onerror=function(){cb(null);};
+            img2.src=proxy;
+        };
+        img.src=url;
+    }
+    // Load center (Statue of Liberty)
+    tryLoad(urls[0],function(img){
+        if(img){
+            centerImg=img;
+            centerImgScale=(PENT_R*2)/Math.min(img.width,img.height);
+            centerImgX=PENT_CX-(img.width*centerImgScale)/2;
+            centerImgY=PENT_CY-(img.height*centerImgScale)/2;
+            applyImageToStar();
+        }
+        loaded++;if(loaded===6){btn.textContent='🖼 Demo Images Loaded';btn.disabled=false;}
+    });
+    // Load 5 tips
+    for(var ti=0;ti<5;ti++){
+        (function(idx){
+            tryLoad(urls[idx+1],function(img){
+                if(img){
+                    tipImages[idx]=img;
+                    var b=getTipTriangleBounds(idx);
+                    var bw=b.maxX-b.minX,bh=b.maxY-b.minY;
+                    tipImgScale[idx]=Math.max(bw,bh)/Math.min(img.width,img.height);
+                    tipImgX[idx]=b.cx-(img.width*tipImgScale[idx])/2;
+                    tipImgY[idx]=b.cy-(img.height*tipImgScale[idx])/2;
+                    applyTipImageToStar(idx);
+                }
+                loaded++;if(loaded===6){btn.textContent='🖼 Demo Images Loaded';btn.disabled=false;}
+            });
+        })(ti);
+    }
+}
+function toggleFullscreen(){
     var body=document.body;
     if(body.classList.contains('fullscreen-mode')){
         body.classList.remove('fullscreen-mode');
