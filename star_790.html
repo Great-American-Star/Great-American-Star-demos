@@ -126,7 +126,8 @@
 <button onclick="previewFull()" style="padding:4px 10px;border:1px solid #aaa;border-radius:4px;cursor:pointer;font-size:12px;background:#f0f0f0;">100%</button>
 </div>
 <button onclick="closePreview()" style="margin-left:auto;padding:6px 16px;background:#DC143C;color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;">✕ Close</button>
-<button onclick="downloadVersion()" style="padding:6px 16px;background:#0052CC;color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;">⬇ Download</button>
+<button onclick="downloadVersion()" style="padding:6px 16px;background:#0052CC;color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;">⬇ Download PNG</button>
+<button onclick="window.open('https://thegreatamericanstar.com','_blank')" style="padding:6px 16px;background:#DC143C;color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;margin-left:8px;">🛒 Order My Poster</button>
 </div>
 <div id="previewScrollArea" style="overflow:auto;text-align:center;height:calc(100vh - 150px);width:100%;box-sizing:border-box;padding:20px;">
 <canvas id="previewCanvas" style="border:1px solid #ddd;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,0.15);display:block;margin:0 auto;"></canvas>
@@ -151,7 +152,8 @@
 <button class="control-btn" onclick="scrollToText()">✏ My Message</button>
 <div class="controls-divider"></div>
 <button class="control-btn" onclick="showPreview()">👁 Preview</button>
-<button class="control-btn" onclick="downloadVersion()">⬇ Download</button>
+<button class="control-btn" onclick="downloadVersion()">⬇ Download PNG</button>
+<button class="control-btn" onclick="window.open('https://thegreatamericanstar.com','_blank')" style="background:rgba(220,20,60,0.15);border-color:rgba(220,20,60,0.7);color:#8B0000;font-weight:700;">🛒 Order My Poster</button>
 <div class="controls-divider"></div>
 <button class="control-btn" onclick="toggleFullscreen()" id="fsBtn">⛶ Full Screen</button>
 </div>
@@ -741,7 +743,7 @@ document.addEventListener('keydown',function(e){
     }
 });
 function downloadVersion(){
-        var opts=[{name:'1. HTML (Interactive)',fmt:'html',scale:1},{name:'2. SVG as HTML',fmt:'svg',scale:1},{name:'3. PNG - Standard  (3500px \u2248 12" at 300 DPI)',fmt:'png',scale:1},{name:'4. PNG - Large     (7000px \u2248 23" at 300 DPI)',fmt:'png',scale:2},{name:'5. PNG - Poster    (10500px \u2248 35" at 300 DPI)',fmt:'png',scale:3}];
+        var opts=[{name:'1. PNG - Digital Use  (small prints & sharing)',fmt:'png',scale:1},{name:'2. PNG - Order Ready  (18x24 poster at 600 DPI) ⭐ Recommended',fmt:'png',scale:2}];
         var ch=prompt('Choose download format:\n'+opts.map(function(o){return o.name;}).join('\n')+'\n\nEnter number (1-5):');
         var chN=parseInt(ch);if(chN>=1&&chN<=5)generateDownload(opts[chN-1].fmt,opts[chN-1].scale);
     }
