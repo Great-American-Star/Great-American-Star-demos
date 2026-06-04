@@ -600,7 +600,7 @@ function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;d
         if(centerImg){ctx.save();var pts3=getPentClipPoints();ctx.beginPath();ctx.moveTo(pts3[0].x,pts3[0].y);for(var pi=1;pi<pts3.length;pi++)ctx.lineTo(pts3[pi].x,pts3[pi].y);ctx.closePath();ctx.clip();ctx.drawImage(centerImg,centerImgX,centerImgY,centerImg.width*centerImgScale,centerImg.height*centerImgScale);ctx.restore();}
         for(var ti=0;ti<5;ti++){if(tipImages[ti]){ctx.save();var b4=getTipTriangleBounds(ti);ctx.beginPath();ctx.moveTo(b4.tipX,b4.tipY);ctx.lineTo(b4.lx,b4.ly);ctx.lineTo(b4.rx,b4.ry);ctx.closePath();ctx.clip();ctx.drawImage(tipImages[ti],tipImgX[ti],tipImgY[ti],tipImages[ti].width*tipImgScale[ti],tipImages[ti].height*tipImgScale[ti]);ctx.restore();}}
         var ssc=starScale||1;var tH=titleH||0;
-        letters.forEach(function(l){var x=(parseFloat(l.style.left)+12)*ssc,y=(parseFloat(l.style.top)+24)*ssc+tH,fs=(parseInt(l.style.fontSize)||24)*ssc;ctx.font=(l.style.fontWeight||'bold')+' '+fs+'px Georgia, serif';ctx.textAlign='center';ctx.textBaseline='middle';var isSp=l.classList.contains('special-corner')||l.classList.contains('special-outline');var isHL=isLetterHighlighted(l);if(isHL){var hc=l.style.color||'#2914c2';ctx.font='900 '+fs+'px Georgia, serif';ctx.shadowColor='rgba(255,255,0,1.0)';ctx.shadowBlur=fs*2;ctx.fillStyle=hc;ctx.fillText(l.textContent,x,y);ctx.shadowBlur=0;ctx.fillStyle='#FFD700';ctx.fillText(l.textContent,x,y);}else if(isSp){ctx.shadowColor='rgba(220,20,60,1.0)';ctx.shadowBlur=12;ctx.fillStyle=l.style.color;ctx.fillText(l.textContent,x,y);ctx.shadowBlur=0;}else{ctx.shadowBlur=0;ctx.fillStyle=l.style.color;ctx.fillText(l.textContent,x,y);}});
+        letters.forEach(function(l){var x=(parseFloat(l.style.left)+12)*ssc,y=(parseFloat(l.style.top)+24)*ssc+tH,fs=(parseInt(l.style.fontSize)||24)*ssc;ctx.font=(l.style.fontWeight||'bold')+' '+fs+'px Georgia, serif';ctx.textAlign='center';ctx.textBaseline='middle';var isSp=l.classList.contains('special-corner')||l.classList.contains('special-outline');var isHL=isLetterHighlighted(l);if(isHL){ctx.font='900 '+fs+'px Georgia, serif';ctx.shadowColor='rgba(255,200,0,1.0)';ctx.shadowBlur=fs*3;ctx.fillStyle='#FFD700';ctx.fillText(l.textContent,x,y);ctx.shadowBlur=0;ctx.fillText(l.textContent,x,y);}else if(isSp){ctx.shadowColor='rgba(220,20,60,1.0)';ctx.shadowBlur=12;ctx.fillStyle=l.style.color;ctx.fillText(l.textContent,x,y);ctx.shadowBlur=0;}else{ctx.shadowBlur=0;ctx.fillStyle=l.style.color;ctx.fillText(l.textContent,x,y);}});
         var pt=getPersonalText();if(pt){var ta3=document.getElementById('personalTextArea');var pSz=ta3?parseInt(ta3.style.fontSize)||64:64;var pAl=ta3?ta3.style.textAlign||'center':'center';var pCol=ta3?ta3.style.color||'#1a1a1a':'#1a1a1a';var pWt=ta3?ta3.style.fontWeight||'normal':'normal';var pSt=ta3?ta3.style.fontStyle||'normal':'normal';// Extract lines with their font sizes
                     var tempDiv=document.createElement('div');
                     tempDiv.innerHTML=pt;
@@ -656,11 +656,11 @@ function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;d
             var pCol2='white';
             var ptPlain2=pt2.replace(/<br\s*\/?>/gi,'\n').replace(/<\/p>/gi,'\n').replace(/<\/div>/gi,'\n').replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ').trim();
             var msgBgH=Math.max(200,(ptPlain2.split('\n').length)*pSz2*1.4+80);
-            ctx.fillStyle='rgba(10,20,80,0.75)';
-            ctx.fillRect(0,2900,3500,msgBgH);
+            ctx.fillStyle='rgba(10,20,80,0.92)';
+            ctx.fillRect(0,3500,3500,250);
             ctx.shadowBlur=0;ctx.font='bold '+pSz2+'px Georgia, serif';ctx.textAlign=pAl2;ctx.fillStyle=pCol2;
             var pX2=pAl2==='left'?200:pAl2==='right'?3300:1750;
-            var ptLines2=ptPlain2.split('\n'),ptY2=2950+pSz2;
+            var ptLines2=ptPlain2.split('\n'),ptY2=3520+pSz2;
             ptLines2.forEach(function(line){if(line.trim())ctx.fillText(line,pX2,ptY2);ptY2+=pSz2*1.4;});
         }
         ctx.shadowBlur=0;ctx.font='28px Georgia, serif';ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText('\u00A9 RABBIDANCZIGER@GMAIL.COM',1750,3740);
