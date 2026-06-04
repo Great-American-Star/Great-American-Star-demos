@@ -665,7 +665,34 @@ function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;d
         }
         ctx.shadowBlur=0;ctx.font='28px Georgia, serif';ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText('\u00A9 RABBIDANCZIGER@GMAIL.COM',1750,3740);
     }
-    function showPreview(){var modal=document.getElementById('previewModal');modal.style.display='block';var availW=window.innerWidth*0.9-40;var availH=window.innerHeight*0.9-150;previewScale=Math.round(Math.min(availW/3500,availH/4350,1.0)*100)/100;document.getElementById('previewZoomLabel').textContent=Math.round(previewScale*100)+'%';renderPreview();}
+    function showPreview(){
+    var modal=document.getElementById('previewModal');
+    modal.style.display='block';
+    // Use html2canvas to capture the actual star as it appears
+    var starEl=document.getElementById('starContainer');
+    var container=document.querySelector('.container');
+    // Simple approach: clone the star container into the preview canvas area
+    var previewDiv=document.getElementById('previewStarDiv');
+    if(!previewDiv){
+        previewDiv=document.createElement('div');
+        previewDiv.id='previewStarDiv';
+        previewDiv.style.cssText='width:3500px;height:4800px;position:relative;transform-origin:top left;';
+        document.getElementById('previewCanvas').parentNode.insertBefore(previewDiv,document.getElementById('previewCanvas'));
+        document.getElementById('previewCanvas').style.display='none';
+    }
+    // Scale to fit
+    var availW=window.innerWidth*0.9-40;
+    var availH=window.innerHeight*0.9-150;
+    var sc=Math.min(availW/3500,availH/4800,1.0);
+    previewDiv.style.transform='scale('+sc+')';
+    previewDiv.style.width='3500px';
+    previewDiv.style.height='4800px';
+    // Clone the actual container content
+    previewDiv.innerHTML=container.innerHTML;
+    // Fix image sources
+    previewDiv.querySelectorAll('canvas').forEach(function(c){c.style.pointerEvents='none';});
+    document.getElementById('previewZoomLabel').textContent=Math.round(sc*100)+'%';
+}
     function previewZoomIn(){previewScale=Math.round(Math.min(previewScale+0.05,1.0)*100)/100;document.getElementById('previewZoomLabel').textContent=Math.round(previewScale*100)+'%';renderPreview();}
     function previewZoomOut(){previewScale=Math.round(Math.max(previewScale-0.05,0.05)*100)/100;document.getElementById('previewZoomLabel').textContent=Math.round(previewScale*100)+'%';renderPreview();}
     function previewFit(){var availW=window.innerWidth*0.9-40;var availH=window.innerHeight*0.9-150;previewScale=Math.round(Math.min(availW/3500,availH/4350,1.0)*100)/100;document.getElementById('previewZoomLabel').textContent=Math.round(previewScale*100)+'%';renderPreview();}
