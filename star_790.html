@@ -576,16 +576,73 @@ function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;d
     function isLetterHighlighted(l){return l.classList.contains('highlighted')||l.classList.contains('path-selected')||l.classList.contains('path-candidate');}
 
     function renderPreview(){
-        var previewCanvas=document.getElementById('previewCanvas');var sc=previewScale;var baseW=3500,baseH=3750;
-        var previewTitleH=700;
-        previewCanvas.width=Math.round(baseW*sc);previewCanvas.height=Math.round((baseH+previewTitleH)*sc);
-        var ctx=previewCanvas.getContext('2d');ctx.scale(sc,sc);
-        ctx.fillStyle='white';ctx.fillRect(0,0,baseW,baseH+previewTitleH);
-        ctx.translate(0,previewTitleH);
+        var previewCanvas=document.getElementById('previewCanvas');
+        var sc=previewScale;
+        var W=3500*sc, H=4450*sc;
+        previewCanvas.width=Math.round(W);
+        previewCanvas.height=Math.round(H);
+        var ctx=previewCanvas.getContext('2d');
+        ctx.scale(sc,sc);
+        // Use same rendering as PNG download
+        var titleH=700, starSz=3500;
         var fi=new Image();fi.crossOrigin='anonymous';
-        fi.onload=function(){var fw=fi.width,fh=fi.height,fsc=Math.max(baseW/fw,baseH/fh);ctx.drawImage(fi,(baseW-fw*fsc)/2,(baseH-fh*fsc)/2,fw*fsc,fh*fsc);var cx2=1750,cy2=1750,outerR2=1680,innerR2=630;ctx.beginPath();for(var si=0;si<10;si++){var sa=(si*Math.PI/5)+(Math.PI/2)+Math.PI;var sr=(si%2===0)?outerR2:innerR2;if(si===0)ctx.moveTo(cx2+sr*Math.cos(sa),cy2+sr*Math.sin(sa));else ctx.lineTo(cx2+sr*Math.cos(sa),cy2+sr*Math.sin(sa));}ctx.closePath();ctx.fillStyle='white';ctx.fill();doPreviewRender(ctx,baseW,baseH);};
-        fi.onerror=function(){doPreviewRender(ctx,baseW,baseH);};fi.src=FLAG_URL;
+        fi.onload=function(){
+            // Draw flag background
+            var fw=fi.width,fh=fi.height,fsc=Math.max(3500/fw,(titleH+starSz)/fh);
+            ctx.drawImage(fi,(3500-fw*fsc)/2,(titleH+starSz-fh*fsc)/2+titleH,fw*fsc,fh*fsc);
+            // White star fill
+            var cx2=1750,cy2=1750+titleH,outerR2=1680,innerR2=630;
+            ctx.beginPath();
+            for(var si=0;si<10;si++){var sa=(si*Math.PI/5)+(Math.PI/2)+Math.PI;var sr=(si%2===0)?outerR2:innerR2;if(si===0)ctx.moveTo(cx2+sr*Math.cos(sa),cy2+sr*Math.sin(sa));else ctx.lineTo(cx2+sr*Math.cos(sa),cy2+sr*Math.sin(sa));}
+            ctx.closePath();ctx.fillStyle='white';ctx.fill();
+            // Draw star outline
+            ctx.strokeStyle='black';ctx.lineWidth=8;ctx.stroke();
+            // Draw images
+            if(centerImg){ctx.save();var pts3=getPentClipPoints();ctx.beginPath();ctx.moveTo(pts3[0].x,pts3[0].y+titleH);for(var pi=1;pi<pts3.length;pi++)ctx.lineTo(pts3[pi].x,pts3[pi].y+titleH);ctx.closePath();ctx.clip();ctx.drawImage(centerImg,centerImgX,centerImgY+titleH,centerImg.width*centerImgScale,centerImg.height*centerImgScale);ctx.restore();}
+            for(var ti=0;ti<5;ti++){if(tipImages[ti]){ctx.save();var b4=getTipTriangleBounds(ti);ctx.beginPath();ctx.moveTo(b4.tipX,b4.tipY+titleH);ctx.lineTo(b4.lx,b4.ly+titleH);ctx.lineTo(b4.rx,b4.ry+titleH);ctx.closePath();ctx.clip();ctx.drawImage(tipImages[ti],tipImgX[ti],tipImgY[ti]+titleH,tipImages[ti].width*tipImgScale[ti],tipImages[ti].height*tipImgScale[ti]);ctx.restore();}}
+            // Draw letters
+            letters.forEach(function(l){
+                var x=parseFloat(l.style.left)+12,y=parseFloat(l.style.top)+24+titleH;
+                var fs=parseInt(l.style.fontSize)||24;
+                var isHL=isLetterHighlighted(l);
+                ctx.font=(isHL?'900':'bold')+' '+fs+'px Georgia, serif';
+                ctx.textAlign='center';ctx.textBaseline='middle';
+                if(isHL){ctx.shadowColor='rgba(255,200,0,1.0)';ctx.shadowBlur=fs*2;ctx.fillStyle='#FFD700';ctx.fillText(l.textContent,x,y);ctx.shadowBlur=0;ctx.fillText(l.textContent,x,y);}
+                else{ctx.shadowBlur=0;ctx.fillStyle=l.style.color;ctx.fillText(l.textContent,x,y);}
+            });
+            // Draw title banner
+            ctx.fillStyle='rgba(0,0,50,0.55)';ctx.fillRect(0,0,3500,titleH);
+            ctx.shadowColor='rgba(0,0,0,0.9)';ctx.shadowBlur=15;
+            ctx.fillStyle='rgba(255,255,255,0.98)';ctx.font='bold 220px Georgia, serif';ctx.textAlign='center';
+            ctx.fillText('The Great American Star',1750,titleH*0.32);
+            ctx.font='italic 90px Georgia, serif';
+            ctx.fillText('In Celebration of Freedom 250',1750,titleH*0.68);
+            ctx.shadowBlur=0;
+            // Draw message
+            var pt2=getPersonalText();
+            if(pt2){
+                var ta4=document.getElementById('personalTextArea');
+                var pSz2=(ta4?parseInt(ta4.style.fontSize)||64:64);
+                var pCol2=ta4?ta4.style.color||'white':'white';
+                var pAl2=ta4?ta4.style.textAlign||'center':'center';
+                var msgBg=getMsgBgColor?getMsgBgColor():'#1B2A6B';
+                ctx.fillStyle=msgBg;ctx.fillRect(0,titleH+starSz,3500,250);
+                var ptPlain2=pt2.replace(/<br\s*\/?>/gi,'
+').replace(/<\/p>/gi,'
+').replace(/<\/div>/gi,'
+').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').trim();
+                ctx.fillStyle=pCol2;ctx.font='bold '+pSz2+'px Georgia, serif';
+                ctx.textAlign=pAl2;
+                var pX2=pAl2==='left'?200:pAl2==='right'?3300:1750;
+                var ptY2=titleH+starSz+50+pSz2;
+                ptPlain2.split('
+').forEach(function(line){if(line.trim()){ctx.fillText(line,pX2,ptY2);}ptY2+=pSz2*1.2;});
+            }
+        };
+        fi.onerror=function(){ctx.fillStyle='#1B2A6B';ctx.fillRect(0,0,3500,4450);};
+        fi.src=FLAG_URL;
     }
+
     function doPreviewRender(ctx,baseW,baseH){
         // DEBUG: draw test markers
         ctx.fillStyle='red';ctx.fillRect(100,100,200,200);
@@ -668,30 +725,15 @@ function applyMsgBgColor(){var col=document.getElementById('msgBgColor').value;d
     function showPreview(){
     var modal=document.getElementById('previewModal');
     modal.style.display='block';
-    // Use html2canvas to capture the actual star as it appears
-    var starEl=document.getElementById('starContainer');
-    var container=document.querySelector('.container');
-    // Simple approach: clone the star container into the preview canvas area
-    var previewDiv=document.getElementById('previewStarDiv');
-    if(!previewDiv){
-        previewDiv=document.createElement('div');
-        previewDiv.id='previewStarDiv';
-        previewDiv.style.cssText='width:3500px;height:4800px;position:relative;transform-origin:top left;';
-        document.getElementById('previewCanvas').parentNode.insertBefore(previewDiv,document.getElementById('previewCanvas'));
-        document.getElementById('previewCanvas').style.display='none';
-    }
-    // Scale to fit
     var availW=window.innerWidth*0.9-40;
     var availH=window.innerHeight*0.9-150;
-    var sc=Math.min(availW/3500,availH/4800,1.0);
-    previewDiv.style.transform='scale('+sc+')';
-    previewDiv.style.width='3500px';
-    previewDiv.style.height='4800px';
-    // Clone the actual container content
-    previewDiv.innerHTML=container.innerHTML;
-    // Fix image sources
-    previewDiv.querySelectorAll('canvas').forEach(function(c){c.style.pointerEvents='none';});
-    document.getElementById('previewZoomLabel').textContent=Math.round(sc*100)+'%';
+    previewScale=Math.round(Math.min(availW/3500,availH/4450,0.8)*100)/100;
+    document.getElementById('previewZoomLabel').textContent=Math.round(previewScale*100)+'%';
+    // Show the canvas, hide any clone div
+    var previewDiv=document.getElementById('previewStarDiv');
+    if(previewDiv)previewDiv.style.display='none';
+    document.getElementById('previewCanvas').style.display='block';
+    renderPreview();
 }
     function previewZoomIn(){previewScale=Math.round(Math.min(previewScale+0.05,1.0)*100)/100;document.getElementById('previewZoomLabel').textContent=Math.round(previewScale*100)+'%';renderPreview();}
     function previewZoomOut(){previewScale=Math.round(Math.max(previewScale-0.05,0.05)*100)/100;document.getElementById('previewZoomLabel').textContent=Math.round(previewScale*100)+'%';renderPreview();}
