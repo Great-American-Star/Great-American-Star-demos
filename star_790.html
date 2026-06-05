@@ -151,7 +151,7 @@
 <button class="control-btn" id="myImagesBtn" onclick="toggleMyImages()">📷 My Images</button>
 <button class="control-btn" onclick="scrollToText()">✏ My Message</button>
 <div class="controls-divider"></div>
-<button class="control-btn" onclick="showPreview()">👁 Preview</button>
+<button class="control-btn" onclick="showPreview2()">👁 Preview</button>
 <button class="control-btn" onclick="downloadVersion()">⬇ Download PNG</button>
 <button class="control-btn" onclick="window.open('https://thegreatamericanstar.com','_blank')" style="background:rgba(220,20,60,0.15);border-color:rgba(220,20,60,0.7);color:#8B0000;font-weight:700;">🛒 Order My Poster</button>
 <div class="controls-divider"></div>
@@ -1071,6 +1071,83 @@ function downloadVersion(){
         requestAnimationFrame(function(){requestAnimationFrame(function(){window.scrollTo(STAR_CENTER_X-Math.round(window.innerWidth/2),(700+STAR_CENTER_Y)-Math.round(window.innerHeight/2));});});
     });
     document.addEventListener('wheel',function(e){e.preventDefault();e.deltaY<0?zoomIn():zoomOut();},{passive:false});
+    function showPreview2(){
+        var modal=document.getElementById('previewModal');
+        if(!modal){alert('Preview not available');return;}
+        modal.style.display='block';
+        var lbl=document.getElementById('previewZoomLabel');
+        if(lbl)lbl.textContent='Generating...';
+        var sc=0.15;
+        var W=Math.round(5400*sc),H=Math.round(7200*sc);
+        var titleH=Math.round(900*sc),starSz=Math.round(5400*sc),ssc=starSz/3500;
+        var cv=document.createElement('canvas');
+        cv.width=W;cv.height=H;
+        var cx=cv.getContext('2d');
+        cx.fillStyle='white';cx.fillRect(0,0,W,H);
+        function finishPreview(){
+            var img=document.getElementById('previewImg2');
+            if(!img){
+                img=document.createElement('img');
+                img.id='previewImg2';
+                img.style.cssText='display:block;max-width:100%;max-height:70vh;margin:0 auto;';
+                var pc=document.getElementById('previewCanvas');
+                if(pc){pc.parentNode.insertBefore(img,pc);pc.style.display='none';}
+            }
+            img.src=cv.toDataURL('image/jpeg',0.85);
+            if(lbl)lbl.textContent='Preview';
+        }
+        // Draw flag
+        var fi=new Image();fi.crossOrigin='anonymous';
+        fi.onload=function(){
+            var fw=fi.width,fh=fi.height,fsc=Math.max(W/fw,H/fh);
+            cx.drawImage(fi,(W-fw*fsc)/2,(H-fh*fsc)/2,fw*fsc,fh*fsc);
+            // White star
+            cx.save();cx.translate(0,titleH);cx.scale(ssc,ssc);
+            var cx2=1750,cy2=1750,or2=1680,ir2=630;
+            cx.beginPath();
+            for(var si=0;si<10;si++){var sa=(si*Math.PI/5)+(Math.PI/2)+Math.PI;var sr=(si%2===0)?or2:ir2;if(si===0)cx.moveTo(cx2+sr*Math.cos(sa),cy2+sr*Math.sin(sa));else cx.lineTo(cx2+sr*Math.cos(sa),cy2+sr*Math.sin(sa));}
+            cx.closePath();cx.fillStyle='white';cx.fill();cx.restore();
+            // Letters
+            cx.save();cx.translate(0,titleH);cx.scale(ssc,ssc);
+            letters.forEach(function(l){
+                var lx=parseFloat(l.style.left)+12,ly=parseFloat(l.style.top)+24,fs=parseInt(l.style.fontSize)||24;
+                var hl=isLetterHighlighted(l);
+                cx.font=(hl?'900':'bold')+' '+fs+'px Georgia,serif';
+                cx.textAlign='center';cx.textBaseline='middle';
+                if(hl){cx.shadowColor='rgba(255,200,0,1)';cx.shadowBlur=fs*2;cx.fillStyle='#FFD700';cx.fillText(l.textContent,lx,ly);cx.shadowBlur=0;cx.fillText(l.textContent,lx,ly);}
+                else{cx.shadowBlur=0;cx.fillStyle=l.style.color;cx.fillText(l.textContent,lx,ly);}
+            });
+            cx.restore();
+            // Title
+            cx.fillStyle='rgba(0,0,50,0.55)';cx.fillRect(0,0,W,titleH);
+            cx.fillStyle='rgba(255,255,255,0.98)';cx.font='bold '+(220*sc)+'px Georgia,serif';cx.textAlign='center';
+            cx.fillText('The Great American Star',W/2,titleH*0.32);
+            cx.font='italic '+(90*sc)+'px Georgia,serif';
+            cx.fillText('In Celebration of Freedom 250',W/2,titleH*0.68);
+            // Message
+            var pt=getPersonalText();
+            if(pt){
+                var ta=document.getElementById('personalTextArea');
+                var psz=(ta?parseInt(ta.style.fontSize)||64:64)*sc;
+                var pcol=ta?ta.style.color||'white':'white';
+                var pal=ta?ta.style.textAlign||'center':'center';
+                var mbg=getMsgBgColor?getMsgBgColor():'#1B2A6B';
+                cx.fillStyle=mbg;cx.fillRect(0,titleH+starSz,W,Math.round(200*sc));
+                var ptxt=pt.replace(/<br[^>]*>/gi,'
+').replace(/<\/[^>]+>/g,'
+').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').trim();
+                cx.fillStyle=pcol;cx.font='bold '+psz+'px Georgia,serif';cx.textAlign=pal;
+                var px2=pal==='left'?W*0.05:pal==='right'?W*0.95:W/2;
+                var py2=titleH+starSz+Math.round(50*sc)+psz*0.6;
+                ptxt.split('
+').forEach(function(ln){if(ln.trim()){cx.fillText(ln,px2,py2);}py2+=psz*1.2;});
+            }
+            finishPreview();
+        };
+        fi.onerror=finishPreview;
+        fi.src=FLAG_URL;
+    }
+
 </script>
 </body>
 </html>
