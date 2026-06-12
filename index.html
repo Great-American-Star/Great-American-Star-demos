@@ -1,484 +1,681 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Great American Star - Interactive Mathematical Art for America's 250th Anniversary</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      The Great American Star - Interactive Mathematical Art for America's 250th
+      Anniversary
+    </title>
     <style>
-        body {
-            font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
+      body {
+        font-family: "Georgia", serif;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+      }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+      }
 
+      .main-title {
+        font-size: 3em;
+        font-weight: bold;
+        color: #ffd700;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      }
+
+      .subtitle {
+        font-size: 1.3em;
+        margin-bottom: 20px;
+        opacity: 0.9;
+      }
+
+      .freedom-250-section {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 215, 0, 0.2),
+          rgba(255, 107, 107, 0.2)
+        );
+        border: 2px solid #ffd700;
+        border-radius: 15px;
+        padding: 30px;
+        margin: 30px 0;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .freedom-250-logo {
+        max-width: 300px;
+        height: auto;
+        margin: 20px auto;
+        display: block;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      }
+
+      .partnership-text {
+        font-size: 1.2em;
+        margin: 20px 0;
+        font-weight: bold;
+        color: #ffd700;
+      }
+
+      .core-image-section {
+        text-align: center;
+        margin: 40px 0;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+      }
+
+      .core-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .core-image:hover {
+        transform: scale(1.02);
+        box-shadow: 0 12px 48px rgba(255, 215, 0, 0.4);
+      }
+
+      /* FEATURED STAR SECTION */
+      .featured-star-section {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 215, 0, 0.25),
+          rgba(220, 20, 60, 0.2)
+        );
+        border: 3px solid #ffd700;
+        border-radius: 20px;
+        padding: 40px 30px;
+        margin: 30px 0;
+        text-align: center;
+        box-shadow: 0 12px 48px rgba(255, 215, 0, 0.3);
+      }
+
+      .featured-star-section h2 {
+        color: #ffd700;
+        font-size: 2.4em;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      }
+
+      .featured-star-section p {
+        font-size: 1.15em;
+        margin-bottom: 10px;
+        opacity: 0.95;
+      }
+
+      .featured-badge {
+        display: inline-block;
+        background: #dc143c;
+        color: white;
+        font-size: 0.85em;
+        font-weight: bold;
+        padding: 4px 14px;
+        border-radius: 20px;
+        margin-bottom: 18px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .featured-link {
+        display: inline-block;
+        background: #ffd700;
+        color: #000;
+        padding: 18px 48px;
+        text-decoration: none;
+        border-radius: 35px;
+        font-weight: bold;
+        font-size: 1.3em;
+        margin: 15px 5px 5px 5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+      }
+
+      .featured-link:hover {
+        background: #ffed4e;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px auto;
+        max-width: 600px;
+        text-align: left;
+      }
+
+      .feature-list li {
+        padding: 6px 0;
+        font-size: 1.05em;
+      }
+
+      .feature-list li::before {
+        content: "✅ ";
+      }
+
+      .section {
+        background: rgba(255, 255, 255, 0.1);
+        margin: 30px 0;
+        padding: 30px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      .section h2 {
+        color: #ffd700;
+        font-size: 2em;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+      }
+
+      .demo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .demo-card {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      .demo-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .demo-link {
+        display: inline-block;
+        background: #ffd700;
+        color: #000;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: bold;
+        margin: 10px 5px;
+        transition: all 0.3s ease;
+      }
+
+      .demo-link:hover {
+        background: #ffed4e;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+      }
+
+      .image-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+
+      .gallery-item {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+      }
+
+      .gallery-item:hover {
+        transform: translateY(-5px);
+      }
+
+      .gallery-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .gallery-image:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+      }
+
+      .gallery-caption {
+        margin-top: 10px;
+        font-size: 0.9em;
+        opacity: 0.9;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .stat-card {
+        background: rgba(255, 215, 0, 0.2);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+      }
+
+      .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        color: #ffd700;
+        display: block;
+      }
+
+      .video-section {
+        text-align: center;
+        margin: 40px 0;
+      }
+
+      .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .video-container iframe {
+        width: 100%;
+        height: 450px;
+        border: none;
+      }
+
+      .copyright {
+        text-align: center;
+        margin-top: 40px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        font-size: 0.9em;
+        opacity: 0.8;
+      }
+
+      @media (max-width: 768px) {
         .main-title {
-            font-size: 3em;
-            font-weight: bold;
-            color: #ffd700;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-
-        .subtitle {
-            font-size: 1.3em;
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
-
-        .freedom-250-section {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 107, 0.2));
-            border: 2px solid #ffd700;
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .freedom-250-logo {
-            max-width: 300px;
-            height: auto;
-            margin: 20px auto;
-            display: block;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-        }
-
-        .partnership-text {
-            font-size: 1.2em;
-            margin: 20px 0;
-            font-weight: bold;
-            color: #ffd700;
-        }
-
-        .core-image-section {
-            text-align: center;
-            margin: 40px 0;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-
-        .core-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .core-image:hover {
-            transform: scale(1.02);
-            box-shadow: 0 12px 48px rgba(255, 215, 0, 0.4);
-        }
-
-        /* FEATURED STAR SECTION */
-        .featured-star-section {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(220, 20, 60, 0.2));
-            border: 3px solid #ffd700;
-            border-radius: 20px;
-            padding: 40px 30px;
-            margin: 30px 0;
-            text-align: center;
-            box-shadow: 0 12px 48px rgba(255, 215, 0, 0.3);
-        }
-
-        .featured-star-section h2 {
-            color: #ffd700;
-            font-size: 2.4em;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-        }
-
-        .featured-star-section p {
-            font-size: 1.15em;
-            margin-bottom: 10px;
-            opacity: 0.95;
-        }
-
-        .featured-badge {
-            display: inline-block;
-            background: #DC143C;
-            color: white;
-            font-size: 0.85em;
-            font-weight: bold;
-            padding: 4px 14px;
-            border-radius: 20px;
-            margin-bottom: 18px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .featured-link {
-            display: inline-block;
-            background: #ffd700;
-            color: #000;
-            padding: 18px 48px;
-            text-decoration: none;
-            border-radius: 35px;
-            font-weight: bold;
-            font-size: 1.3em;
-            margin: 15px 5px 5px 5px;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
-        }
-
-        .featured-link:hover {
-            background: #ffed4e;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
-        }
-
-        .feature-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px auto;
-            max-width: 600px;
-            text-align: left;
-        }
-
-        .feature-list li {
-            padding: 6px 0;
-            font-size: 1.05em;
-        }
-
-        .feature-list li::before {
-            content: "✅ ";
-        }
-
-        .section {
-            background: rgba(255, 255, 255, 0.1);
-            margin: 30px 0;
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        .section h2 {
-            color: #ffd700;
-            font-size: 2em;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+          font-size: 2em;
         }
 
         .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .demo-card {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .demo-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .demo-link {
-            display: inline-block;
-            background: #ffd700;
-            color: #000;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: bold;
-            margin: 10px 5px;
-            transition: all 0.3s ease;
-        }
-
-        .demo-link:hover {
-            background: #ffed4e;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+          grid-template-columns: 1fr;
         }
 
         .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         }
 
-        .gallery-item {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
+        .featured-star-section h2 {
+          font-size: 1.8em;
         }
 
-        .gallery-item:hover {
-            transform: translateY(-5px);
+        .featured-link {
+          font-size: 1.1em;
+          padding: 14px 32px;
         }
-
-        .gallery-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .gallery-image:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
-        }
-
-        .gallery-caption {
-            margin-top: 10px;
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .stat-card {
-            background: rgba(255, 215, 0, 0.2);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #ffd700;
-            display: block;
-        }
-
-        .video-section {
-            text-align: center;
-            margin: 40px 0;
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .video-container iframe {
-            width: 100%;
-            height: 450px;
-            border: none;
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-
-        @media (max-width: 768px) {
-            .main-title {
-                font-size: 2em;
-            }
-            
-            .demo-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .image-gallery {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-
-            .featured-star-section h2 {
-                font-size: 1.8em;
-            }
-
-            .featured-link {
-                font-size: 1.1em;
-                padding: 14px 32px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <!-- Header Section -->
-        <div class="header">
-            <h1 class="main-title">The Great American Star</h1>
-            <p class="subtitle">Interactive mathematical art for America's 250th anniversary. Features 359+ million unique paths arranged as a patriotic star with visualization demos.</p>
+      <!-- Header Section -->
+      <div class="header">
+        <h1 class="main-title">The Great American Star</h1>
+        <p class="subtitle">
+          Interactive mathematical art for America's 250th anniversary. Features
+          359+ million unique paths arranged as a patriotic star with
+          visualization demos.
+        </p>
+      </div>
+
+      <!-- Freedom 250 Partnership Section -->
+      <div class="freedom-250-section">
+        <h2 style="color: #ffd700; margin-bottom: 15px">
+          In Celebration of Freedom 250
+        </h2>
+        <img
+          src="Freedom 250 Logo - RGB - Full Color Gold.png"
+          alt="Freedom 250 Logo"
+          class="freedom-250-logo"
+        />
+        <p class="partnership-text">
+          Celebrating America's 250th anniversary through mathematical art and
+          educational innovation.
+        </p>
+        <p style="font-size: 1.1em; margin-bottom: 15px">
+          The Great American Star embodies the spirit of unity and personal
+          connection - engaging Americans through the beauty of mathematics and
+          individual representation.
+        </p>
+      </div>
+
+      <!-- ⭐ FEATURED: THE FULL INTERACTIVE STAR -->
+      <div class="featured-star-section">
+        <div class="featured-badge">⭐ New — The Full Star</div>
+        <h2>The Complete Great American Star</h2>
+        <p>
+          This is the real thing — the full five-pointed star with all
+          359,277,250 unique paths. Trace a random path, animate paths, or
+          <strong>create your own personal path</strong> through America's
+          story.
+        </p>
+        <ul class="feature-list">
+          <li>Full five-pointed star — the complete mathematical artwork</li>
+          <li>Trace a random path through all 24 letters</li>
+          <li>Animated path visualization</li>
+          <li>Create your own personal path — click through each row</li>
+          <li>Zoom in and out to explore the detail</li>
+        </ul>
+        <a href="star_790.html" class="featured-link" target="_blank"
+          >🌟 Open The Full Star</a
+        >
+        <p style="margin-top: 15px; font-size: 0.95em; opacity: 0.8">
+          Work in progress — actively being developed
+        </p>
+      </div>
+
+      <!-- Core Star Design Image -->
+      <div class="core-image-section">
+        <h2>The Great American Star Design</h2>
+        <img
+          src="star-design-core-freedom-250.jpg"
+          alt="The Great American Star - Core Design showing 359 million unique paths arranged as a patriotic star"
+          class="core-image"
+          onclick="window.open('star-design-core-freedom-250.jpg', '_blank')"
+        />
+        <p style="margin-top: 15px; font-style: italic">
+          Click image to view full size • 359,277,250 unique paths representing
+          every American citizen
+        </p>
+      </div>
+
+      <!-- Interactive Demonstrations -->
+      <div class="section">
+        <h2>🔬 Additional Demonstrations</h2>
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>Path Calculator</h3>
+            <p>
+              Mathematical calculator showing path distributions across the star
+              structure
+            </p>
+            <a href="calculator.html" class="demo-link" target="_blank"
+              >Explore Calculator</a
+            >
+          </div>
+          <div class="demo-card">
+            <h3>Pascal Triangle</h3>
+            <p>
+              Interactive exploration of mathematical paths with color-coded
+              letters
+            </p>
+            <a href="pascal-triangle.html" class="demo-link" target="_blank"
+              >Try Interactive</a
+            >
+          </div>
+          <div class="demo-card">
+            <h3>Path Animation</h3>
+            <p>
+              Animated visualization of paths flowing through the mathematical
+              structure
+            </p>
+            <a href="path-animation.html" class="demo-link" target="_blank"
+              >Watch Animation</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Portfolio -->
+      <div class="section">
+        <h2>🎨 Visual Portfolio</h2>
+        <div class="image-gallery">
+          <div class="gallery-item">
+            <img
+              src="highlighted-paths-sample.jpg"
+              alt="Sample of highlighted paths showing individual journeys through the star"
+              class="gallery-image"
+              onclick="window.open('highlighted-paths-sample.jpg', '_blank')"
+            />
+            <div class="gallery-caption">Highlighted Paths Sample</div>
+          </div>
+          <div class="gallery-item">
+            <img
+              src="navy-blue-visualization.jpg"
+              alt="Navy blue background visualization with highlighted paths"
+              class="gallery-image"
+              onclick="window.open('navy-blue-visualization.jpg', '_blank')"
+            />
+            <div class="gallery-caption">Navy Blue Visualization</div>
+          </div>
+          <div class="gallery-item">
+            <img
+              src="patriotic-theme.jpg"
+              alt="Traditional red, white, and blue patriotic theme design"
+              class="gallery-image"
+              onclick="window.open('patriotic-theme.jpg', '_blank')"
+            />
+            <div class="gallery-caption">Patriotic Theme</div>
+          </div>
+          <div class="gallery-item">
+            <img
+              src="trump-presidential-edition-freedom-250.jpg"
+              alt="Personalized example showing customization capabilities with Freedom 250 branding"
+              class="gallery-image"
+              onclick="
+                window.open(
+                  'trump-presidential-edition-freedom-250.jpg',
+                  '_blank',
+                )
+              "
+            />
+            <div class="gallery-caption">Presidential Edition Example</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Path Visualization Video -->
+      <div class="section">
+        <h2>🎬 Path Visualization Demo</h2>
+        <div class="video-section">
+          <div class="video-container">
+            <iframe
+              src="https://www.youtube.com/embed/3bjbKlmCZKw"
+              title="Great American Star Path Visualization"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <p style="margin-top: 15px">
+            Watch as random paths are highlighted in real-time, showing how
+            individual journeys flow through the mathematical structure from the
+            central pentagon to the star's tips.
+          </p>
+        </div>
+      </div>
+
+      <!-- Project Overview -->
+      <div class="section">
+        <h2>📊 Project Overview</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-number">359,277,250</span>
+            <div>Unique Paths</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">50</span>
+            <div>Starting Points (States)</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">24</span>
+            <div>Character Sequence</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">2026</span>
+            <div>Anniversary Year</div>
+          </div>
         </div>
 
-        <!-- Freedom 250 Partnership Section -->
-        <div class="freedom-250-section">
-            <h2 style="color: #ffd700; margin-bottom: 15px;">In Celebration of Freedom 250</h2>
-            <img src="Freedom 250 Logo - RGB - Full Color Gold.png" alt="Freedom 250 Logo" class="freedom-250-logo">
-            <p class="partnership-text">Celebrating America's 250th anniversary through mathematical art and educational innovation.</p>
-            <p style="font-size: 1.1em; margin-bottom: 15px;">The Great American Star embodies the spirit of unity and personal connection - engaging Americans through the beauty of mathematics and individual representation.</p>
-        </div>
+        <h3>Mathematical Foundation</h3>
+        <p>
+          The Great American Star arranges the phrase "UNITEDSTATESOFAMERICA250"
+          into a five-pointed star using a modified mathematical structure. Each
+          of the 359+ million paths represents a unique journey through the
+          letter sequence, symbolizing individual American stories while forming
+          a unified whole.
+        </p>
 
-        <!-- ⭐ FEATURED: THE FULL INTERACTIVE STAR -->
-        <div class="featured-star-section">
-            <div class="featured-badge">⭐ New — The Full Star</div>
-            <h2>The Complete Great American Star</h2>
-            <p>This is the real thing — the full five-pointed star with all 359,277,250 unique paths. Trace a random path, animate paths, or <strong>create your own personal path</strong> through America's story.</p>
-            <ul class="feature-list">
-                <li>Full five-pointed star — the complete mathematical artwork</li>
-                <li>Trace a random path through all 24 letters</li>
-                <li>Animated path visualization</li>
-                <li>Create your own personal path — click through each row</li>
-                <li>Zoom in and out to explore the detail</li>
-            </ul>
-            <a href="star_790.html" class="featured-link" target="_blank">🌟 Open The Full Star</a>
-            <p style="margin-top: 15px; font-size: 0.95em; opacity: 0.8;">Work in progress — actively being developed</p>
-        </div>
+        <h3>Personalization Features</h3>
+        <ul>
+          <li>
+            <strong>Choose Your Path:</strong> Select from 359+ million unique
+            routes through the star
+          </li>
+          <li>
+            <strong>Add Your Images:</strong> Personalize with 6 custom images
+            (center + 5 star tips)
+          </li>
+          <li>
+            <strong>Personal Message:</strong> Include your own message beneath
+            the star
+          </li>
+          <li>
+            <strong>Multiple Formats:</strong> Available as digital downloads,
+            printed posters, and interactive displays
+          </li>
+        </ul>
+      </div>
 
-        <!-- Core Star Design Image -->
-        <div class="core-image-section">
-            <h2>The Great American Star Design</h2>
-            <img src="star-design-core-freedom-250.jpg" alt="The Great American Star - Core Design showing 359 million unique paths arranged as a patriotic star" class="core-image" onclick="window.open('star-design-core-freedom-250.jpg', '_blank')">
-            <p style="margin-top: 15px; font-style: italic;">Click image to view full size • 359,277,250 unique paths representing every American citizen</p>
-        </div>
+      <!-- Freedom 250 Connection -->
+      <div class="section">
+        <h2>Freedom 250 Connection</h2>
+        <p>
+          This project celebrates America's 250th anniversary through the
+          principle of "E Pluribus Unum" (Out of Many, One). The mathematical
+          structure creates exactly the right number of paths to represent
+          individual Americans, making this both an artistic tribute and a
+          symbolic representation of American unity in diversity.
+        </p>
 
-        <!-- Interactive Demonstrations -->
-        <div class="section">
-            <h2>🔬 Additional Demonstrations</h2>
-            <div class="demo-grid">
-                <div class="demo-card">
-                    <h3>Path Calculator</h3>
-                    <p>Mathematical calculator showing path distributions across the star structure</p>
-                    <a href="calculator.html" class="demo-link" target="_blank">Explore Calculator</a>
-                </div>
-                <div class="demo-card">
-                    <h3>Pascal Triangle</h3>
-                    <p>Interactive exploration of mathematical paths with color-coded letters</p>
-                    <a href="pascal-triangle.html" class="demo-link" target="_blank">Try Interactive</a>
-                </div>
-                <div class="demo-card">
-                    <h3>Path Animation</h3>
-                    <p>Animated visualization of paths flowing through the mathematical structure</p>
-                    <a href="path-animation.html" class="demo-link" target="_blank">Watch Animation</a>
-                </div>
-            </div>
-        </div>
+        <p>
+          The design celebrates individual journeys while highlighting how
+          millions of unique paths converge to form a single, beautiful star
+          that represents our nation's enduring spirit of freedom and unity.
+        </p>
+      </div>
 
-        <!-- Visual Portfolio -->
-        <div class="section">
-            <h2>🎨 Visual Portfolio</h2>
-            <div class="image-gallery">
-                <div class="gallery-item">
-                    <img src="highlighted-paths-sample.jpg" alt="Sample of highlighted paths showing individual journeys through the star" class="gallery-image" onclick="window.open('highlighted-paths-sample.jpg', '_blank')">
-                    <div class="gallery-caption">Highlighted Paths Sample</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="navy-blue-visualization.jpg" alt="Navy blue background visualization with highlighted paths" class="gallery-image" onclick="window.open('navy-blue-visualization.jpg', '_blank')">
-                    <div class="gallery-caption">Navy Blue Visualization</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="patriotic-theme.jpg" alt="Traditional red, white, and blue patriotic theme design" class="gallery-image" onclick="window.open('patriotic-theme.jpg', '_blank')">
-                    <div class="gallery-caption">Patriotic Theme</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="trump-presidential-edition-freedom-250.jpg" alt="Personalized example showing customization capabilities with Freedom 250 branding" class="gallery-image" onclick="window.open('trump-presidential-edition-freedom-250.jpg', '_blank')">
-                    <div class="gallery-caption">Presidential Edition Example</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Path Visualization Video -->
-        <div class="section">
-            <h2>🎬 Path Visualization Demo</h2>
-            <div class="video-section">
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/3bjbKlmCZKw" title="Great American Star Path Visualization" allowfullscreen></iframe>
-                </div>
-                <p style="margin-top: 15px;">Watch as random paths are highlighted in real-time, showing how individual journeys flow through the mathematical structure from the central pentagon to the star's tips.</p>
-            </div>
-        </div>
-
-        <!-- Project Overview -->
-        <div class="section">
-            <h2>📊 Project Overview</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-number">359,277,250</span>
-                    <div>Unique Paths</div>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">50</span>
-                    <div>Starting Points (States)</div>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">24</span>
-                    <div>Character Sequence</div>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">2026</span>
-                    <div>Anniversary Year</div>
-                </div>
-            </div>
-            
-            <h3>Mathematical Foundation</h3>
-            <p>The Great American Star arranges the phrase "UNITEDSTATESOFAMERICA250" into a five-pointed star using a modified mathematical structure. Each of the 359+ million paths represents a unique journey through the letter sequence, symbolizing individual American stories while forming a unified whole.</p>
-            
-            <h3>Personalization Features</h3>
-            <ul>
-                <li><strong>Choose Your Path:</strong> Select from 359+ million unique routes through the star</li>
-                <li><strong>Add Your Images:</strong> Personalize with 6 custom images (center + 5 star tips)</li>
-                <li><strong>Personal Message:</strong> Include your own message beneath the star</li>
-                <li><strong>Multiple Formats:</strong> Available as digital downloads, printed posters, and interactive displays</li>
-            </ul>
-        </div>
-
-        <!-- Freedom 250 Connection -->
-        <div class="section">
-            <h2>Freedom 250 Connection</h2>
-            <p>This project celebrates America's 250th anniversary through the principle of "E Pluribus Unum" (Out of Many, One). The mathematical structure creates exactly the right number of paths to represent individual Americans, making this both an artistic tribute and a symbolic representation of American unity in diversity.</p>
-            
-            <p>The design celebrates individual journeys while highlighting how millions of unique paths converge to form a single, beautiful star that represents our nation's enduring spirit of freedom and unity.</p>
-        </div>
-
-        <!-- Copyright -->
-        <div class="copyright">
-            <p><strong>© RABBIDANCZIGER@GMAIL.COM</strong></p>
-            <p>The Great American Star Project • Mathematical Art for America's 250th Anniversary</p>
-            <p>In celebration of Freedom 250 • Educational Innovation Through Mathematical Art</p>
-        </div>
+      <!-- Copyright -->
+      <div class="copyright">
+        <p><strong>© RABBIDANCZIGER@GMAIL.COM</strong></p>
+        <p>
+          The Great American Star Project • Mathematical Art for America's 250th
+          Anniversary
+        </p>
+        <p>
+          In celebration of Freedom 250 • Educational Innovation Through
+          Mathematical Art
+        </p>
+      </div>
     </div>
-</body>
+    <!-- ===== Sticky "Create Your Poster" bar (links to the star tool) ===== -->
+    <style>
+      body {
+        padding-bottom: 76px !important;
+      }
+      #gas-sticky-cta {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99999;
+        background: rgba(10, 35, 66, 0.97);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 12px 16px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+        font-family: Georgia, "Times New Roman", serif;
+      }
+      #gas-sticky-cta .gas-cta-text {
+        color: #fff;
+        font-size: 14px;
+        opacity: 0.92;
+        margin: 0;
+      }
+      #gas-sticky-cta a.gas-cta-btn {
+        background: #ff0013;
+        color: #fff;
+        text-decoration: none;
+        padding: 11px 26px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+        white-space: nowrap;
+      }
+      #gas-sticky-cta a.gas-cta-btn:hover {
+        background: #c8000f;
+        transform: translateY(-1px);
+      }
+      @media (max-width: 600px) {
+        #gas-sticky-cta .gas-cta-text {
+          display: none;
+        }
+        #gas-sticky-cta {
+          padding: 10px;
+        }
+        body {
+          padding-bottom: 64px !important;
+        }
+      }
+    </style>
+    <div id="gas-sticky-cta">
+      <p class="gas-cta-text">Ready to make your own one-of-a-kind star?</p>
+      <a
+        class="gas-cta-btn"
+        href="https://great-american-star.github.io/Great-American-Star-demos/star_790.html"
+        >⭐ Create Your Poster</a
+      >
+    </div>
+    <!-- ===== End sticky CTA ===== -->
+  </body>
 </html>

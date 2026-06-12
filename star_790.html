@@ -293,6 +293,31 @@
         text-transform: uppercase;
         padding: 2px 0 0 2px;
       }
+      .controls-label.primary {
+        color: #b22234;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .controls-primary {
+        width: 100%;
+        background: rgba(220, 20, 60, 0.06);
+        border: 1px solid rgba(220, 20, 60, 0.18);
+        border-radius: 8px;
+        padding: 8px;
+        margin-bottom: 4px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      .controls-secondary-note {
+        width: 100%;
+        font-size: 9px;
+        color: rgba(0, 0, 0, 0.35);
+        font-family: "Courier New", monospace;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 4px 0 0 2px;
+      }
       .info {
         display: none;
       }
@@ -825,7 +850,7 @@
             ✕ Close
           </button>
           <button
-            onclick="downloadVersion()"
+            onclick="downloadPreviewLowRes()"
             style="
               padding: 6px 16px;
               background: #0052cc;
@@ -837,7 +862,7 @@
               font-weight: 600;
             "
           >
-            ⬇ Download PNG
+            ⬇ Download Preview (Low-Res)
           </button>
           <button
             onclick="orderMyPoster()"
@@ -855,6 +880,25 @@
           >
             🛒 Order My Poster
           </button>
+          <a
+            href="https://great-american-star.github.io/Great-American-Star-demos/"
+            style="
+              padding: 5px 12px;
+              background: transparent;
+              color: #6b7280;
+              border: 1px solid #d1d5db;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 11px;
+              font-weight: 500;
+              margin-left: 8px;
+              text-decoration: none;
+              display: inline-flex;
+              align-items: center;
+            "
+          >
+            Explore the Mathematics →
+          </a>
         </div>
         <div
           id="previewScrollArea"
@@ -892,6 +936,50 @@
       </div>
     </div>
     <div class="controls">
+      <!-- ===== PRIMARY: Personalize + Order (most prominent) ===== -->
+      <div class="controls-label primary">★ Personalize Your Star</div>
+      <div class="controls-primary">
+        <button class="control-btn" id="myPathBtn" onclick="toggleMyPath()">
+          🕐 My Path
+        </button>
+        <button class="control-btn" id="myImagesBtn" onclick="toggleMyImages()">
+          📷 My Images
+        </button>
+        <button class="control-btn" onclick="scrollToText()">
+          ✏ My Message
+        </button>
+      </div>
+
+      <div class="controls-label primary">★ Get Your Poster</div>
+      <div class="controls-primary">
+        <button
+          class="control-btn"
+          onclick="orderMyPoster()"
+          style="
+            background: rgba(220, 20, 60, 0.15);
+            border-color: rgba(220, 20, 60, 0.7);
+            color: #8b0000;
+            font-weight: 700;
+          "
+        >
+          🛒 Order My Poster
+        </button>
+        <button class="control-btn" onclick="downloadPreviewLowRes()">
+          ⬇ Download Preview (Low-Res)
+        </button>
+        <button
+          class="control-btn"
+          onclick="downloadFullResolution()"
+          style="opacity: 0.85"
+        >
+          🔒 Download Full Resolution
+        </button>
+      </div>
+
+      <div class="controls-divider"></div>
+
+      <!-- ===== SECONDARY: Explore the mathematics (less prominent) ===== -->
+      <div class="controls-secondary-note">Explore the Mathematics</div>
       <div class="controls-label">Navigation</div>
       <button class="control-btn" onclick="zoomIn()">Zoom In</button>
       <button class="control-btn" onclick="zoomOut()">Zoom Out</button>
@@ -907,32 +995,21 @@
       <button class="control-btn" onclick="clearHighlights()">
         Clear Highlights
       </button>
-      <div class="controls-divider"></div>
-      <div class="controls-label">Personalization</div>
-      <button class="control-btn" id="myPathBtn" onclick="toggleMyPath()">
-        🕐 My Path
-      </button>
-      <button class="control-btn" id="myImagesBtn" onclick="toggleMyImages()">
-        📷 My Images
-      </button>
-      <button class="control-btn" onclick="scrollToText()">✏ My Message</button>
-      <div class="controls-divider"></div>
-      <button class="control-btn" onclick="showPreview()">👁 Preview</button>
-      <button class="control-btn" onclick="downloadVersion()">
-        ⬇ Download PNG
-      </button>
-      <button
+      <a
         class="control-btn"
-        onclick="orderMyPoster()"
+        href="https://great-american-star.github.io/Great-American-Star-demos/"
         style="
-          background: rgba(220, 20, 60, 0.15);
-          border-color: rgba(220, 20, 60, 0.7);
-          color: #8b0000;
-          font-weight: 700;
+          font-size: 11px;
+          font-weight: 500;
+          color: #6b7280;
+          opacity: 0.85;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
         "
       >
-        🛒 Order My Poster
-      </button>
+        Explore the Mathematics →
+      </a>
       <div class="controls-divider"></div>
       <button class="control-btn" onclick="toggleFullscreen()" id="fsBtn">
         ⛶ Full Screen
@@ -3760,6 +3837,34 @@
           if (btn) btn.textContent = "⛶ Full Screen";
         }
       });
+      // ===== Dual download system =====
+      // Simple client-side gate for the full-resolution download.
+      // NOTE: this is a soft gate only — the page is public, so the password
+      // is not real security. Client confirmed a simple gate is acceptable.
+      var FULLRES_PASSWORD = "gas2026"; // <-- client can change this
+      var __previewMode = false; // when true, render adds a PREVIEW watermark + low res
+
+      function downloadPreviewLowRes() {
+        __previewMode = true;
+        generateDownload("png", 1); // base size; render downscales + watermarks in preview mode
+      }
+
+      function downloadFullResolution() {
+        var entry = prompt(
+          "Enter the password to download the full-resolution poster:",
+        );
+        if (entry === null) return; // cancelled
+        if (entry !== FULLRES_PASSWORD) {
+          alert(
+            "Incorrect password. The full-resolution download is restricted.",
+          );
+          return;
+        }
+        __previewMode = false;
+        generateDownload("png", 2); // full-res (18x24 @ 600 DPI), no PREVIEW watermark
+      }
+      // ===== End dual download system =====
+
       function downloadVersion() {
         var opts = [
           {
@@ -4606,12 +4711,65 @@
                 ptY += lineSize * 0.6;
               });
             }
-            // Step 10: watermark
+            // Step 10: watermark (sits just above the website URL strip)
             ctx.shadowBlur = 0;
             ctx.font = 36 * sc + "px Georgia, serif";
             ctx.textAlign = "center";
             ctx.fillStyle = "rgba(255,255,255,0.5)";
-            ctx.fillText(wm2, W / 2, H - 40 * sc);
+            var _stripH = Math.round(H * 0.018);
+            if (_stripH < 70 * sc) _stripH = Math.round(70 * sc);
+            ctx.fillText(wm2, W / 2, H - _stripH - 30 * sc);
+
+            // ===== Website URL footer (thegreatamericanstar.com) — on every poster =====
+            ctx.save();
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = "#0a2342";
+            ctx.fillRect(0, H - _stripH, W, _stripH);
+            ctx.font = Math.round(_stripH * 0.5) + "px Georgia, serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = "rgba(255,255,255,0.78)";
+            ctx.fillText("thegreatamericanstar.com", W / 2, H - _stripH / 2);
+            ctx.restore();
+            // ===== End website URL footer =====
+
+            // ===== PREVIEW watermark (low-res preview download only) =====
+            if (typeof __previewMode !== "undefined" && __previewMode) {
+              ctx.save();
+              // Tiled, repeated "PREVIEW" across the entire poster at -30°,
+              // with dark stroke + light fill so it's visible on ANY background.
+              var wmText = "PREVIEW";
+              var wmFontSize = Math.round(W * 0.075);
+              ctx.font = "bold " + wmFontSize + "px Georgia, serif";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.translate(W / 2, H / 2);
+              ctx.rotate((-30 * Math.PI) / 180);
+              var stepX = wmFontSize * 7; // horizontal spacing between repeats
+              var stepY = wmFontSize * 3.2; // vertical spacing between rows
+              var diag = Math.sqrt(W * W + H * H);
+              var startX = -diag / 2;
+              var startY = -diag / 2;
+              var rowIndex = 0;
+              for (var wy = startY; wy < diag / 2; wy += stepY) {
+                var offset = (rowIndex % 2) * (stepX / 2); // brick-stagger rows
+                for (var wx = startX; wx < diag / 2; wx += stepX) {
+                  // dark outline for contrast on light areas
+                  ctx.lineWidth = Math.max(2, wmFontSize * 0.04);
+                  ctx.strokeStyle = "rgba(0,0,0,0.20)";
+                  ctx.strokeText(wmText, wx + offset, wy);
+                  // light fill for contrast on dark areas
+                  ctx.fillStyle = "rgba(255,255,255,0.38)";
+                  ctx.fillText(wmText, wx + offset, wy);
+                }
+                rowIndex++;
+              }
+              ctx.restore();
+              // NOTE: do not reset __previewMode here — exportCanvas needs it
+              // to know whether to downscale. exportCanvas resets it after use.
+            }
+            // ===== End PREVIEW watermark =====
+
             // Step 11: save
             var pngName =
               sc === 1
@@ -4619,6 +4777,37 @@
                 : sc === 2
                   ? "patriotic_star_18x24_large.png"
                   : "patriotic_star_18x24_poster.png";
+
+            // Helper: export the canvas, downscaling first if this is a low-res preview
+            function exportCanvas(srcCanvas) {
+              var outCanvas = srcCanvas;
+              var outName = pngName;
+              if (typeof __previewMode !== "undefined" && __previewMode) {
+                // genuine low-res preview: downscale to ~1350px wide (1/4 of 5400)
+                var targetW = 1350;
+                var scaleDown = targetW / srcCanvas.width;
+                var small = document.createElement("canvas");
+                small.width = Math.round(srcCanvas.width * scaleDown);
+                small.height = Math.round(srcCanvas.height * scaleDown);
+                var sctx = small.getContext("2d");
+                sctx.drawImage(srcCanvas, 0, 0, small.width, small.height);
+                outCanvas = small;
+                outName = "patriotic_star_PREVIEW_lowres.png";
+                __previewMode = false; // reset after use
+              }
+              outCanvas.toBlob(
+                function (blob) {
+                  if (blob) {
+                    downloadFile(blob, outName);
+                  } else {
+                    alert("PNG generation failed. Try a different size.");
+                  }
+                },
+                "image/png",
+                0.92,
+              );
+            }
+
             try {
               var _li = new Image();
               _li.onload = function () {
@@ -4635,26 +4824,10 @@
                   logoH + 40 * sc,
                 );
                 ctx.drawImage(_li, logoX, logoY, logoW, logoH);
-                canvas.toBlob(
-                  function (blob) {
-                    if (blob) {
-                      downloadFile(blob, pngName);
-                    } else {
-                      alert("PNG too large for browser. Use Standard size.");
-                    }
-                  },
-                  "image/png",
-                  0.95,
-                );
+                exportCanvas(canvas);
               };
               _li.onerror = function () {
-                canvas.toBlob(
-                  function (blob) {
-                    downloadFile(blob, pngName);
-                  },
-                  "image/png",
-                  0.95,
-                );
+                exportCanvas(canvas);
               };
               _li.src = LOGO_URL;
             } catch (e) {
@@ -4822,7 +4995,37 @@
           ctx.font = "36px Georgia, serif";
           ctx.textAlign = "center";
           ctx.fillStyle = "rgba(255,255,255,0.5)";
-          ctx.fillText(wm2, canvasW / 2, (baseH || 7200) - 40);
+          // sit just above the website URL strip (drawn next)
+          (function () {
+            var ch = canvas.height;
+            var stripH = Math.round(ch * 0.018);
+            if (stripH < 70) stripH = 70;
+            ctx.fillText(wm2, canvas.width / 2, ch - stripH - 30);
+          })();
+
+          // ===== Website URL footer (thegreatamericanstar.com) =====
+          // Subtle navy strip at the very bottom with the site URL, on every poster.
+          (function () {
+            var cw = canvas.width;
+            var ch = canvas.height;
+            var stripH = Math.round(ch * 0.018); // thin strip (~1.8% of height)
+            if (stripH < 70) stripH = 70;
+            // navy strip background
+            ctx.save();
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = "#0a2342";
+            ctx.fillRect(0, ch - stripH, cw, stripH);
+            // URL text: serif, white, subtle (~75% opacity), plain
+            var urlFont = Math.round(stripH * 0.5); // ~50% of strip height
+            ctx.font = urlFont + "px Georgia, serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = "rgba(255,255,255,0.78)";
+            ctx.fillText("thegreatamericanstar.com", cw / 2, ch - stripH / 2);
+            ctx.restore();
+          })();
+          // ===== End website URL footer =====
+
           var scv = sc || 1;
           var pngName =
             scv === 1
