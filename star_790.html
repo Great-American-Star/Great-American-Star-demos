@@ -3535,26 +3535,31 @@
           var tempDiv = document.createElement("div");
           tempDiv.innerHTML = pt;
           var lines = [];
-          function extractLines(node, curSize) {
+          function extractLines(node, curSize, curColor) {
+            if (!curColor) curColor = pCol;
             if (node.nodeType === 3) {
               var t = node.textContent
                 .replace(/&amp;/g, "&")
                 .replace(/&lt;/g, "<")
                 .replace(/&gt;/g, ">")
                 .replace(/&nbsp;/g, " ");
-              if (t) lines.push({ text: t, size: curSize });
+              if (t) lines.push({ text: t, size: curSize, color: curColor });
             } else if (node.nodeName === "BR") {
-              lines.push({ text: "\n", size: curSize });
+              lines.push({ text: "\n", size: curSize, color: curColor });
             } else {
               var sz = curSize;
+              var col = curColor;
               if (node.style && node.style.fontSize) {
                 sz = parseInt(node.style.fontSize) || curSize;
               }
+              if (node.style && node.style.color) {
+                col = node.style.color || curColor;
+              }
               node.childNodes.forEach(function (c) {
-                extractLines(c, sz);
+                extractLines(c, sz, col);
               });
               if (node.nodeName === "DIV" || node.nodeName === "P") {
-                lines.push({ text: "\n", size: sz });
+                lines.push({ text: "\n", size: sz, color: col });
               }
             }
           }
@@ -3569,13 +3574,13 @@
             .replace(/\n+$/, "")
             .trim();
           var ptLines2d = [];
-          var curLine = { text: "", size: pSz };
+          var curLine = { text: "", size: pSz, color: pCol };
           lines.forEach(function (l) {
             if (l.text === "\n") {
               ptLines2d.push(curLine);
-              curLine = { text: "", size: l.size };
+              curLine = { text: "", size: l.size, color: l.color || pCol };
             } else {
-              if (!curLine.text) curLine.size = l.size;
+              if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; }
               curLine.text += l.text;
             }
           });
@@ -3594,6 +3599,7 @@
             var lineSize = line.size;
             ptY += lineSize * 0.6;
             if (lineText.trim()) {
+              ctx.fillStyle = line.color || pCol;
               ctx.font = pSt + " " + pWt + " " + lineSize + "px Georgia, serif";
               ctx.fillText(lineText, pX, ptY);
             }
@@ -4627,26 +4633,31 @@
               var tempDiv = document.createElement("div");
               tempDiv.innerHTML = pt;
               var lines = [];
-              function extractLines(node, curSize) {
+              function extractLines(node, curSize, curColor) {
+                if (!curColor) curColor = pCol;
                 if (node.nodeType === 3) {
                   var t = node.textContent
                     .replace(/&amp;/g, "&")
                     .replace(/&lt;/g, "<")
                     .replace(/&gt;/g, ">")
                     .replace(/&nbsp;/g, " ");
-                  if (t) lines.push({ text: t, size: curSize });
+                  if (t) lines.push({ text: t, size: curSize, color: curColor });
                 } else if (node.nodeName === "BR") {
-                  lines.push({ text: "\n", size: curSize });
+                  lines.push({ text: "\n", size: curSize, color: curColor });
                 } else {
                   var sz = curSize;
+                  var col = curColor;
                   if (node.style && node.style.fontSize) {
                     sz = parseInt(node.style.fontSize) || curSize;
                   }
+                  if (node.style && node.style.color) {
+                    col = node.style.color || curColor;
+                  }
                   node.childNodes.forEach(function (c) {
-                    extractLines(c, sz);
+                    extractLines(c, sz, col);
                   });
                   if (node.nodeName === "DIV" || node.nodeName === "P") {
-                    lines.push({ text: "\n", size: sz });
+                    lines.push({ text: "\n", size: sz, color: col });
                   }
                 }
               }
@@ -4661,13 +4672,13 @@
                 .replace(/\n+$/, "")
                 .trim();
               var ptLines2d = [];
-              var curLine = { text: "", size: pSz };
+              var curLine = { text: "", size: pSz, color: pCol };
               lines.forEach(function (l) {
                 if (l.text === "\n") {
                   ptLines2d.push(curLine);
-                  curLine = { text: "", size: l.size };
+                  curLine = { text: "", size: l.size, color: l.color || pCol };
                 } else {
-                  if (!curLine.text) curLine.size = l.size;
+                  if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; }
                   curLine.text += l.text;
                 }
               });
@@ -4704,6 +4715,7 @@
                 var lineSize = line.size * sc;
                 ptY += lineSize * 0.6;
                 if (lineText.trim()) {
+                  ctx.fillStyle = line.color || pCol;
                   ctx.font =
                     pSt + " " + pWt + " " + lineSize + "px Georgia, serif";
                   ctx.fillText(lineText, pX, ptY);
@@ -4983,11 +4995,16 @@
                 : pAl === "right"
                   ? canvasW - 300
                   : canvasW / 2;
-            var ptLines = ptPlain.split("\n"),
-              ptY = tH + 5400 * ssc + pSz * ssc * 1.2;
-            ptLines.forEach(function (line) {
-              if (line.trim()) ctx.fillText(line, pX, ptY);
-              ptY += pSz * ssc * 1.4;
+            var ptY2b = tH + 5400 * ssc + pSz * ssc * 1.2;
+            ptLines2d.forEach(function (line) {
+              var lineText = line.text;
+              var lineSize = (line.size || pSz) * ssc;
+              if (lineText.trim()) {
+                ctx.fillStyle = line.color || pCol;
+                ctx.font = pSt + " " + pWt + " " + lineSize + "px Georgia, serif";
+                ctx.fillText(lineText, pX, ptY2b);
+              }
+              ptY2b += lineSize * 1.4;
             });
           }
           // Watermark
@@ -5398,3 +5415,4 @@
     <!-- ====================== END INTEGRATION ====================== -->
   </body>
 </html>
+
