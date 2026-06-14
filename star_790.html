@@ -698,8 +698,8 @@
               return false;
             }
           "
-          onkeyup="updateMsgFontSizeDisplay()"
-          onclick="updateMsgFontSizeDisplay()"
+          onkeyup="updateMsgFontSizeDisplay(); updateMsgColorDisplay();"
+          onclick="updateMsgFontSizeDisplay(); updateMsgColorDisplay();"
           style="
             width: 100%;
             min-height: 80px;
@@ -2182,6 +2182,14 @@
         document.getElementById("personalTextArea").focus();
         document.execCommand("removeFormat", false, null);
       }
+      document.addEventListener("selectionchange", function () {
+        var active = document.activeElement;
+        if (active && active.id === "personalTextArea") {
+          updateMsgFontSizeDisplay();
+          updateMsgColorDisplay();
+        }
+      });
+
       function updateMsgFontSizeDisplay() {
         var sel = window.getSelection();
         if (!sel || sel.rangeCount === 0) return;
@@ -2219,6 +2227,38 @@
           sel2.selectedIndex = best;
         }
       }
+      function updateMsgColorDisplay() {
+        var sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return;
+        var node = sel.getRangeAt(0).startContainer;
+        var el = node.nodeType === 3 ? node.parentElement : node;
+        var col = null;
+        while (el && el.id !== "personalTextArea") {
+          if (el.style && el.style.color) {
+            col = el.style.color;
+            break;
+          }
+          el = el.parentElement;
+        }
+        if (!col) {
+          var ta = document.getElementById("personalTextArea");
+          col = ta ? ta.style.color || "#ffffff" : "#ffffff";
+        }
+        // Convert rgb() to hex if needed
+        if (col && col.startsWith("rgb")) {
+          var m = col.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+          if (m) {
+            col = "#" + [m[1],m[2],m[3]].map(function(x){
+              return parseInt(x).toString(16).padStart(2,"0");
+            }).join("");
+          }
+        }
+        var picker = document.getElementById("msgColor");
+        if (picker && col) {
+          try { picker.value = col; } catch(e) {}
+        }
+      }
+
       function applyMsgBgColor() {
         var col = document.getElementById("msgBgColor").value;
         document.getElementById("personalTextArea").style.background = col;
