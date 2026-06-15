@@ -557,6 +557,7 @@
             <input
               id="msgColor"
               onchange="applyMsgColor()"
+              oninput="applyMsgColor()"
               style="
                 width: 28px;
                 height: 28px;
@@ -628,6 +629,21 @@
               "
             >
               ⇥
+            </button>
+            <button
+              onclick="applyColorToAll()"
+              style="
+                padding: 3px 8px;
+                border: 1.5px solid #aaa;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 11px;
+                background: #e8f0ff;
+                color: #003;
+              "
+              title="Apply selected color to ALL text"
+            >
+              All
             </button>
             <button
               onclick="clearMsgFormatting()"
@@ -2221,6 +2237,20 @@
         document.execCommand("foreColor", false, col);
         updateMsgColorDisplay();
       }
+      function applyColorToAll() {
+        var col = document.getElementById("msgColor").value;
+        var ta = document.getElementById("personalTextArea");
+        ta.focus();
+        var allRange = document.createRange();
+        allRange.selectNodeContents(ta);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(allRange);
+        document.execCommand("foreColor", false, col);
+        sel.removeAllRanges();
+        updateMsgColorDisplay();
+      }
+
       function clearMsgFormatting() {
         document.getElementById("personalTextArea").focus();
         document.execCommand("removeFormat", false, null);
