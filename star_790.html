@@ -4719,7 +4719,7 @@
             var pt = getPersonalText();
             if (pt) {
               var ta3 = document.getElementById("personalTextArea");
-              var pSz = (ta3 ? parseInt(ta3.style.fontSize) || 64 : 64) * sc;
+              var pSz = ta3 ? parseInt(ta3.style.fontSize) || 64 : 64; // sc applied at render time
               var pAl = ta3 ? ta3.style.textAlign || "center" : "center";
               var pCol = ta3 ? ta3.style.color || "#ffffff" : "#ffffff";
               var pWt = ta3 ? ta3.style.fontWeight || "normal" : "normal";
