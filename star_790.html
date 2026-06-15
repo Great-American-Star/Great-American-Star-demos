@@ -964,10 +964,7 @@
         >
           🛒 Order My Poster
         </button>
-        <button class="control-btn" onclick="debugMsgHTML()" style="background:#555;font-size:11px">
-          🔍 Debug HTML
-        </button>
-        <button class="control-btn" onclick="downloadPreviewLowRes()">
+<button class="control-btn" onclick="downloadPreviewLowRes()">
           ⬇ Download Preview (watermark)
         </button>
         <button
@@ -3639,18 +3636,20 @@
           var tempDiv = document.createElement("div");
           tempDiv.innerHTML = pt;
           var lines = [];
-          function extractLines(node, curSize, curColor, curBold) {
+          function extractLines(node, curSize, curColor, curBold, curItalic, curUnderline) {
             if (!curColor) curColor = pCol;
             if (curBold === undefined) curBold = (pWt === "bold");
+            if (curItalic === undefined) curItalic = (pSt === "italic");
+            if (curUnderline === undefined) curUnderline = false;
             if (node.nodeType === 3) {
               var t = node.textContent
                 .replace(/&amp;/g, "&")
                 .replace(/&lt;/g, "<")
                 .replace(/&gt;/g, ">")
                 .replace(/&nbsp;/g, " ");
-              if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold });
+              if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
             } else if (node.nodeName === "BR") {
-              lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold });
+              lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
             } else {
               var sz = curSize;
               var col = curColor;
@@ -3673,16 +3672,22 @@
               if (node.nodeName === "B" || node.nodeName === "STRONG") {
                 bld = true;
               }
+              if (node.nodeName === "I" || node.nodeName === "EM") {
+                itl = true;
+              }
+              if (node.nodeName === "U") {
+                uln = true;
+              }
               node.childNodes.forEach(function (c) {
-                extractLines(c, sz, col, bld);
+                extractLines(c, sz, col, bld, itl, uln);
               });
               if (node.nodeName === "DIV" || node.nodeName === "P") {
-                lines.push({ text: "\n", size: sz, color: col, bold: bld });
+                lines.push({ text: "\n", size: sz, color: col, bold: bld, italic: itl, underline: uln });
               }
             }
           }
           tempDiv.childNodes.forEach(function (c) {
-            extractLines(c, pSz, pCol, (pWt === "bold"));
+            extractLines(c, pSz, pCol, (pWt === "bold"), (pSt === "italic"), false);
           });
           var ptPlain = lines
             .map(function (l) {
@@ -3718,7 +3723,7 @@
             ptY += lineSize * 0.6;
             if (lineText.trim()) {
               ctx.fillStyle = line.color || pCol;
-              ctx.font = pSt + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
+              ctx.font = (line.italic ? "italic" : pSt) + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
               ctx.fillText(lineText, pX, ptY);
             }
             ptY += lineSize * 0.6;
@@ -4758,22 +4763,26 @@
               var tempDiv = document.createElement("div");
               tempDiv.innerHTML = pt;
               var lines = [];
-              function extractLines(node, curSize, curColor, curBold) {
+              function extractLines(node, curSize, curColor, curBold, curItalic, curUnderline) {
                 if (!curColor) curColor = pCol;
                 if (curBold === undefined) curBold = (pWt === "bold");
+            if (curItalic === undefined) curItalic = (pSt === "italic");
+            if (curUnderline === undefined) curUnderline = false;
                 if (node.nodeType === 3) {
                   var t = node.textContent
                     .replace(/&amp;/g, "&")
                     .replace(/&lt;/g, "<")
                     .replace(/&gt;/g, ">")
                     .replace(/&nbsp;/g, " ");
-                  if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold });
+                  if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
                 } else if (node.nodeName === "BR") {
-                  lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold });
+                  lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
                 } else {
                   var sz = curSize;
                   var col = curColor;
                   var bld = curBold;
+                  var itl = curItalic;
+                  var uln = curUnderline;
                   if (node.style && node.style.fontSize) {
                     sz = parseInt(node.style.fontSize) || curSize;
                   }
@@ -4792,16 +4801,22 @@
                   if (node.nodeName === "B" || node.nodeName === "STRONG") {
                     bld = true;
                   }
+                  if (node.nodeName === "I" || node.nodeName === "EM") {
+                    itl = true;
+                  }
+                  if (node.nodeName === "U") {
+                    uln = true;
+                  }
                   node.childNodes.forEach(function (c) {
-                    extractLines(c, sz, col, bld);
+                    extractLines(c, sz, col, bld, itl, uln);
                   });
                   if (node.nodeName === "DIV" || node.nodeName === "P") {
-                    lines.push({ text: "\n", size: sz, color: col, bold: bld });
+                    lines.push({ text: "\n", size: sz, color: col, bold: bld, italic: itl, underline: uln });
                   }
                 }
               }
               tempDiv.childNodes.forEach(function (c) {
-                extractLines(c, pSz, pCol, (pWt === "bold"));
+                extractLines(c, pSz, pCol, (pWt === "bold"), (pSt === "italic"), false);
               });
               var ptPlain = lines
                 .map(function (l) {
@@ -4856,7 +4871,10 @@
                 if (lineText.trim()) {
                   ctx.fillStyle = line.color || pCol;
                   ctx.font =
-                    pSt + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
+                    (line.italic ? "italic" : pSt) + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
+                  if (line.underline) {
+                    // draw underline manually after fillText
+                  }
                   ctx.fillText(lineText, pX, ptY);
                 }
                 ptY += lineSize * 0.6;
@@ -5079,18 +5097,20 @@
             var tempDiv = document.createElement("div");
             tempDiv.innerHTML = pt;
             var lines = [];
-             function extractLines(node, curSize, curColor, curBold) {
+             function extractLines(node, curSize, curColor, curBold, curItalic, curUnderline) {
                if (!curColor) curColor = pCol;
                if (curBold === undefined) curBold = (pWt === "bold");
+            if (curItalic === undefined) curItalic = (pSt === "italic");
+            if (curUnderline === undefined) curUnderline = false;
                if (node.nodeType === 3) {
                  var t = node.textContent
                    .replace(/&amp;/g, "&")
                    .replace(/&lt;/g, "<")
                    .replace(/&gt;/g, ">")
                    .replace(/&nbsp;/g, " ");
-                 if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold });
+                 if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
                } else if (node.nodeName === "BR") {
-                 lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold });
+                 lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
                } else {
                  var sz = curSize;
                  var col = curColor;
@@ -5117,12 +5137,12 @@
                    extractLines(c, sz, col, bld);
                  });
                  if (node.nodeName === "DIV" || node.nodeName === "P") {
-                   lines.push({ text: "\n", size: sz, color: col, bold: bld });
+                   lines.push({ text: "\n", size: sz, color: col, bold: bld, italic: itl, underline: uln });
                  }
                }
              }
              tempDiv.childNodes.forEach(function (c) {
-               extractLines(c, pSz, pCol, (pWt === "bold"));
+               extractLines(c, pSz, pCol, (pWt === "bold"), (pSt === "italic"), false);
              });
             var ptPlain = lines
               .map(function (l) {
@@ -5157,7 +5177,7 @@
               var lineSize = (line.size || pSz) * ssc;
               if (lineText.trim()) {
                 ctx.fillStyle = line.color || pCol;
-                ctx.font = pSt + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
+                ctx.font = (line.italic ? "italic" : pSt) + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
                 ctx.fillText(lineText, pX, ptY2b);
               }
               ptY2b += lineSize * 1.4;
