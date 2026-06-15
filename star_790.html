@@ -3697,13 +3697,13 @@
             .replace(/\n+$/, "")
             .trim();
           var ptLines2d = [];
-          var curLine = { text: "", size: pSz, color: pCol };
+          var curLine = { text: "", size: pSz, color: pCol, bold: (pWt === "bold"), italic: (pSt === "italic"), underline: false };
           lines.forEach(function (l) {
             if (l.text === "\n") {
               ptLines2d.push(curLine);
-              curLine = { text: "", size: l.size, color: l.color || pCol };
+              curLine = { text: "", size: l.size, color: l.color || pCol, bold: l.bold || false, italic: l.italic || false, underline: l.underline || false };
             } else {
-              if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; }
+              if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; curLine.bold = l.bold || false; curLine.italic = l.italic || false; curLine.underline = l.underline || false; }
               curLine.text += l.text;
             }
           });
@@ -4826,13 +4826,13 @@
                 .replace(/\n+$/, "")
                 .trim();
               var ptLines2d = [];
-              var curLine = { text: "", size: pSz, color: pCol };
+              var curLine = { text: "", size: pSz, color: pCol, bold: (pWt === "bold"), italic: (pSt === "italic"), underline: false };
               lines.forEach(function (l) {
                 if (l.text === "\n") {
                   ptLines2d.push(curLine);
-                  curLine = { text: "", size: l.size, color: l.color || pCol };
+                  curLine = { text: "", size: l.size, color: l.color || pCol, bold: l.bold || false, italic: l.italic || false, underline: l.underline || false };
                 } else {
-                  if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; }
+                  if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; curLine.bold = l.bold || false; curLine.italic = l.italic || false; curLine.underline = l.underline || false; }
                   curLine.text += l.text;
                 }
               });
@@ -5152,13 +5152,13 @@
               .replace(/\n+$/, "")
               .trim();
             var ptLines2d = [];
-            var curLine = { text: "", size: pSz, color: pCol };
+            var curLine = { text: "", size: pSz, color: pCol, bold: (pWt === "bold"), italic: (pSt === "italic"), underline: false };
             lines.forEach(function (l) {
               if (l.text === "\n") {
                 ptLines2d.push(curLine);
-                curLine = { text: "", size: l.size, color: l.color || pCol };
+                curLine = { text: "", size: l.size, color: l.color || pCol, bold: l.bold || false, italic: l.italic || false, underline: l.underline || false };
               } else {
-                if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; }
+                if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; curLine.bold = l.bold || false; curLine.italic = l.italic || false; curLine.underline = l.underline || false; }
                 curLine.text += l.text;
               }
             });
