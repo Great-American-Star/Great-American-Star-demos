@@ -2194,31 +2194,31 @@
         var ta = document.getElementById("personalTextArea");
         ta.focus();
         var sel = window.getSelection();
-        if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
-          // Text is selected — apply color only to selection
-          document.execCommand("foreColor", false, col);
-        } else if (sel && sel.rangeCount > 0) {
-          // No text selected — select the entire current line then apply color
+        if (!sel || sel.rangeCount === 0) return;
+        if (sel.isCollapsed) {
+          // No text selected — select all text in current line node
           var range = sel.getRangeAt(0);
           var node = range.startContainer;
-          // Walk up to find the line div/p or stay at text node level
           var lineNode = node.nodeType === 3 ? node.parentElement : node;
-          // If we are directly in the textarea, wrap cursor position in a span
-          if (lineNode === ta || lineNode.id === "personalTextArea") {
-            // Apply to whole textarea as fallback
-            document.execCommand("foreColor", false, col);
+          // Walk up until we find a direct child of the textarea
+          while (lineNode && lineNode.parentElement && lineNode.parentElement !== ta) {
+            lineNode = lineNode.parentElement;
+          }
+          if (!lineNode || lineNode === ta) {
+            // Fallback: select all
+            var allRange = document.createRange();
+            allRange.selectNodeContents(ta);
+            sel.removeAllRanges();
+            sel.addRange(allRange);
           } else {
-            // Select the entire line node content
             var lineRange = document.createRange();
             lineRange.selectNodeContents(lineNode);
             sel.removeAllRanges();
             sel.addRange(lineRange);
-            document.execCommand("foreColor", false, col);
-            // Restore cursor position
-            sel.removeAllRanges();
-            sel.addRange(range);
           }
         }
+        // Now apply color to whatever is selected
+        document.execCommand("foreColor", false, col);
         updateMsgColorDisplay();
       }
       function clearMsgFormatting() {
