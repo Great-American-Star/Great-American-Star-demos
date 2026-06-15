@@ -3644,6 +3644,12 @@
               if (node.style && node.style.color) {
                 col = node.style.color || curColor;
               }
+              if (node.nodeName === "FONT" && node.getAttribute("color")) {
+                col = node.getAttribute("color") || curColor;
+              }
+              if (node.nodeName === "SPAN" && node.style && node.style.color) {
+                col = node.style.color || curColor;
+              }
               node.childNodes.forEach(function (c) {
                 extractLines(c, sz, col);
               });
@@ -4742,6 +4748,12 @@
                   if (node.style && node.style.color) {
                     col = node.style.color || curColor;
                   }
+                  if (node.nodeName === "FONT" && node.getAttribute("color")) {
+                    col = node.getAttribute("color") || curColor;
+                  }
+                  if (node.nodeName === "SPAN" && node.style && node.style.color) {
+                    col = node.style.color || curColor;
+                  }
                   node.childNodes.forEach(function (c) {
                     extractLines(c, sz, col);
                   });
@@ -5047,6 +5059,14 @@
                   sz = parseInt(node.style.fontSize) || curSize;
                 }
                 if (node.style && node.style.color) {
+                  col = node.style.color || curColor;
+                }
+                // Also handle <font color="..."> tags from execCommand foreColor
+                if (node.nodeName === "FONT" && node.getAttribute("color")) {
+                  col = node.getAttribute("color") || curColor;
+                }
+                // Also handle <span style="color:..."> from execCommand
+                if (node.nodeName === "SPAN" && node.style && node.style.color) {
                   col = node.style.color || curColor;
                 }
                 node.childNodes.forEach(function (c) {
