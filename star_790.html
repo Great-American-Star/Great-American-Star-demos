@@ -5029,31 +5029,36 @@
             var tempDiv = document.createElement("div");
             tempDiv.innerHTML = pt;
             var lines = [];
-            function extractLines(node, curSize) {
+            function extractLines(node, curSize, curColor) {
+              if (!curColor) curColor = pCol;
               if (node.nodeType === 3) {
                 var t = node.textContent
                   .replace(/&amp;/g, "&")
                   .replace(/&lt;/g, "<")
                   .replace(/&gt;/g, ">")
                   .replace(/&nbsp;/g, " ");
-                if (t) lines.push({ text: t, size: curSize });
+                if (t) lines.push({ text: t, size: curSize, color: curColor });
               } else if (node.nodeName === "BR") {
-                lines.push({ text: "\n", size: curSize });
+                lines.push({ text: "\n", size: curSize, color: curColor });
               } else {
                 var sz = curSize;
+                var col = curColor;
                 if (node.style && node.style.fontSize) {
                   sz = parseInt(node.style.fontSize) || curSize;
                 }
+                if (node.style && node.style.color) {
+                  col = node.style.color || curColor;
+                }
                 node.childNodes.forEach(function (c) {
-                  extractLines(c, sz);
+                  extractLines(c, sz, col);
                 });
                 if (node.nodeName === "DIV" || node.nodeName === "P") {
-                  lines.push({ text: "\n", size: sz });
+                  lines.push({ text: "\n", size: sz, color: col });
                 }
               }
             }
             tempDiv.childNodes.forEach(function (c) {
-              extractLines(c, pSz);
+              extractLines(c, pSz, pCol);
             });
             var ptPlain = lines
               .map(function (l) {
@@ -5063,21 +5068,19 @@
               .replace(/\n+$/, "")
               .trim();
             var ptLines2d = [];
-            var curLine = { text: "", size: pSz };
+            var curLine = { text: "", size: pSz, color: pCol };
             lines.forEach(function (l) {
               if (l.text === "\n") {
                 ptLines2d.push(curLine);
-                curLine = { text: "", size: l.size };
+                curLine = { text: "", size: l.size, color: l.color || pCol };
               } else {
-                if (!curLine.text) curLine.size = l.size;
+                if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; }
                 curLine.text += l.text;
               }
             });
             if (curLine.text) ptLines2d.push(curLine);
             ctx.shadowBlur = 0;
-            ctx.font = pSt + " " + pWt + " " + pSz * ssc + "px Georgia, serif";
             ctx.textAlign = pAl;
-            ctx.fillStyle = pCol;
             var pX =
               pAl === "left"
                 ? 300
