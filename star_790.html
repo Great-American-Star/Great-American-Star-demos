@@ -965,14 +965,21 @@
           🛒 Order My Poster
         </button>
         <button class="control-btn" onclick="downloadPreviewLowRes()">
-          ⬇ Download Preview (Low-Res)
+          ⬇ Download Preview (watermark)
+        </button>
+        <button
+          class="control-btn"
+          onclick="downloadOwnerLowRes()"
+          style="opacity: 0.85"
+        >
+          🔒 Download Low-Res (owner)
         </button>
         <button
           class="control-btn"
           onclick="downloadFullResolution()"
           style="opacity: 0.85"
         >
-          🔒 Download Full Resolution
+          🔒 Download High-Res (owner)
         </button>
       </div>
 
@@ -3947,22 +3954,29 @@
 
       function downloadPreviewLowRes() {
         __previewMode = true;
-        generateDownload("png", 1); // base size; render downscales + watermarks in preview mode
+        generateDownload("png", 1); // public preview with watermark
+      }
+
+      function checkOwnerPassword() {
+        var entry = prompt("Enter the password:");
+        if (entry === null) return false;
+        if (entry !== FULLRES_PASSWORD) {
+          alert("Incorrect password.");
+          return false;
+        }
+        return true;
+      }
+
+      function downloadOwnerLowRes() {
+        if (!checkOwnerPassword()) return;
+        __previewMode = false;
+        generateDownload("png", 1); // low-res, no watermark, password protected
       }
 
       function downloadFullResolution() {
-        var entry = prompt(
-          "Enter the password to download the full-resolution poster:",
-        );
-        if (entry === null) return; // cancelled
-        if (entry !== FULLRES_PASSWORD) {
-          alert(
-            "Incorrect password. The full-resolution download is restricted.",
-          );
-          return;
-        }
+        if (!checkOwnerPassword()) return;
         __previewMode = false;
-        generateDownload("png", 2); // full-res (18x24 @ 600 DPI), no PREVIEW watermark
+        generateDownload("png", 2); // full-res (18x24 @ 600 DPI), no watermark
       }
       // ===== End dual download system =====
 
