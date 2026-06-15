@@ -552,20 +552,7 @@
             >
               <em>I</em>
             </button>
-            <button
-              onclick="applyMsgCmd('underline')"
-              style="
-                padding: 3px 10px;
-                border: 1.5px solid #aaa;
-                border-radius: 4px;
-                cursor: pointer;
-                text-decoration: underline;
-                font-size: 13px;
-                background: white;
-              "
-            >
-              U
-            </button>
+
             <label style="font-size: 11px; color: #aabbdd">Color:</label>
             <input
               id="msgColor"
@@ -4872,9 +4859,7 @@
                   ctx.fillStyle = line.color || pCol;
                   ctx.font =
                     (line.italic ? "italic" : pSt) + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
-                  if (line.underline) {
-                    // draw underline manually after fillText
-                  }
+
                   ctx.fillText(lineText, pX, ptY);
                 }
                 ptY += lineSize * 0.6;
