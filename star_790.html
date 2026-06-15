@@ -2170,13 +2170,35 @@
       }
       function applyMsgColor() {
         var col = document.getElementById("msgColor").value;
-        document.getElementById("personalTextArea").focus();
+        var ta = document.getElementById("personalTextArea");
+        ta.focus();
         var sel = window.getSelection();
         if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+          // Text is selected — apply color only to selection
           document.execCommand("foreColor", false, col);
-        } else {
-          document.getElementById("personalTextArea").style.color = col;
+        } else if (sel && sel.rangeCount > 0) {
+          // No text selected — select the entire current line then apply color
+          var range = sel.getRangeAt(0);
+          var node = range.startContainer;
+          // Walk up to find the line div/p or stay at text node level
+          var lineNode = node.nodeType === 3 ? node.parentElement : node;
+          // If we are directly in the textarea, wrap cursor position in a span
+          if (lineNode === ta || lineNode.id === "personalTextArea") {
+            // Apply to whole textarea as fallback
+            document.execCommand("foreColor", false, col);
+          } else {
+            // Select the entire line node content
+            var lineRange = document.createRange();
+            lineRange.selectNodeContents(lineNode);
+            sel.removeAllRanges();
+            sel.addRange(lineRange);
+            document.execCommand("foreColor", false, col);
+            // Restore cursor position
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
         }
+        updateMsgColorDisplay();
       }
       function clearMsgFormatting() {
         document.getElementById("personalTextArea").focus();
