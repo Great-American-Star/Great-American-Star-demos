@@ -964,6 +964,9 @@
         >
           🛒 Order My Poster
         </button>
+        <button class="control-btn" onclick="debugMsgHTML()" style="background:#555;font-size:11px">
+          🔍 Debug HTML
+        </button>
         <button class="control-btn" onclick="downloadPreviewLowRes()">
           ⬇ Download Preview (watermark)
         </button>
@@ -2324,6 +2327,11 @@
         var el = document.getElementById("msgBgColor");
         return el ? el.value : "#1B2A6B";
       }
+      function debugMsgHTML() {
+        var ta = document.getElementById("personalTextArea");
+        alert("MSG HTML:\n" + (ta ? ta.innerHTML : "empty"));
+      }
+
       function getPersonalText() {
         var ta = document.getElementById("personalTextArea");
         return ta ? ta.innerHTML.trim() : "";
