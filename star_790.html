@@ -3631,20 +3631,22 @@
           var tempDiv = document.createElement("div");
           tempDiv.innerHTML = pt;
           var lines = [];
-          function extractLines(node, curSize, curColor) {
+          function extractLines(node, curSize, curColor, curBold) {
             if (!curColor) curColor = pCol;
+            if (curBold === undefined) curBold = (pWt === "bold");
             if (node.nodeType === 3) {
               var t = node.textContent
                 .replace(/&amp;/g, "&")
                 .replace(/&lt;/g, "<")
                 .replace(/&gt;/g, ">")
                 .replace(/&nbsp;/g, " ");
-              if (t) lines.push({ text: t, size: curSize, color: curColor });
+              if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold });
             } else if (node.nodeName === "BR") {
-              lines.push({ text: "\n", size: curSize, color: curColor });
+              lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold });
             } else {
               var sz = curSize;
               var col = curColor;
+              var bld = curBold;
               if (node.style && node.style.fontSize) {
                 sz = parseInt(node.style.fontSize) || curSize;
               }
@@ -3657,16 +3659,22 @@
               if (node.nodeName === "SPAN" && node.style && node.style.color) {
                 col = node.style.color || curColor;
               }
+              if (node.style && node.style.fontWeight) {
+                bld = (node.style.fontWeight === "bold" || node.style.fontWeight === "700" || node.style.fontWeight === "900");
+              }
+              if (node.nodeName === "B" || node.nodeName === "STRONG") {
+                bld = true;
+              }
               node.childNodes.forEach(function (c) {
-                extractLines(c, sz, col);
+                extractLines(c, sz, col, bld);
               });
               if (node.nodeName === "DIV" || node.nodeName === "P") {
-                lines.push({ text: "\n", size: sz, color: col });
+                lines.push({ text: "\n", size: sz, color: col, bold: bld });
               }
             }
           }
           tempDiv.childNodes.forEach(function (c) {
-            extractLines(c, pSz);
+            extractLines(c, pSz, pCol, (pWt === "bold"));
           });
           var ptPlain = lines
             .map(function (l) {
@@ -3702,7 +3710,7 @@
             ptY += lineSize * 0.6;
             if (lineText.trim()) {
               ctx.fillStyle = line.color || pCol;
-              ctx.font = pSt + " " + pWt + " " + lineSize + "px Georgia, serif";
+              ctx.font = pSt + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
               ctx.fillText(lineText, pX, ptY);
             }
             ptY += lineSize * 0.6;
@@ -4742,20 +4750,22 @@
               var tempDiv = document.createElement("div");
               tempDiv.innerHTML = pt;
               var lines = [];
-              function extractLines(node, curSize, curColor) {
+              function extractLines(node, curSize, curColor, curBold) {
                 if (!curColor) curColor = pCol;
+                if (curBold === undefined) curBold = (pWt === "bold");
                 if (node.nodeType === 3) {
                   var t = node.textContent
                     .replace(/&amp;/g, "&")
                     .replace(/&lt;/g, "<")
                     .replace(/&gt;/g, ">")
                     .replace(/&nbsp;/g, " ");
-                  if (t) lines.push({ text: t, size: curSize, color: curColor });
+                  if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold });
                 } else if (node.nodeName === "BR") {
-                  lines.push({ text: "\n", size: curSize, color: curColor });
+                  lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold });
                 } else {
                   var sz = curSize;
                   var col = curColor;
+                  var bld = curBold;
                   if (node.style && node.style.fontSize) {
                     sz = parseInt(node.style.fontSize) || curSize;
                   }
@@ -4768,16 +4778,22 @@
                   if (node.nodeName === "SPAN" && node.style && node.style.color) {
                     col = node.style.color || curColor;
                   }
+                  if (node.style && node.style.fontWeight) {
+                    bld = (node.style.fontWeight === "bold" || node.style.fontWeight === "700" || node.style.fontWeight === "900");
+                  }
+                  if (node.nodeName === "B" || node.nodeName === "STRONG") {
+                    bld = true;
+                  }
                   node.childNodes.forEach(function (c) {
-                    extractLines(c, sz, col);
+                    extractLines(c, sz, col, bld);
                   });
                   if (node.nodeName === "DIV" || node.nodeName === "P") {
-                    lines.push({ text: "\n", size: sz, color: col });
+                    lines.push({ text: "\n", size: sz, color: col, bold: bld });
                   }
                 }
               }
               tempDiv.childNodes.forEach(function (c) {
-                extractLines(c, pSz);
+                extractLines(c, pSz, pCol, (pWt === "bold"));
               });
               var ptPlain = lines
                 .map(function (l) {
@@ -4832,7 +4848,7 @@
                 if (lineText.trim()) {
                   ctx.fillStyle = line.color || pCol;
                   ctx.font =
-                    pSt + " " + pWt + " " + lineSize + "px Georgia, serif";
+                    pSt + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
                   ctx.fillText(lineText, pX, ptY);
                 }
                 ptY += lineSize * 0.6;
@@ -5055,45 +5071,51 @@
             var tempDiv = document.createElement("div");
             tempDiv.innerHTML = pt;
             var lines = [];
-            function extractLines(node, curSize, curColor) {
-              if (!curColor) curColor = pCol;
-              if (node.nodeType === 3) {
-                var t = node.textContent
-                  .replace(/&amp;/g, "&")
-                  .replace(/&lt;/g, "<")
-                  .replace(/&gt;/g, ">")
-                  .replace(/&nbsp;/g, " ");
-                if (t) lines.push({ text: t, size: curSize, color: curColor });
-              } else if (node.nodeName === "BR") {
-                lines.push({ text: "\n", size: curSize, color: curColor });
-              } else {
-                var sz = curSize;
-                var col = curColor;
-                if (node.style && node.style.fontSize) {
-                  sz = parseInt(node.style.fontSize) || curSize;
-                }
-                if (node.style && node.style.color) {
-                  col = node.style.color || curColor;
-                }
-                // Also handle <font color="..."> tags from execCommand foreColor
-                if (node.nodeName === "FONT" && node.getAttribute("color")) {
-                  col = node.getAttribute("color") || curColor;
-                }
-                // Also handle <span style="color:..."> from execCommand
-                if (node.nodeName === "SPAN" && node.style && node.style.color) {
-                  col = node.style.color || curColor;
-                }
-                node.childNodes.forEach(function (c) {
-                  extractLines(c, sz, col);
-                });
-                if (node.nodeName === "DIV" || node.nodeName === "P") {
-                  lines.push({ text: "\n", size: sz, color: col });
-                }
-              }
-            }
-            tempDiv.childNodes.forEach(function (c) {
-              extractLines(c, pSz, pCol);
-            });
+             function extractLines(node, curSize, curColor, curBold) {
+               if (!curColor) curColor = pCol;
+               if (curBold === undefined) curBold = (pWt === "bold");
+               if (node.nodeType === 3) {
+                 var t = node.textContent
+                   .replace(/&amp;/g, "&")
+                   .replace(/&lt;/g, "<")
+                   .replace(/&gt;/g, ">")
+                   .replace(/&nbsp;/g, " ");
+                 if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold });
+               } else if (node.nodeName === "BR") {
+                 lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold });
+               } else {
+                 var sz = curSize;
+                 var col = curColor;
+                 var bld = curBold;
+                 if (node.style && node.style.fontSize) {
+                   sz = parseInt(node.style.fontSize) || curSize;
+                 }
+                 if (node.style && node.style.color) {
+                   col = node.style.color || curColor;
+                 }
+                 if (node.nodeName === "FONT" && node.getAttribute("color")) {
+                   col = node.getAttribute("color") || curColor;
+                 }
+                 if (node.nodeName === "SPAN" && node.style && node.style.color) {
+                   col = node.style.color || curColor;
+                 }
+                 if (node.style && node.style.fontWeight) {
+                   bld = (node.style.fontWeight === "bold" || node.style.fontWeight === "700" || node.style.fontWeight === "900");
+                 }
+                 if (node.nodeName === "B" || node.nodeName === "STRONG") {
+                   bld = true;
+                 }
+                 node.childNodes.forEach(function (c) {
+                   extractLines(c, sz, col, bld);
+                 });
+                 if (node.nodeName === "DIV" || node.nodeName === "P") {
+                   lines.push({ text: "\n", size: sz, color: col, bold: bld });
+                 }
+               }
+             }
+             tempDiv.childNodes.forEach(function (c) {
+               extractLines(c, pSz, pCol, (pWt === "bold"));
+             });
             var ptPlain = lines
               .map(function (l) {
                 return l.text;
@@ -5127,7 +5149,7 @@
               var lineSize = (line.size || pSz) * ssc;
               if (lineText.trim()) {
                 ctx.fillStyle = line.color || pCol;
-                ctx.font = pSt + " " + pWt + " " + lineSize + "px Georgia, serif";
+                ctx.font = pSt + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
                 ctx.fillText(lineText, pX, ptY2b);
               }
               ptY2b += lineSize * 1.4;
