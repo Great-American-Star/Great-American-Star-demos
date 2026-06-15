@@ -2155,18 +2155,45 @@
       }
       function applyMsgFontSize() {
         var sz = document.getElementById("msgFontSize").value;
-        document.getElementById("personalTextArea").focus();
+        var ta = document.getElementById("personalTextArea");
+        ta.focus();
         var sel = window.getSelection();
         if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+          // Text is selected — apply size only to selection
           var range = sel.getRangeAt(0);
           var span = document.createElement("span");
           span.style.fontSize = sz;
           try {
             range.surroundContents(span);
           } catch (e) {}
-        } else {
-          document.getElementById("personalTextArea").style.fontSize = sz;
+        } else if (sel && sel.rangeCount > 0) {
+          // No text selected — apply size to current line only
+          var range = sel.getRangeAt(0);
+          var node = range.startContainer;
+          var lineNode = node.nodeType === 3 ? node.parentElement : node;
+          if (lineNode === ta || lineNode.id === "personalTextArea") {
+            // Fallback: apply to whole textarea
+            ta.style.fontSize = sz;
+          } else {
+            // Select entire line and wrap in span
+            var lineRange = document.createRange();
+            lineRange.selectNodeContents(lineNode);
+            sel.removeAllRanges();
+            sel.addRange(lineRange);
+            var span = document.createElement("span");
+            span.style.fontSize = sz;
+            try {
+              lineRange.surroundContents(span);
+            } catch (e) {
+              // If surroundContents fails, apply fontSize to lineNode directly
+              lineNode.style.fontSize = sz;
+            }
+            // Restore cursor
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
         }
+        updateMsgFontSizeDisplay();
       }
       function applyMsgColor() {
         var col = document.getElementById("msgColor").value;
