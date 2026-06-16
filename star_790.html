@@ -3699,7 +3699,8 @@
                 extractLines(c, sz, col, bld, itl, uln);
               });
               if (node.nodeName === "DIV" || node.nodeName === "P") {
-                lines.push({ text: "\n", size: sz, color: col, bold: bld, italic: itl, underline: uln });
+                // Push newline with RESET formatting so next line starts fresh
+                lines.push({ text: "\n", size: sz, color: col, bold: false, italic: false, underline: false });
               }
             }
           }
@@ -4828,7 +4829,7 @@
                     extractLines(c, sz, col, bld, itl, uln);
                   });
                   if (node.nodeName === "DIV" || node.nodeName === "P") {
-                    lines.push({ text: "\n", size: sz, color: col, bold: bld, italic: itl, underline: uln });
+                    lines.push({ text: "\n", size: sz, color: col, bold: false, italic: false, underline: false });
                   }
                 }
               }
@@ -5152,7 +5153,7 @@
                    extractLines(c, sz, col, bld);
                  });
                  if (node.nodeName === "DIV" || node.nodeName === "P") {
-                   lines.push({ text: "\n", size: sz, color: col, bold: bld, italic: itl, underline: uln });
+                   lines.push({ text: "\n", size: sz, color: col, bold: false, italic: false, underline: false });
                  }
                }
              }
