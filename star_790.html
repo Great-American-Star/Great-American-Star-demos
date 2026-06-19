@@ -701,8 +701,14 @@
               return false;
             }
           "
-          onkeyup="updateMsgFontSizeDisplay(); updateMsgColorDisplay();"
-          onclick="updateMsgFontSizeDisplay(); updateMsgColorDisplay();"
+          onkeyup="
+            updateMsgFontSizeDisplay();
+            updateMsgColorDisplay();
+          "
+          onclick="
+            updateMsgFontSizeDisplay();
+            updateMsgColorDisplay();
+          "
           style="
             width: 100%;
             min-height: 80px;
@@ -967,22 +973,16 @@
         >
           🛒 Order My Poster
         </button>
-<button class="control-btn" onclick="downloadPreviewLowRes()">
+        <button class="control-btn" onclick="downloadPreviewLowRes()">
           ⬇ Download Preview (watermark)
         </button>
         <button
           class="control-btn"
-          onclick="downloadOwnerLowRes()"
-          style="opacity: 0.85"
+          onclick="ownerAccess()"
+          id="ownerAccessBtn"
+          style="background:rgba(10,35,66,0.12);border-color:rgba(10,35,66,0.6);color:#0a2342;"
         >
-          🔒 Download Low-Res (owner)
-        </button>
-        <button
-          class="control-btn"
-          onclick="downloadFullResolution()"
-          style="opacity: 0.85"
-        >
-          🔒 Download High-Res (owner)
+          🔐 Owner Access
         </button>
       </div>
 
@@ -1607,8 +1607,7 @@
       </button>
     </div>
     <div class="version-tag">
-      Work in progress — Version 1.0 | Full personalization features coming
-      soon
+      Work in progress — Version 1.0 | Full personalization features coming soon
     </div>
     <div class="info"><div id="totalCount"></div></div>
     <script>
@@ -2217,7 +2216,11 @@
           var node = range.startContainer;
           var lineNode = node.nodeType === 3 ? node.parentElement : node;
           // Walk up until we find a direct child of the textarea
-          while (lineNode && lineNode.parentElement && lineNode.parentElement !== ta) {
+          while (
+            lineNode &&
+            lineNode.parentElement &&
+            lineNode.parentElement !== ta
+          ) {
             lineNode = lineNode.parentElement;
           }
           if (!lineNode || lineNode === ta) {
@@ -2321,14 +2324,20 @@
         if (col && col.startsWith("rgb")) {
           var m = col.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
           if (m) {
-            col = "#" + [m[1],m[2],m[3]].map(function(x){
-              return parseInt(x).toString(16).padStart(2,"0");
-            }).join("");
+            col =
+              "#" +
+              [m[1], m[2], m[3]]
+                .map(function (x) {
+                  return parseInt(x).toString(16).padStart(2, "0");
+                })
+                .join("");
           }
         }
         var picker = document.getElementById("msgColor");
         if (picker && col) {
-          try { picker.value = col; } catch(e) {}
+          try {
+            picker.value = col;
+          } catch (e) {}
         }
       }
 
@@ -3653,10 +3662,17 @@
           var tempDiv = document.createElement("div");
           tempDiv.innerHTML = pt;
           var lines = [];
-          function extractLines(node, curSize, curColor, curBold, curItalic, curUnderline) {
+          function extractLines(
+            node,
+            curSize,
+            curColor,
+            curBold,
+            curItalic,
+            curUnderline,
+          ) {
             if (!curColor) curColor = pCol;
-            if (curBold === undefined) curBold = (pWt === "bold");
-            if (curItalic === undefined) curItalic = (pSt === "italic");
+            if (curBold === undefined) curBold = pWt === "bold";
+            if (curItalic === undefined) curItalic = pSt === "italic";
             if (curUnderline === undefined) curUnderline = false;
             if (node.nodeType === 3) {
               var t = node.textContent
@@ -3664,9 +3680,24 @@
                 .replace(/&lt;/g, "<")
                 .replace(/&gt;/g, ">")
                 .replace(/&nbsp;/g, " ");
-              if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
+              if (t)
+                lines.push({
+                  text: t,
+                  size: curSize,
+                  color: curColor,
+                  bold: curBold,
+                  italic: curItalic,
+                  underline: curUnderline,
+                });
             } else if (node.nodeName === "BR") {
-              lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
+              lines.push({
+                text: "\n",
+                size: curSize,
+                color: curColor,
+                bold: curBold,
+                italic: curItalic,
+                underline: curUnderline,
+              });
             } else {
               var sz = curSize;
               var col = curColor;
@@ -3684,7 +3715,10 @@
                 col = node.style.color || curColor;
               }
               if (node.style && node.style.fontWeight) {
-                bld = (node.style.fontWeight === "bold" || node.style.fontWeight === "700" || node.style.fontWeight === "900");
+                bld =
+                  node.style.fontWeight === "bold" ||
+                  node.style.fontWeight === "700" ||
+                  node.style.fontWeight === "900";
               }
               if (node.nodeName === "B" || node.nodeName === "STRONG") {
                 bld = true;
@@ -3700,12 +3734,19 @@
               });
               if (node.nodeName === "DIV" || node.nodeName === "P") {
                 // Push newline with RESET formatting so next line starts fresh
-                lines.push({ text: "\n", size: sz, color: col, bold: false, italic: false, underline: false });
+                lines.push({
+                  text: "\n",
+                  size: sz,
+                  color: col,
+                  bold: false,
+                  italic: false,
+                  underline: false,
+                });
               }
             }
           }
           tempDiv.childNodes.forEach(function (c) {
-            extractLines(c, pSz, pCol, (pWt === "bold"), (pSt === "italic"), false);
+            extractLines(c, pSz, pCol, pWt === "bold", pSt === "italic", false);
           });
           var ptPlain = lines
             .map(function (l) {
@@ -3715,13 +3756,33 @@
             .replace(/\n+$/, "")
             .trim();
           var ptLines2d = [];
-          var curLine = { text: "", size: pSz, color: pCol, bold: (pWt === "bold"), italic: (pSt === "italic"), underline: false };
+          var curLine = {
+            text: "",
+            size: pSz,
+            color: pCol,
+            bold: pWt === "bold",
+            italic: pSt === "italic",
+            underline: false,
+          };
           lines.forEach(function (l) {
             if (l.text === "\n") {
               ptLines2d.push(curLine);
-              curLine = { text: "", size: l.size, color: l.color || pCol, bold: l.bold || false, italic: l.italic || false, underline: l.underline || false };
+              curLine = {
+                text: "",
+                size: l.size,
+                color: l.color || pCol,
+                bold: l.bold || false,
+                italic: l.italic || false,
+                underline: l.underline || false,
+              };
             } else {
-              if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; curLine.bold = l.bold || false; curLine.italic = l.italic || false; curLine.underline = l.underline || false; }
+              if (!curLine.text) {
+                curLine.size = l.size;
+                curLine.color = l.color || pCol;
+                curLine.bold = l.bold || false;
+                curLine.italic = l.italic || false;
+                curLine.underline = l.underline || false;
+              }
               curLine.text += l.text;
             }
           });
@@ -3746,7 +3807,13 @@
             ptY += lineSize * 0.6;
             if (lineText.trim()) {
               ctx.fillStyle = line.color || pCol;
-              ctx.font = (line.italic ? "italic" : pSt) + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
+              ctx.font =
+                (line.italic ? "italic" : pSt) +
+                " " +
+                (line.bold ? "bold" : pWt) +
+                " " +
+                lineSize +
+                "px Georgia, serif";
               ctx.fillText(lineText, pX, ptY);
             }
             ptY += lineSize * 0.6;
@@ -3990,10 +4057,6 @@
         }
       });
       // ===== Dual download system =====
-      // Simple client-side gate for the full-resolution download.
-      // NOTE: this is a soft gate only — the page is public, so the password
-      // is not real security. Client confirmed a simple gate is acceptable.
-      var FULLRES_PASSWORD = "yidelposter"; // <-- client can change this
       var __previewMode = false; // when true, render adds a PREVIEW watermark + low res
 
       function downloadPreviewLowRes() {
@@ -4001,26 +4064,131 @@
         generateDownload("png", 1); // public preview with watermark
       }
 
-      function checkOwnerPassword() {
-        var entry = prompt("Enter the password:");
-        if (entry === null) return false;
-        if (entry !== FULLRES_PASSWORD) {
-          alert("Incorrect password.");
-          return false;
+      // ── Server-side owner password — buttons injected into DOM only after auth ──
+      var VERIFY_ENDPOINT = "https://star-poster-shopify.vercel.app/api/verify-download";
+      var OWNER_TOKEN_KEY  = "ownerDownloadToken";
+
+      function ownerAccess() {
+        // Re-use unexpired session token without re-prompting
+        var stored = sessionStorage.getItem(OWNER_TOKEN_KEY);
+        if (stored) {
+          try {
+            var p = JSON.parse(stored);
+            if (p && p.token && p.expires && Date.now() < p.expires) {
+              injectOwnerButtons();
+              return;
+            }
+          } catch(e) {}
         }
-        return true;
+        var pw = prompt("Enter owner password:");
+        if (!pw) return;
+        fetch(VERIFY_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: pw })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && data.token) {
+            sessionStorage.setItem(OWNER_TOKEN_KEY, JSON.stringify({
+              token: data.token,
+              expires: data.expires || (Date.now() + 7200000)
+            }));
+            injectOwnerButtons();
+          } else {
+            alert("Incorrect password. Please try again.");
+          }
+        })
+        .catch(function() {
+          alert("Could not reach verification server. Check your connection.");
+        });
+      }
+
+      function injectOwnerButtons() {
+        // Remove any existing injected buttons (idempotent)
+        var existing = document.getElementById("__ownerBtns");
+        if (existing) existing.remove();
+
+        // Hide the access button
+        var ab = document.getElementById("ownerAccessBtn");
+        if (ab) ab.style.display = "none";
+
+        // Create a wrapper div
+        var wrap = document.createElement("div");
+        wrap.id = "__ownerBtns";
+        wrap.style.cssText = "display:contents;";
+
+        // Low-res owner button
+        var btn1 = document.createElement("button");
+        btn1.className = "control-btn";
+        btn1.textContent = "🔒 Download Low-Res (owner)";
+        btn1.style.opacity = "0.85";
+        btn1.onclick = function() { downloadOwnerLowRes(); };
+
+        // High-res owner button
+        var btn2 = document.createElement("button");
+        btn2.className = "control-btn";
+        btn2.textContent = "🔒 Download High-Res (owner)";
+        btn2.style.opacity = "0.85";
+        btn2.onclick = function() { downloadFullResolution(); };
+
+        wrap.appendChild(btn1);
+        wrap.appendChild(btn2);
+
+        // Insert right after the Owner Access button
+        if (ab && ab.parentNode) {
+          ab.parentNode.insertBefore(wrap, ab.nextSibling);
+        } else {
+          document.querySelector(".controls-primary").appendChild(wrap);
+        }
+      }
+
+      function removeOwnerButtons() {
+        sessionStorage.removeItem(OWNER_TOKEN_KEY);
+        var el = document.getElementById("__ownerBtns");
+        if (el) el.remove();
+        var ab = document.getElementById("ownerAccessBtn");
+        if (ab) ab.style.display = "";
+      }
+
+      function verifyOwnerToken(cb) {
+        var stored = sessionStorage.getItem(OWNER_TOKEN_KEY);
+        if (!stored) { cb(false); return; }
+        var p = null;
+        try { p = JSON.parse(stored); } catch(e) {}
+        if (!p || !p.token) { cb(false); return; }
+        if (p.expires && Date.now() >= p.expires) { removeOwnerButtons(); cb(false); return; }
+        fetch(VERIFY_ENDPOINT + "?token=" + encodeURIComponent(p.token))
+          .then(function(r) { return r.json(); })
+          .then(function(d) {
+            if (d && d.valid) { cb(true); }
+            else { removeOwnerButtons(); cb(false); }
+          })
+          .catch(function() { cb(false); });
       }
 
       function downloadOwnerLowRes() {
-        if (!checkOwnerPassword()) return;
-        __previewMode = false;
-        generateDownload("png", 1); // low-res, no watermark, password protected
+        verifyOwnerToken(function(ok) {
+          if (!ok) {
+            alert("Session expired. Click 🔐 Owner Access to verify again.");
+            removeOwnerButtons();
+            return;
+          }
+          __previewMode = false;
+          generateDownload("png", 1);
+        });
       }
 
       function downloadFullResolution() {
-        if (!checkOwnerPassword()) return;
-        __previewMode = false;
-        generateDownload("png", 2); // full-res (18x24 @ 600 DPI), no watermark
+        verifyOwnerToken(function(ok) {
+          if (!ok) {
+            alert("Session expired. Click 🔐 Owner Access to verify again.");
+            removeOwnerButtons();
+            return;
+          }
+          __previewMode = false;
+          generateDownload("png", 2);
+        });
       }
       // ===== End dual download system =====
 
@@ -4786,20 +4954,42 @@
               var tempDiv = document.createElement("div");
               tempDiv.innerHTML = pt;
               var lines = [];
-              function extractLines(node, curSize, curColor, curBold, curItalic, curUnderline) {
+              function extractLines(
+                node,
+                curSize,
+                curColor,
+                curBold,
+                curItalic,
+                curUnderline,
+              ) {
                 if (!curColor) curColor = pCol;
-                if (curBold === undefined) curBold = (pWt === "bold");
-            if (curItalic === undefined) curItalic = (pSt === "italic");
-            if (curUnderline === undefined) curUnderline = false;
+                if (curBold === undefined) curBold = pWt === "bold";
+                if (curItalic === undefined) curItalic = pSt === "italic";
+                if (curUnderline === undefined) curUnderline = false;
                 if (node.nodeType === 3) {
                   var t = node.textContent
                     .replace(/&amp;/g, "&")
                     .replace(/&lt;/g, "<")
                     .replace(/&gt;/g, ">")
                     .replace(/&nbsp;/g, " ");
-                  if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
+                  if (t)
+                    lines.push({
+                      text: t,
+                      size: curSize,
+                      color: curColor,
+                      bold: curBold,
+                      italic: curItalic,
+                      underline: curUnderline,
+                    });
                 } else if (node.nodeName === "BR") {
-                  lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
+                  lines.push({
+                    text: "\n",
+                    size: curSize,
+                    color: curColor,
+                    bold: curBold,
+                    italic: curItalic,
+                    underline: curUnderline,
+                  });
                 } else {
                   var sz = curSize;
                   var col = curColor;
@@ -4815,11 +5005,18 @@
                   if (node.nodeName === "FONT" && node.getAttribute("color")) {
                     col = node.getAttribute("color") || curColor;
                   }
-                  if (node.nodeName === "SPAN" && node.style && node.style.color) {
+                  if (
+                    node.nodeName === "SPAN" &&
+                    node.style &&
+                    node.style.color
+                  ) {
                     col = node.style.color || curColor;
                   }
                   if (node.style && node.style.fontWeight) {
-                    bld = (node.style.fontWeight === "bold" || node.style.fontWeight === "700" || node.style.fontWeight === "900");
+                    bld =
+                      node.style.fontWeight === "bold" ||
+                      node.style.fontWeight === "700" ||
+                      node.style.fontWeight === "900";
                   }
                   if (node.nodeName === "B" || node.nodeName === "STRONG") {
                     bld = true;
@@ -4834,12 +5031,26 @@
                     extractLines(c, sz, col, bld, itl, uln);
                   });
                   if (node.nodeName === "DIV" || node.nodeName === "P") {
-                    lines.push({ text: "\n", size: sz, color: col, bold: false, italic: false, underline: false });
+                    lines.push({
+                      text: "\n",
+                      size: sz,
+                      color: col,
+                      bold: false,
+                      italic: false,
+                      underline: false,
+                    });
                   }
                 }
               }
               tempDiv.childNodes.forEach(function (c) {
-                extractLines(c, pSz, pCol, (pWt === "bold"), (pSt === "italic"), false);
+                extractLines(
+                  c,
+                  pSz,
+                  pCol,
+                  pWt === "bold",
+                  pSt === "italic",
+                  false,
+                );
               });
               var ptPlain = lines
                 .map(function (l) {
@@ -4849,13 +5060,33 @@
                 .replace(/\n+$/, "")
                 .trim();
               var ptLines2d = [];
-              var curLine = { text: "", size: pSz, color: pCol, bold: (pWt === "bold"), italic: (pSt === "italic"), underline: false };
+              var curLine = {
+                text: "",
+                size: pSz,
+                color: pCol,
+                bold: pWt === "bold",
+                italic: pSt === "italic",
+                underline: false,
+              };
               lines.forEach(function (l) {
                 if (l.text === "\n") {
                   ptLines2d.push(curLine);
-                  curLine = { text: "", size: l.size, color: l.color || pCol, bold: l.bold || false, italic: l.italic || false, underline: l.underline || false };
+                  curLine = {
+                    text: "",
+                    size: l.size,
+                    color: l.color || pCol,
+                    bold: l.bold || false,
+                    italic: l.italic || false,
+                    underline: l.underline || false,
+                  };
                 } else {
-                  if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; curLine.bold = l.bold || false; curLine.italic = l.italic || false; curLine.underline = l.underline || false; }
+                  if (!curLine.text) {
+                    curLine.size = l.size;
+                    curLine.color = l.color || pCol;
+                    curLine.bold = l.bold || false;
+                    curLine.italic = l.italic || false;
+                    curLine.underline = l.underline || false;
+                  }
                   curLine.text += l.text;
                 }
               });
@@ -4895,7 +5126,12 @@
                 if (lineText.trim()) {
                   ctx.fillStyle = line.color || pCol;
                   ctx.font =
-                    (line.italic ? "italic" : pSt) + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
+                    (line.italic ? "italic" : pSt) +
+                    " " +
+                    (line.bold ? "bold" : pWt) +
+                    " " +
+                    lineSize +
+                    "px Georgia, serif";
 
                   ctx.fillText(lineText, pX, ptY);
                 }
@@ -5119,53 +5355,96 @@
             var tempDiv = document.createElement("div");
             tempDiv.innerHTML = pt;
             var lines = [];
-             function extractLines(node, curSize, curColor, curBold, curItalic, curUnderline) {
-               if (!curColor) curColor = pCol;
-               if (curBold === undefined) curBold = (pWt === "bold");
-            if (curItalic === undefined) curItalic = (pSt === "italic");
-            if (curUnderline === undefined) curUnderline = false;
-               if (node.nodeType === 3) {
-                 var t = node.textContent
-                   .replace(/&amp;/g, "&")
-                   .replace(/&lt;/g, "<")
-                   .replace(/&gt;/g, ">")
-                   .replace(/&nbsp;/g, " ");
-                 if (t) lines.push({ text: t, size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
-               } else if (node.nodeName === "BR") {
-                 lines.push({ text: "\n", size: curSize, color: curColor, bold: curBold, italic: curItalic, underline: curUnderline });
-               } else {
-                 var sz = curSize;
-                 var col = curColor;
-                 var bld = curBold;
-                 if (node.style && node.style.fontSize) {
-                   sz = parseInt(node.style.fontSize) || curSize;
-                 }
-                 if (node.style && node.style.color) {
-                   col = node.style.color || curColor;
-                 }
-                 if (node.nodeName === "FONT" && node.getAttribute("color")) {
-                   col = node.getAttribute("color") || curColor;
-                 }
-                 if (node.nodeName === "SPAN" && node.style && node.style.color) {
-                   col = node.style.color || curColor;
-                 }
-                 if (node.style && node.style.fontWeight) {
-                   bld = (node.style.fontWeight === "bold" || node.style.fontWeight === "700" || node.style.fontWeight === "900");
-                 }
-                 if (node.nodeName === "B" || node.nodeName === "STRONG") {
-                   bld = true;
-                 }
-                 node.childNodes.forEach(function (c) {
-                   extractLines(c, sz, col, bld);
-                 });
-                 if (node.nodeName === "DIV" || node.nodeName === "P") {
-                   lines.push({ text: "\n", size: sz, color: col, bold: false, italic: false, underline: false });
-                 }
-               }
-             }
-             tempDiv.childNodes.forEach(function (c) {
-               extractLines(c, pSz, pCol, (pWt === "bold"), (pSt === "italic"), false);
-             });
+            function extractLines(
+              node,
+              curSize,
+              curColor,
+              curBold,
+              curItalic,
+              curUnderline,
+            ) {
+              if (!curColor) curColor = pCol;
+              if (curBold === undefined) curBold = pWt === "bold";
+              if (curItalic === undefined) curItalic = pSt === "italic";
+              if (curUnderline === undefined) curUnderline = false;
+              if (node.nodeType === 3) {
+                var t = node.textContent
+                  .replace(/&amp;/g, "&")
+                  .replace(/&lt;/g, "<")
+                  .replace(/&gt;/g, ">")
+                  .replace(/&nbsp;/g, " ");
+                if (t)
+                  lines.push({
+                    text: t,
+                    size: curSize,
+                    color: curColor,
+                    bold: curBold,
+                    italic: curItalic,
+                    underline: curUnderline,
+                  });
+              } else if (node.nodeName === "BR") {
+                lines.push({
+                  text: "\n",
+                  size: curSize,
+                  color: curColor,
+                  bold: curBold,
+                  italic: curItalic,
+                  underline: curUnderline,
+                });
+              } else {
+                var sz = curSize;
+                var col = curColor;
+                var bld = curBold;
+                if (node.style && node.style.fontSize) {
+                  sz = parseInt(node.style.fontSize) || curSize;
+                }
+                if (node.style && node.style.color) {
+                  col = node.style.color || curColor;
+                }
+                if (node.nodeName === "FONT" && node.getAttribute("color")) {
+                  col = node.getAttribute("color") || curColor;
+                }
+                if (
+                  node.nodeName === "SPAN" &&
+                  node.style &&
+                  node.style.color
+                ) {
+                  col = node.style.color || curColor;
+                }
+                if (node.style && node.style.fontWeight) {
+                  bld =
+                    node.style.fontWeight === "bold" ||
+                    node.style.fontWeight === "700" ||
+                    node.style.fontWeight === "900";
+                }
+                if (node.nodeName === "B" || node.nodeName === "STRONG") {
+                  bld = true;
+                }
+                node.childNodes.forEach(function (c) {
+                  extractLines(c, sz, col, bld);
+                });
+                if (node.nodeName === "DIV" || node.nodeName === "P") {
+                  lines.push({
+                    text: "\n",
+                    size: sz,
+                    color: col,
+                    bold: false,
+                    italic: false,
+                    underline: false,
+                  });
+                }
+              }
+            }
+            tempDiv.childNodes.forEach(function (c) {
+              extractLines(
+                c,
+                pSz,
+                pCol,
+                pWt === "bold",
+                pSt === "italic",
+                false,
+              );
+            });
             var ptPlain = lines
               .map(function (l) {
                 return l.text;
@@ -5174,13 +5453,33 @@
               .replace(/\n+$/, "")
               .trim();
             var ptLines2d = [];
-            var curLine = { text: "", size: pSz, color: pCol, bold: (pWt === "bold"), italic: (pSt === "italic"), underline: false };
+            var curLine = {
+              text: "",
+              size: pSz,
+              color: pCol,
+              bold: pWt === "bold",
+              italic: pSt === "italic",
+              underline: false,
+            };
             lines.forEach(function (l) {
               if (l.text === "\n") {
                 ptLines2d.push(curLine);
-                curLine = { text: "", size: l.size, color: l.color || pCol, bold: l.bold || false, italic: l.italic || false, underline: l.underline || false };
+                curLine = {
+                  text: "",
+                  size: l.size,
+                  color: l.color || pCol,
+                  bold: l.bold || false,
+                  italic: l.italic || false,
+                  underline: l.underline || false,
+                };
               } else {
-                if (!curLine.text) { curLine.size = l.size; curLine.color = l.color || pCol; curLine.bold = l.bold || false; curLine.italic = l.italic || false; curLine.underline = l.underline || false; }
+                if (!curLine.text) {
+                  curLine.size = l.size;
+                  curLine.color = l.color || pCol;
+                  curLine.bold = l.bold || false;
+                  curLine.italic = l.italic || false;
+                  curLine.underline = l.underline || false;
+                }
                 curLine.text += l.text;
               }
             });
@@ -5199,7 +5498,13 @@
               var lineSize = (line.size || pSz) * ssc;
               if (lineText.trim()) {
                 ctx.fillStyle = line.color || pCol;
-                ctx.font = (line.italic ? "italic" : pSt) + " " + (line.bold ? "bold" : pWt) + " " + lineSize + "px Georgia, serif";
+                ctx.font =
+                  (line.italic ? "italic" : pSt) +
+                  " " +
+                  (line.bold ? "bold" : pWt) +
+                  " " +
+                  lineSize +
+                  "px Georgia, serif";
                 ctx.fillText(lineText, pX, ptY2b);
               }
               ptY2b += lineSize * 1.4;
@@ -5613,4 +5918,3 @@
     <!-- ====================== END INTEGRATION ====================== -->
   </body>
 </html>
-
