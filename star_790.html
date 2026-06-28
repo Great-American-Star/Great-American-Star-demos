@@ -991,8 +991,7 @@
 
       <div class="controls-divider"></div>
 
-      <!-- ===== SECONDARY: Explore the mathematics (less prominent) ===== -->
-      <div class="controls-secondary-note">Explore the Mathematics</div>
+      <!-- ===== SECONDARY: Navigation + Paths ===== -->
       <div class="controls-label">Navigation</div>
       <button class="control-btn" onclick="zoomIn()">Zoom In</button>
       <button class="control-btn" onclick="zoomOut()">Zoom Out</button>
@@ -1008,6 +1007,10 @@
       <button class="control-btn" onclick="clearHighlights()">
         Clear Highlights
       </button>
+      <button class="control-btn" onclick="toggleFullscreen()" id="fsBtn">
+        ⛶ Full Screen
+      </button>
+      <div class="controls-divider"></div>
       <a
         class="control-btn"
         href="https://great-american-star.github.io/Great-American-Star-demos/"
@@ -1023,10 +1026,6 @@
       >
         Explore the Mathematics →
       </a>
-      <div class="controls-divider"></div>
-      <button class="control-btn" onclick="toggleFullscreen()" id="fsBtn">
-        ⛶ Full Screen
-      </button>
     </div>
     <input
       accept="image/*"
