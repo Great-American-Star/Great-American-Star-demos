@@ -2249,6 +2249,12 @@
         document.getElementById("bgFlagBtn").style.fontWeight = type === 'flag' ? 'bold' : 'normal';
         document.getElementById("bgBlueBtn").style.fontWeight = type === 'blue' ? 'bold' : 'normal';
         document.getElementById("bgParchmentBtn").style.fontWeight = type === 'parchment' ? 'bold' : 'normal';
+        // Auto-set message background color to match poster background
+        var msgBgColor = type === 'parchment' ? '#5C3A1E' : '#1B2A6B';
+        document.getElementById("msgBgColor").value = msgBgColor;
+        document.getElementById("msgBgColorValue").value = msgBgColor;
+        document.getElementById("personalTextBox").style.background = msgBgColor.startsWith('#') ?
+          msgBgColor + 'eb' : msgBgColor;
         // Store current background for download
         window.currentBgUrl = url;
       }
