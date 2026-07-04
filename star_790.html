@@ -1723,7 +1723,7 @@
         dragImgY;
       var pentagonCanvasEl = null;
       var PENT_CX = 1750,
-        PENT_CY = 1750,
+        PENT_CY = 1752.5,
         PENT_R = 195;
       var tipImages = [null, null, null, null, null];
       var tipImgX = [0, 0, 0, 0, 0],
@@ -2889,15 +2889,10 @@
         document
           .getElementById("outerStarOutline")
           .setAttribute("points", op.join(" "));
-        var pp = [];
-        for (var i = 0; i < 5; i++) {
-          var a = (i * 2 * Math.PI) / 5 + Math.PI / 2;
-          pp.push(
-            (cx + 195 * Math.cos(a)).toFixed(0) +
-              "," +
-              (cy + 195 * Math.sin(a)).toFixed(0),
-          );
-        }
+        var pentPts = getPentClipPoints();
+        var pp = pentPts.map(function (p) {
+          return p.x.toFixed(0) + "," + p.y.toFixed(0);
+        });
         document
           .getElementById("pentagonOutline")
           .setAttribute("points", pp.join(" "));
@@ -3739,7 +3734,7 @@
         var tH = titleH || 0;
         letters.forEach(function (l) {
           var x = (parseFloat(l.style.left) + 12) * ssc,
-            y = (parseFloat(l.style.top) + 24) * ssc + tH,
+            y = (parseFloat(l.style.top) + 12) * ssc + tH,
             fs = (parseInt(l.style.fontSize) || 24) * ssc;
           ctx.font =
             (l.style.fontWeight || "bold") + " " + fs + "px Georgia, serif";
@@ -4645,7 +4640,7 @@
           letters.forEach(function (l) {
             var t = document.createElementNS(NS, "text");
             t.setAttribute("x", parseFloat(l.style.left) + 12);
-            t.setAttribute("y", parseFloat(l.style.top) + 24);
+            t.setAttribute("y", parseFloat(l.style.top) + 12);
             t.setAttribute("font-family", "Georgia, serif");
             t.setAttribute("font-size", l.style.fontSize || "24px");
             t.setAttribute("font-weight", l.style.fontWeight || "bold");
@@ -4863,7 +4858,7 @@
             // Step 7: letters
             letters.forEach(function (l) {
               var x = (parseFloat(l.style.left) + 12) * ssc;
-              var y = (parseFloat(l.style.top) + 24) * ssc + titleH;
+              var y = (parseFloat(l.style.top) + 12) * ssc + titleH;
               var fs = (parseInt(l.style.fontSize) || 24) * ssc;
               ctx.font =
                 (l.style.fontWeight || "bold") + " " + fs + "px Georgia, serif";
@@ -5411,7 +5406,7 @@
         var tH = titleH || 0;
         letters.forEach(function (l) {
           var x = (parseFloat(l.style.left) + 12) * ssc,
-            y = (parseFloat(l.style.top) + 24) * ssc + tH,
+            y = (parseFloat(l.style.top) + 12) * ssc + tH,
             fs = (parseInt(l.style.fontSize) || 24) * ssc;
           ctx.font =
             (l.style.fontWeight || "bold") + " " + fs + "px Georgia, serif";
