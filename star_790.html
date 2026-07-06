@@ -3661,8 +3661,10 @@
         if (window.currentBgUrl) {
           fi.src = window.currentBgUrl;
         } else {
-          // No background — skip drawing background image
-          fi = null;
+          // No background — render directly with white background
+          ctx.fillStyle = "white";
+          ctx.fillRect(0, 0, baseW, baseH);
+          doPreviewRender(ctx, baseW, baseH);
         }
       }
       function doPreviewRender(ctx, baseW, baseH) {
@@ -5420,9 +5422,11 @@
           if (window.currentBgUrl) {
           fi.src = window.currentBgUrl;
         } else {
-          // No background — skip drawing background image
-          fi = null;
-        }
+          // No background — render directly with white background
+          ctx.fillStyle = "white";
+          ctx.fillRect(0, 0, W, H);
+          // Trigger logo load to complete the render chain
+          var _liNoBg = new Image(); _liNoBg.onload = function() { exportCanvas(canvas); }; _liNoBg.onerror = function() { exportCanvas(canvas); }; _liNoBg.src = LOGO_URL;
         }
       }
 
