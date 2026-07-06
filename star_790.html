@@ -1458,6 +1458,21 @@
           📜 Old Parchment
         </button>
         <button
+          onclick="setBackground('none')"
+          id="bgNoneBtn"
+          style="
+            padding: 10px;
+            background: rgba(200, 200, 200, 0.2);
+            border: 2px solid #888;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+          "
+        >
+          ⬜ No Background
+        </button>
+        <button
           onclick="
             document.getElementById('myBgPanel').style.display = 'none';
             document.getElementById('myBgBtn').classList.remove('active');
@@ -2239,13 +2254,20 @@
       var BLUE_GRADIENT_URL = "https://raw.githubusercontent.com/Great-American-Star/Great-American-Star-demos/main/blue_gradient_custom.jpg";
       var PARCHMENT_URL = "https://raw.githubusercontent.com/Great-American-Star/Great-American-Star-demos/main/parchment_18x24.jpg";
       function setBackground(type) {
-        var url = type === 'flag' ? FLAG_URL : type === 'blue' ? BLUE_GRADIENT_URL : PARCHMENT_URL;
-        document.body.style.backgroundImage = 'url("' + url + '")';
-        document.getElementById("starContainer").style.backgroundImage = 'url("' + url + '")';
+        var url = type === 'flag' ? FLAG_URL : type === 'blue' ? BLUE_GRADIENT_URL : type === 'parchment' ? PARCHMENT_URL : null;
+        if (url) {
+          document.body.style.backgroundImage = 'url("' + url + '")';
+          document.getElementById("starContainer").style.backgroundImage = 'url("' + url + '")';
+        } else {
+          document.body.style.backgroundImage = 'none';
+          document.getElementById("starContainer").style.backgroundImage = 'none';
+          document.body.style.background = 'white';
+        }
         // Update button styles
         document.getElementById("bgFlagBtn").style.border = type === 'flag' ? '3px solid #003399' : '2px solid #003399';
         document.getElementById("bgBlueBtn").style.border = type === 'blue' ? '3px solid #0064c8' : '2px solid #0064c8';
         document.getElementById("bgParchmentBtn").style.border = type === 'parchment' ? '3px solid #8b6914' : '2px solid #8b6914';
+        document.getElementById("bgNoneBtn").style.border = type === 'none' ? '3px solid #888' : '2px solid #888';
         document.getElementById("bgFlagBtn").style.fontWeight = type === 'flag' ? 'bold' : 'normal';
         document.getElementById("bgBlueBtn").style.fontWeight = type === 'blue' ? 'bold' : 'normal';
         document.getElementById("bgParchmentBtn").style.fontWeight = type === 'parchment' ? 'bold' : 'normal';
@@ -2256,7 +2278,7 @@
         document.getElementById("personalTextBox").style.background = msgBgColor.startsWith('#') ?
           msgBgColor + 'eb' : msgBgColor;
         // Store current background for download
-        window.currentBgUrl = url;
+        window.currentBgUrl = url || '';
       }
       function startCreatePath() {
         document.getElementById("myPathPanel").style.display = "none";
