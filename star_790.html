@@ -3658,7 +3658,12 @@
         fi.onerror = function () {
           doPreviewRender(ctx, baseW, baseH);
         };
-        fi.src = window.currentBgUrl || FLAG_URL;
+        if (window.currentBgUrl) {
+          fi.src = window.currentBgUrl;
+        } else {
+          // No background — skip drawing background image
+          fi = null;
+        }
       }
       function doPreviewRender(ctx, baseW, baseH) {
         // DEBUG: draw test markers
@@ -4429,9 +4434,9 @@
               "</div></div>"
             : "";
           var html =
-            '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><title>The Great American Star</title><style>body{margin:0;padding:0;background:white;font-family:Georgia,serif;overflow:auto;}.page{position:relative;width:5400px;height:7200px;background-image:url(\'' +
-            (window.currentBgUrl || FLAG_URL) +
-            "');background-size:cover;background-position:center;}.title-area{position:absolute;top:0;left:0;width:5400px;height:900px;display:flex;flex-direction:column;align-items:center;justify-content:center;}.title-text{font-family:Georgia,serif;font-size:180px;font-weight:bold;color:rgba(255,255,255,0.95);text-shadow:0 0 30px rgba(0,0,0,0.5);}.year-text{font-family:Georgia,serif;font-size:120px;font-weight:bold;color:rgba(255,215,0,0.95);text-shadow:0 0 20px rgba(0,0,0,0.5);}.star-area{position:absolute;top:900px;left:0;width:5400px;height:5400px;}.star-container{position:absolute;top:0;left:0;width:5400px;height:5400px;transform-origin:top left;transform:scale(" +
+            '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><title>The Great American Star</title><style>body{margin:0;padding:0;background:white;font-family:Georgia,serif;overflow:auto;}.page{position:relative;width:5400px;height:7200px;' + (window.currentBgUrl ? 'background-image:url(\'\'' +
+            window.currentBgUrl +
+            '\');background-size:cover;background-position:center;}' : 'background:white;}') +
             String(5400 / 3500) +
             ");}.letter{position:absolute;font-size:24px;font-weight:bold;font-family:Georgia,serif;user-select:none;}.letter.special-corner,.letter.special-outline{font-weight:900!important;text-shadow:0 0 15px rgba(220,20,60,1.0),0 0 25px rgba(220,20,60,0.8),0 0 35px rgba(220,20,60,0.6),0 0 45px rgba(220,20,60,0.4)!important;filter:brightness(1.2) contrast(1.2) drop-shadow(0 0 8px rgba(220,20,60,0.8))!important;}.letter.path-selected,.letter.highlighted{color:" +
             pc +
@@ -4575,14 +4580,16 @@
             }
           }
           svg.appendChild(defs);
-          var flagImgSvg = document.createElementNS(NS, "image");
-          flagImgSvg.setAttribute("x", "0");
-          flagImgSvg.setAttribute("y", "0");
-          flagImgSvg.setAttribute("width", "5400");
-          flagImgSvg.setAttribute("height", "7200");
-          flagImgSvg.setAttribute("preserveAspectRatio", "xMidYMid slice");
-          flagImgSvg.setAttribute("href", window.currentBgUrl || FLAG_URL);
-          svg.appendChild(flagImgSvg);
+          if (window.currentBgUrl) {
+            var flagImgSvg = document.createElementNS(NS, "image");
+            flagImgSvg.setAttribute("x", "0");
+            flagImgSvg.setAttribute("y", "0");
+            flagImgSvg.setAttribute("width", "5400");
+            flagImgSvg.setAttribute("height", "7200");
+            flagImgSvg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+            flagImgSvg.setAttribute("href", window.currentBgUrl);
+            svg.appendChild(flagImgSvg);
+          }
           var outerR2 = 1680,
             innerR2 = 630,
             cx2 = 1750,
@@ -5410,7 +5417,12 @@
             // Continue with rest of rendering (simplified)
             alert("Flag image could not load. PNG may not include background.");
           };
-          fi.src = window.currentBgUrl || FLAG_URL;
+          if (window.currentBgUrl) {
+          fi.src = window.currentBgUrl;
+        } else {
+          // No background — skip drawing background image
+          fi = null;
+        }
         }
       }
 
