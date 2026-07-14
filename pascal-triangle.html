@@ -303,6 +303,9 @@
           <button class="control-button" onclick="clearHighlights()">
             Clear Highlights
           </button>
+          <button class="control-button" id="pascalDemoBtn" onclick="togglePascalDemo()">
+            Pascal Demo
+          </button>
         </div>
       </div>
 
@@ -918,6 +921,68 @@
       }
 
       // Clear all highlights
+      // Pascal Demo — highlight two parents and their child sum
+      let pascalDemoInterval = null;
+      let pascalDemoRunning = false;
+      let pascalDemoStep = 0;
+
+      function togglePascalDemo() {
+        if (pascalDemoRunning) {
+          clearInterval(pascalDemoInterval);
+          pascalDemoRunning = false;
+          pascalDemoStep = 0;
+          document.getElementById("pascalDemoBtn").classList.remove("active");
+          clearHighlights();
+        } else {
+          pascalDemoRunning = true;
+          document.getElementById("pascalDemoBtn").classList.add("active");
+          // Switch to numbers mode so the sums are visible
+          toggleMode("numbers");
+          runPascalDemoStep();
+          pascalDemoInterval = setInterval(runPascalDemoStep, 1800);
+        }
+      }
+
+      function runPascalDemoStep() {
+        if (!pascalDemoRunning) return;
+        clearHighlights();
+
+        // Build list of all valid parent-child triplets
+        const triplets = [];
+        for (let row = 0; row < triangleData.length - 1; row++) {
+          const rowLen = triangleData[row].length;
+          for (let col = 0; col < rowLen - 1; col++) {
+            // parent1 = [row][col], parent2 = [row][col+1]
+            // child = [row+1][col+1]
+            if (triangleData[row+1] && triangleData[row+1][col+1] !== undefined) {
+              triplets.push({ row, col });
+            }
+          }
+        }
+
+        if (triplets.length === 0) return;
+        const t = triplets[pascalDemoStep % triplets.length];
+        pascalDemoStep++;
+
+        const color = "#ffd700"; // gold
+        const childColor = "#ff6b35"; // orange for child
+
+        // Highlight parent 1
+        const p1 = document.querySelector(`[data-row="${t.row}"][data-col="${t.col}"]`);
+        // Highlight parent 2
+        const p2 = document.querySelector(`[data-row="${t.row}"][data-col="${t.col + 1}"]`);
+        // Highlight child (sum)
+        const child = document.querySelector(`[data-row="${t.row + 1}"][data-col="${t.col + 1}"]`);
+
+        if (p1) { p1.style.backgroundColor = color; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; }
+        if (p2) { p2.style.backgroundColor = color; p2.style.fontWeight = "900"; p2.style.outline = "3px solid #ff6b35"; }
+
+        // Show child after short delay to emphasize the "result"
+        setTimeout(() => {
+          if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #ffd700"; }
+        }, 600);
+      }
+
       function clearHighlights() {
         // Clear any trace timeouts
         clearTraceTimeouts();
@@ -925,6 +990,8 @@
         document.querySelectorAll(".cell").forEach((cell) => {
           cell.style.backgroundColor = "";
           cell.style.fontWeight = "";
+          cell.style.outline = "";
+          cell.style.color = "";
           cell.classList.remove("animated", "valid-next");
 
           // Restore permanent letter colors
