@@ -470,11 +470,15 @@
           "#32cd32",
         ];
         const color = colors[Math.floor(Math.random() * colors.length)];
+        const pathLength = path.length;
+        const stepDelay = 80; // ms per step
+        const totalDuration = pathLength * stepDelay; // time to draw full path
+        const holdDuration = 800; // how long full path stays visible after completion
 
+        // Draw path step by step — each cell stays lit until path is complete
         path.forEach((position, index) => {
           setTimeout(() => {
             if (!animationRunning) return;
-
             const cell = document.querySelector(
               `[data-row="${position.row}"][data-col="${position.col}"]`,
             );
@@ -482,35 +486,45 @@
               cell.style.backgroundColor = color;
               cell.style.fontWeight = "900";
               cell.classList.add("animated");
-
-              const letterColor = getWordColor(position.row);
-              cell.style.color = letterColor;
-
-              setTimeout(() => {
-                if (cell) {
-                  cell.style.backgroundColor = "";
-                  cell.style.fontWeight = "";
-                  cell.classList.remove("animated");
-
-                  const letterColor = getWordColor(position.row);
-                  cell.style.color = letterColor;
-                }
-              }, 1500);
+              cell.style.color = getWordColor(position.row);
             }
-          }, index * 100);
+          }, index * stepDelay);
         });
+
+        // After full path is drawn + hold time, fade out entire path at once
+        setTimeout(() => {
+          path.forEach((position) => {
+            const cell = document.querySelector(
+              `[data-row="${position.row}"][data-col="${position.col}"]`,
+            );
+            if (cell) {
+              cell.style.backgroundColor = "";
+              cell.style.fontWeight = "";
+              cell.classList.remove("animated");
+              cell.style.color = getWordColor(position.row);
+            }
+          });
+        }, totalDuration + holdDuration);
       }
 
       // Initialize the application
       document.addEventListener("DOMContentLoaded", function () {
         initTriangle();
 
-        // Start automatic animation
+        // Start 3-4 paths simultaneously with staggered starts
+        const NUM_PATHS = 4;
+        const PATH_INTERVAL = 1800; // new path every 1.8 seconds
+
         animationInterval = setInterval(() => {
           if (animationRunning) {
             animateRandomPath();
           }
-        }, 2000);
+        }, PATH_INTERVAL);
+
+        // Start first 3 paths immediately with slight stagger
+        animateRandomPath();
+        setTimeout(() => animateRandomPath(), 400);
+        setTimeout(() => animateRandomPath(), 900);
 
         // Start first animation immediately
         animateRandomPath();
