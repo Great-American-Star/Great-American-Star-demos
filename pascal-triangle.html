@@ -948,26 +948,34 @@
         clearHighlights();
 
         // Build list of all valid parent-child relationships
-        // Type "double": two parents → one child (middle cells)
-        // Type "left": one parent (leftmost) → leftmost child below
-        // Type "right": one parent (rightmost) → rightmost child below
+        // Rows 0-10 (expanding): left/right edges have single parents
+        // Row 11 is peak (22 cells)
+        // Rows 12-23 (contracting): ALL cells have two parents — no single parents
+        const PEAK_ROW = 11;
         const triplets = [];
         for (let row = 0; row < triangleData.length - 1; row++) {
           const rowLen = triangleData[row].length;
-          const nextRowLen = triangleData[row+1] ? triangleData[row+1].length : 0;
+          const nextRow = triangleData[row+1];
+          if (!nextRow) continue;
+          const nextRowLen = nextRow.length;
+          const expanding = row < PEAK_ROW;
 
-          // Left edge: single parent (col 0) → child (col 0)
-          triplets.push({ row, type: "left" });
+          // Left edge: single parent only in expanding phase
+          if (expanding) {
+            triplets.push({ row, type: "left" });
+          }
 
           // Middle cells: two parents → one child
           for (let col = 0; col < rowLen - 1; col++) {
-            if (triangleData[row+1] && triangleData[row+1][col+1] !== undefined) {
+            if (nextRow[col+1] !== undefined) {
               triplets.push({ row, col, type: "double" });
             }
           }
 
-          // Right edge: single parent (last col) → child (last col of next row)
-          triplets.push({ row, type: "right" });
+          // Right edge: single parent only in expanding phase
+          if (expanding) {
+            triplets.push({ row, type: "right" });
+          }
         }
 
         if (triplets.length === 0) return;
