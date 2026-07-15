@@ -926,6 +926,36 @@
       let pascalDemoRunning = false;
       let pascalDemoStep = 0;
 
+      // Pre-built list of all triplets
+      let pascalTriplets = [];
+
+      function buildPascalTriplets() {
+        pascalTriplets = [];
+        const PEAK_ROW = 11;
+        for (let row = 0; row < triangleData.length - 1; row++) {
+          const rowLen = triangleData[row].length;
+          const nextRow = triangleData[row + 1];
+          if (!nextRow) continue;
+          const expanding = row < PEAK_ROW;
+
+          if (expanding) pascalTriplets.push({ row, type: "left" });
+
+          for (let col = 0; col < rowLen - 1; col++) {
+            const childCol = expanding ? col + 1 : col;
+            if (nextRow[childCol] !== undefined) {
+              pascalTriplets.push({ row, col, type: "double", childCol });
+            }
+          }
+
+          if (expanding) pascalTriplets.push({ row, type: "right" });
+        }
+        // Shuffle for random order
+        for (let i = pascalTriplets.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [pascalTriplets[i], pascalTriplets[j]] = [pascalTriplets[j], pascalTriplets[i]];
+        }
+      }
+
       function togglePascalDemo() {
         if (pascalDemoRunning) {
           clearInterval(pascalDemoInterval);
@@ -937,20 +967,19 @@
           pascalDemoRunning = true;
           document.getElementById("pascalDemoBtn").classList.add("active");
           toggleMode("numbers");
-          // Start 3 demos immediately at staggered times
+          buildPascalTriplets();
           runPascalDemoStep();
-          setTimeout(() => { if (pascalDemoRunning) runPascalDemoStep(); }, 600);
-          setTimeout(() => { if (pascalDemoRunning) runPascalDemoStep(); }, 1200);
-          // Then keep launching new ones every 1.2 seconds
           pascalDemoInterval = setInterval(() => {
             if (pascalDemoRunning) runPascalDemoStep();
-          }, 1200);
+          }, 1600);
         }
       }
 
       function runPascalDemoStep() {
         if (!pascalDemoRunning) return;
-        // Don't clear all highlights — each demo manages its own cells
+        if (pascalTriplets.length === 0) buildPascalTriplets();
+        const t = pascalTriplets[pascalDemoStep % pascalTriplets.length];
+        pascalDemoStep++;
 
         // Build list of all valid parent-child relationships
         // Rows 0-10 (expanding): left/right edges have single parents
@@ -994,40 +1023,35 @@
         const childColor = "#ff6b35"; // orange for child
         const singleColor = "#00bfff"; // blue for single parent
 
-        // Helper to clear a cell after delay
-        function clearCell(cell, delay) {
+        const HOLD = 1200;
+        function clearCellAfter(cell, delay) {
+          if (!cell) return;
           setTimeout(() => {
-            if (cell) {
-              cell.style.backgroundColor = "";
-              cell.style.fontWeight = "";
-              cell.style.outline = "";
-              cell.style.color = "";
-            }
+            cell.style.backgroundColor = "";
+            cell.style.fontWeight = "";
+            cell.style.outline = "";
+            cell.style.color = "";
           }, delay);
         }
-
-        const HOLD = 1400; // how long cells stay highlighted
 
         if (t.type === "double") {
           const p1 = document.querySelector(`[data-row="${t.row}"][data-col="${t.col}"]`);
           const p2 = document.querySelector(`[data-row="${t.row}"][data-col="${t.col + 1}"]`);
           const childCol = t.childCol !== undefined ? t.childCol : t.col + 1;
           const child = document.querySelector(`[data-row="${t.row + 1}"][data-col="${childCol}"]`);
-          if (p1) { p1.style.backgroundColor = color; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; clearCell(p1, HOLD); }
-          if (p2) { p2.style.backgroundColor = color; p2.style.fontWeight = "900"; p2.style.outline = "3px solid #ff6b35"; clearCell(p2, HOLD); }
+          if (p1) { p1.style.backgroundColor = color; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; clearCellAfter(p1, HOLD); }
+          if (p2) { p2.style.backgroundColor = color; p2.style.fontWeight = "900"; p2.style.outline = "3px solid #ff6b35"; clearCellAfter(p2, HOLD); }
           setTimeout(() => {
-            if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #ffd700"; clearCell(child, HOLD - 200); }
-          }, 600);
+            if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #ffd700"; clearCellAfter(child, HOLD - 300); }
+          }, 500);
 
         } else if (t.type === "left") {
-          const nextRow = triangleData[t.row + 1];
-          if (!nextRow) return;
           const p1 = document.querySelector(`[data-row="${t.row}"][data-col="0"]`);
           const child = document.querySelector(`[data-row="${t.row + 1}"][data-col="0"]`);
-          if (p1) { p1.style.backgroundColor = singleColor; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; clearCell(p1, HOLD); }
+          if (p1) { p1.style.backgroundColor = singleColor; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; clearCellAfter(p1, HOLD); }
           setTimeout(() => {
-            if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #00bfff"; clearCell(child, HOLD - 200); }
-          }, 600);
+            if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #00bfff"; clearCellAfter(child, HOLD - 300); }
+          }, 500);
 
         } else if (t.type === "right") {
           const rowLen = triangleData[t.row].length;
@@ -1035,10 +1059,10 @@
           if (nextRowLen === 0) return;
           const p1 = document.querySelector(`[data-row="${t.row}"][data-col="${rowLen - 1}"]`);
           const child = document.querySelector(`[data-row="${t.row + 1}"][data-col="${nextRowLen - 1}"]`);
-          if (p1) { p1.style.backgroundColor = singleColor; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; clearCell(p1, HOLD); }
+          if (p1) { p1.style.backgroundColor = singleColor; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; clearCellAfter(p1, HOLD); }
           setTimeout(() => {
-            if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #00bfff"; clearCell(child, HOLD - 200); }
-          }, 600);
+            if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #00bfff"; clearCellAfter(child, HOLD - 300); }
+          }, 500);
         }
       }
 
