@@ -966,9 +966,12 @@
           }
 
           // Middle cells: two parents → one child
+          // Expanding (rows 0-10): child is at col+1
+          // Contracting (rows 12+): child is at col
           for (let col = 0; col < rowLen - 1; col++) {
-            if (nextRow[col+1] !== undefined) {
-              triplets.push({ row, col, type: "double" });
+            const childCol = expanding ? col + 1 : col;
+            if (nextRow[childCol] !== undefined) {
+              triplets.push({ row, col, type: "double", childCol });
             }
           }
 
@@ -990,7 +993,8 @@
           // Two parents → child
           const p1 = document.querySelector(`[data-row="${t.row}"][data-col="${t.col}"]`);
           const p2 = document.querySelector(`[data-row="${t.row}"][data-col="${t.col + 1}"]`);
-          const child = document.querySelector(`[data-row="${t.row + 1}"][data-col="${t.col + 1}"]`);
+          const childCol = t.childCol !== undefined ? t.childCol : t.col + 1;
+          const child = document.querySelector(`[data-row="${t.row + 1}"][data-col="${childCol}"]`);
           if (p1) { p1.style.backgroundColor = color; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; }
           if (p2) { p2.style.backgroundColor = color; p2.style.fontWeight = "900"; p2.style.outline = "3px solid #ff6b35"; }
           setTimeout(() => {
