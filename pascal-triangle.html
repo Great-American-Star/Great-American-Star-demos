@@ -978,52 +978,18 @@
       function runPascalDemoStep() {
         if (!pascalDemoRunning) return;
         if (pascalTriplets.length === 0) buildPascalTriplets();
-        const t = pascalTriplets[pascalDemoStep % pascalTriplets.length];
         pascalDemoStep++;
 
         // Build list of all valid parent-child relationships
-        // Rows 0-10 (expanding): left/right edges have single parents
-        // Row 11 is peak (22 cells)
-        // Rows 12-23 (contracting): ALL cells have two parents — no single parents
-        const PEAK_ROW = 11;
-        const triplets = [];
-        for (let row = 0; row < triangleData.length - 1; row++) {
-          const rowLen = triangleData[row].length;
-          const nextRow = triangleData[row+1];
-          if (!nextRow) continue;
-          const nextRowLen = nextRow.length;
-          const expanding = row < PEAK_ROW;
-
-          // Left edge: single parent only in expanding phase
-          if (expanding) {
-            triplets.push({ row, type: "left" });
-          }
-
-          // Middle cells: two parents → one child
-          // Expanding (rows 0-10): child is at col+1
-          // Contracting (rows 12+): child is at col
-          for (let col = 0; col < rowLen - 1; col++) {
-            const childCol = expanding ? col + 1 : col;
-            if (nextRow[childCol] !== undefined) {
-              triplets.push({ row, col, type: "double", childCol });
-            }
-          }
-
-          // Right edge: single parent only in expanding phase
-          if (expanding) {
-            triplets.push({ row, type: "right" });
-          }
-        }
-
-        if (triplets.length === 0) return;
-        const t = triplets[pascalDemoStep % triplets.length];
+        if (pascalTriplets.length === 0) buildPascalTriplets();
+        const t = pascalTriplets[pascalDemoStep % pascalTriplets.length];
         pascalDemoStep++;
 
-        const color = "#ffd700"; // gold for parents
-        const childColor = "#ff6b35"; // orange for child
-        const singleColor = "#00bfff"; // blue for single parent
-
+        const color = "#ffd700";
+        const childColor = "#ff6b35";
+        const singleColor = "#00bfff";
         const HOLD = 1200;
+
         function clearCellAfter(cell, delay) {
           if (!cell) return;
           setTimeout(() => {
