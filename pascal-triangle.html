@@ -947,40 +947,71 @@
         if (!pascalDemoRunning) return;
         clearHighlights();
 
-        // Build list of all valid parent-child triplets
+        // Build list of all valid parent-child relationships
+        // Type "double": two parents → one child (middle cells)
+        // Type "left": one parent (leftmost) → leftmost child below
+        // Type "right": one parent (rightmost) → rightmost child below
         const triplets = [];
         for (let row = 0; row < triangleData.length - 1; row++) {
           const rowLen = triangleData[row].length;
+          const nextRowLen = triangleData[row+1] ? triangleData[row+1].length : 0;
+
+          // Left edge: single parent (col 0) → child (col 0)
+          triplets.push({ row, type: "left" });
+
+          // Middle cells: two parents → one child
           for (let col = 0; col < rowLen - 1; col++) {
-            // parent1 = [row][col], parent2 = [row][col+1]
-            // child = [row+1][col+1]
             if (triangleData[row+1] && triangleData[row+1][col+1] !== undefined) {
-              triplets.push({ row, col });
+              triplets.push({ row, col, type: "double" });
             }
           }
+
+          // Right edge: single parent (last col) → child (last col of next row)
+          triplets.push({ row, type: "right" });
         }
 
         if (triplets.length === 0) return;
         const t = triplets[pascalDemoStep % triplets.length];
         pascalDemoStep++;
 
-        const color = "#ffd700"; // gold
+        const color = "#ffd700"; // gold for parents
         const childColor = "#ff6b35"; // orange for child
+        const singleColor = "#00bfff"; // blue for single parent
 
-        // Highlight parent 1
-        const p1 = document.querySelector(`[data-row="${t.row}"][data-col="${t.col}"]`);
-        // Highlight parent 2
-        const p2 = document.querySelector(`[data-row="${t.row}"][data-col="${t.col + 1}"]`);
-        // Highlight child (sum)
-        const child = document.querySelector(`[data-row="${t.row + 1}"][data-col="${t.col + 1}"]`);
+        if (t.type === "double") {
+          // Two parents → child
+          const p1 = document.querySelector(`[data-row="${t.row}"][data-col="${t.col}"]`);
+          const p2 = document.querySelector(`[data-row="${t.row}"][data-col="${t.col + 1}"]`);
+          const child = document.querySelector(`[data-row="${t.row + 1}"][data-col="${t.col + 1}"]`);
+          if (p1) { p1.style.backgroundColor = color; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; }
+          if (p2) { p2.style.backgroundColor = color; p2.style.fontWeight = "900"; p2.style.outline = "3px solid #ff6b35"; }
+          setTimeout(() => {
+            if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #ffd700"; }
+          }, 600);
 
-        if (p1) { p1.style.backgroundColor = color; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; }
-        if (p2) { p2.style.backgroundColor = color; p2.style.fontWeight = "900"; p2.style.outline = "3px solid #ff6b35"; }
+        } else if (t.type === "left") {
+          // Left edge: single parent col 0 → child col 0
+          const nextRow = triangleData[t.row + 1];
+          if (!nextRow) return;
+          const p1 = document.querySelector(`[data-row="${t.row}"][data-col="0"]`);
+          const child = document.querySelector(`[data-row="${t.row + 1}"][data-col="0"]`);
+          if (p1) { p1.style.backgroundColor = singleColor; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; }
+          setTimeout(() => {
+            if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #00bfff"; }
+          }, 600);
 
-        // Show child after short delay to emphasize the "result"
-        setTimeout(() => {
-          if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #ffd700"; }
-        }, 600);
+        } else if (t.type === "right") {
+          // Right edge: single parent (last col) → child (last col of next row)
+          const rowLen = triangleData[t.row].length;
+          const nextRowLen = triangleData[t.row + 1] ? triangleData[t.row + 1].length : 0;
+          if (nextRowLen === 0) return;
+          const p1 = document.querySelector(`[data-row="${t.row}"][data-col="${rowLen - 1}"]`);
+          const child = document.querySelector(`[data-row="${t.row + 1}"][data-col="${nextRowLen - 1}"]`);
+          if (p1) { p1.style.backgroundColor = singleColor; p1.style.fontWeight = "900"; p1.style.outline = "3px solid #ff6b35"; }
+          setTimeout(() => {
+            if (child) { child.style.backgroundColor = childColor; child.style.fontWeight = "900"; child.style.color = "white"; child.style.outline = "3px solid #00bfff"; }
+          }, 600);
+        }
       }
 
       function clearHighlights() {
