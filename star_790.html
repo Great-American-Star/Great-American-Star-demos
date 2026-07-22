@@ -246,14 +246,18 @@
         left: 20px;
         z-index: 1000;
         display: flex;
-        flex-wrap: wrap;
-        max-width: 440px;
-        gap: 5px;
-        background: rgba(255, 255, 255, 0.85);
-        padding: 10px;
-        border-radius: 10px;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
-        backdrop-filter: blur(4px);
+        flex-direction: column;
+        width: min(400px, calc(100vw - 40px));
+        max-height: 90vh;
+        box-sizing: border-box;
+        gap: 14px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        background: #eef2f7;
+        padding: 16px;
+        border: 1px solid #aebdce;
+        border-radius: 12px;
+        box-shadow: 0 10px 32px rgba(10, 35, 66, 0.24);
       }
       .control-btn {
         background: rgba(255, 255, 255, 0.95);
@@ -263,8 +267,14 @@
         border-radius: 6px;
         cursor: pointer;
         transition: all 0.2s ease;
+        font-family: Arial, Helvetica, sans-serif;
         font-size: 13px;
         font-weight: 600;
+        line-height: normal;
+        letter-spacing: normal;
+        text-align: center;
+        min-height: 42px;
+        box-sizing: border-box;
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
       }
       .control-btn:hover {
@@ -277,6 +287,410 @@
         border-color: rgba(0, 140, 0, 0.7);
         color: #004400;
         font-weight: 700;
+      }
+      .control-btn:focus-visible,
+      .controls-accordion summary:focus-visible,
+      .controls-toggle:focus-visible {
+        outline: 3px solid #1d5fd1;
+        outline-offset: 2px;
+      }
+      .controls-section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .controls-section + .controls-section {
+        border-top: 1px solid rgba(10, 35, 66, 0.14);
+        padding-top: 14px;
+      }
+      .controls-section-title {
+        margin: 0;
+        color: #0a2342;
+        font-family: Georgia, serif;
+        font-size: 14px;
+        line-height: 1.2;
+        letter-spacing: 0.7px;
+      }
+      .creation-steps {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .creation-steps .control-btn {
+        text-align: left;
+      }
+      .view-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .view-controls .control-btn,
+      .accordion-content .control-btn {
+        height: 42px;
+      }
+      .review-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .order-primary {
+        width: 100%;
+        min-height: 50px;
+        margin-top: 4px;
+        background: #b22234;
+        border-color: #8b0000;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(139, 0, 0, 0.28);
+      }
+      .order-primary:hover {
+        background: #8b0000;
+        color: #fff;
+      }
+      .controls-accordion {
+        border-top: 1px solid rgba(10, 35, 66, 0.14);
+        padding-top: 12px;
+      }
+      .controls-accordion summary {
+        cursor: pointer;
+        color: #0a2342;
+        font-family: Georgia, serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      .accordion-content {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-top: 10px;
+      }
+      .accordion-content .control-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+      }
+      .controls-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1001;
+        min-height: 38px;
+        padding: 8px 12px;
+        border: 1px solid rgba(10, 35, 66, 0.35);
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.97);
+        color: #0a2342;
+        cursor: pointer;
+        font-weight: 700;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
+      }
+      .controls-toggle[hidden] {
+        display: none;
+      }
+      .controls.is-hidden {
+        display: none;
+      }
+      .hide-controls-btn {
+        align-self: flex-end;
+        min-height: 32px;
+        padding: 5px 9px;
+        font-size: 12px;
+      }
+      .customer-panel-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 1001;
+        background: rgba(10, 35, 66, 0.22);
+        pointer-events: auto;
+      }
+      .customer-panel-backdrop.is-visible {
+        display: block;
+      }
+      .customer-dialog {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%);
+        width: min(420px, calc(100vw - 32px)) !important;
+        min-width: 0 !important;
+        max-height: min(82vh, 760px) !important;
+        box-sizing: border-box;
+        overflow-y: auto !important;
+        padding: 18px !important;
+        background: #eef2f7 !important;
+        border: 1px solid #aebdce !important;
+        border-radius: 12px !important;
+        box-shadow: 0 12px 36px rgba(10, 35, 66, 0.28) !important;
+        backdrop-filter: none !important;
+        color: #111 !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+      }
+      .customer-dialog.message-dialog {
+        width: min(850px, calc(100vw - 32px)) !important;
+        max-height: 80vh !important;
+      }
+      .customer-dialog-inner {
+        max-width: none !important;
+        margin: 0 !important;
+      }
+      .customer-dialog-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .customer-dialog-title {
+        margin: 0;
+        color: #0a2342;
+        font-family: Georgia, serif;
+        font-size: 15px;
+        line-height: 1.25;
+        letter-spacing: 0.7px;
+      }
+      .customer-dialog-subtitle {
+        margin: 4px 0 0;
+        color: #526174;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .customer-dialog-close {
+        flex: 0 0 auto !important;
+        min-width: 72px;
+        min-height: 36px;
+        margin: 0 !important;
+        padding: 7px 12px !important;
+        background: #fff !important;
+        border: 1px solid #8799ad !important;
+        border-radius: 6px !important;
+        color: #0a2342 !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        cursor: pointer;
+      }
+      .customer-dialog button,
+      .customer-dialog select,
+      .customer-dialog input {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .customer-dialog button:focus-visible,
+      .customer-dialog select:focus-visible,
+      .customer-dialog input:focus-visible,
+      .customer-dialog [contenteditable="true"]:focus-visible,
+      .path-color-option:focus-visible {
+        outline: 3px solid #1d5fd1 !important;
+        outline-offset: 2px;
+      }
+      .panel-choice-list {
+        display: flex !important;
+        flex-direction: column;
+        gap: 10px !important;
+      }
+      .panel-choice-button {
+        width: 100%;
+        min-height: 52px;
+        box-sizing: border-box;
+        padding: 10px 12px !important;
+        background: #fff !important;
+        border: 1px solid #8799ad !important;
+        border-radius: 7px !important;
+        color: #111;
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        line-height: 1.35;
+        text-align: left !important;
+        cursor: pointer;
+      }
+      .panel-choice-button:hover,
+      .customer-dialog-close:hover {
+        background: #f7f9fc !important;
+        border-color: #526f91 !important;
+      }
+      .panel-choice-description {
+        display: block;
+        margin-top: 3px;
+        color: #526174 !important;
+        font-size: 13px !important;
+        font-weight: 400 !important;
+      }
+      .image-progress {
+        color: #526174;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .image-position-row {
+        display: grid;
+        grid-template-columns: minmax(130px, 1fr) auto 96px;
+        align-items: center;
+        gap: 8px;
+        padding: 9px;
+        background: #fff;
+        border: 1px solid #c4cfdb;
+        border-radius: 7px;
+      }
+      .image-position-name {
+        color: #111;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .image-position-state {
+        min-width: 100px;
+        color: #526174;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: right;
+      }
+      .image-position-state.has-image {
+        color: #176b3a;
+      }
+      .image-position-action {
+        min-height: 38px !important;
+        padding: 7px 10px !important;
+        text-align: center !important;
+      }
+      .crop-editor-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 1005;
+        background: rgba(10, 35, 66, 0.34);
+      }
+      .crop-editor-backdrop.is-visible {
+        display: block;
+      }
+      .crop-dialog {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translate(-50%, -50%);
+        z-index: 1006 !important;
+        width: min(520px, calc(100vw - 32px)) !important;
+        min-width: 0 !important;
+        max-height: calc(100vh - 32px);
+        overflow-y: auto;
+        box-sizing: border-box;
+        padding: 18px !important;
+        background: #eef2f7 !important;
+        border: 1px solid #aebdce !important;
+        border-radius: 12px !important;
+        box-shadow: 0 14px 42px rgba(10, 35, 66, 0.32) !important;
+        color: #111 !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+      }
+      .crop-dialog-title {
+        margin: 0;
+        color: #0a2342;
+        font-family: Georgia, serif;
+        font-size: 16px;
+        letter-spacing: 0.7px;
+      }
+      .crop-dialog-description,
+      .crop-dialog-instructions {
+        margin: 5px 0 12px;
+        color: #526174 !important;
+        font-size: 14px !important;
+        line-height: 1.4;
+      }
+      .crop-workspace {
+        display: block;
+        width: min(440px, 100%) !important;
+        height: auto;
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #aebdce !important;
+        border-radius: 8px !important;
+        cursor: move;
+        touch-action: none;
+      }
+      .crop-zoom-controls,
+      .crop-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .crop-zoom-controls {
+        margin-top: 10px;
+      }
+      .crop-actions {
+        margin-top: 12px !important;
+      }
+      .crop-control-btn {
+        flex: 1 1 100px;
+        min-height: 42px;
+        padding: 9px 12px !important;
+        border: 1px solid #8799ad !important;
+        border-radius: 6px !important;
+        background: #fff !important;
+        color: #111 !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        cursor: pointer;
+      }
+      .crop-control-btn.primary {
+        background: #145fbd !important;
+        border-color: #0d4e9e !important;
+        color: #fff !important;
+      }
+      .crop-control-btn.danger {
+        background: #b42336 !important;
+        border-color: #8e1728 !important;
+        color: #fff !important;
+      }
+      .crop-control-btn:focus-visible,
+      .crop-workspace:focus-visible {
+        outline: 3px solid #1d5fd1 !important;
+        outline-offset: 2px;
+      }
+      .path-color-group {
+        padding: 10px !important;
+        background: #fff !important;
+        border: 1px solid #c4cfdb !important;
+        border-radius: 7px !important;
+      }
+      .message-toolbar {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+        margin: 0 !important;
+      }
+      .message-toolbar label,
+      .message-toolbar-label,
+      .message-toolbar-note {
+        color: #36475b !important;
+        font-size: 14px !important;
+      }
+      .message-toolbar button,
+      .message-toolbar select {
+        min-height: 36px;
+        padding: 6px 10px !important;
+        background: #fff !important;
+        border: 1px solid #8799ad !important;
+        border-radius: 6px !important;
+        color: #111 !important;
+        font-size: 14px !important;
+      }
+      .message-editor {
+        width: 100% !important;
+        min-height: 160px !important;
+        max-height: 42vh !important;
+        overflow: auto !important;
+        box-sizing: border-box !important;
+      }
+      .background-choice {
+        min-height: 48px;
+        text-align: center !important;
       }
       .controls-divider {
         width: 100%;
@@ -339,35 +753,98 @@
       #pathCreationPanel {
         position: fixed;
         top: 20px;
-        left: 460px;
-        background: rgba(255, 255, 255, 0.97);
-        border: 2px solid rgba(0, 150, 0, 0.6);
-        border-radius: 8px;
-        padding: 14px 18px;
+        right: 20px;
+        width: min(380px, calc(100vw - 40px));
+        box-sizing: border-box;
+        background: #eef2f7;
+        border: 1px solid #aebdce;
+        border-radius: 12px;
+        padding: 18px;
         z-index: 1003;
-        font-size: 13px;
-        color: black;
-        min-width: 290px;
-        display: none;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-      }
-      #pathCreationPanel h3 {
-        margin: 0 0 8px 0;
+        font-family: Arial, Helvetica, sans-serif;
         font-size: 14px;
-        color: #005500;
+        color: #111;
+        display: none;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        box-shadow: 0 12px 36px rgba(10, 35, 66, 0.28);
+      }
+      .path-creation-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      #pathCreationPanel h2 {
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: 16px;
+        line-height: 1.25;
+        letter-spacing: 0.7px;
+        color: #0a2342;
       }
       #pathCreationPanel .panel-row {
-        margin: 4px 0;
-        line-height: 1.4;
+        margin: 8px 0;
+        line-height: 1.45;
+      }
+      .path-creation-progress {
+        padding: 10px 12px;
+        background: #fff;
+        border: 1px solid #c4cfdb;
+        border-radius: 7px;
+        color: #0a2342;
+        font-size: 14px;
+      }
+      .path-creation-guidance {
+        color: #176b3a;
+        font-weight: 600;
+      }
+      .path-creation-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 12px;
       }
       #pathCreationPanel button {
-        background: rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(0, 0, 0, 0.3);
-        padding: 6px 12px;
-        border-radius: 4px;
+        min-height: 42px;
+        padding: 9px 12px;
+        background: #fff;
+        border: 1px solid #8799ad;
+        border-radius: 6px;
+        color: #111;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
         cursor: pointer;
-        margin-top: 8px;
-        font-size: 12px;
+      }
+      #pathCreationPanel button:hover {
+        background: #f7f9fc;
+        border-color: #526f91;
+      }
+      #pathCreationPanel button:focus-visible {
+        outline: 3px solid #1d5fd1;
+        outline-offset: 2px;
+      }
+      .path-creation-close {
+        flex: 0 0 auto;
+        min-width: 72px;
+      }
+      .path-creation-reset {
+        flex: 1 1 180px;
+        background: #fffaf0 !important;
+        border-color: #b78b42 !important;
+        color: #63420e !important;
+      }
+      .path-creation-undo {
+        flex: 1 1 150px;
+      }
+      #pathCreationPanel button:disabled {
+        background: #e4e9ef !important;
+        border-color: #c4cfdb !important;
+        color: #7a8795 !important;
+        cursor: not-allowed;
+        opacity: 0.78;
       }
       .personal-text-display {
         display: none;
@@ -382,6 +859,9 @@
       }
       /* Fullscreen mode - hide all UI */
       .fullscreen-mode .controls {
+        display: none !important;
+      }
+      .fullscreen-mode .controls-toggle {
         display: none !important;
       }
       .fullscreen-mode .version-tag {
@@ -430,6 +910,59 @@
           display: none !important;
         }
       }
+      @media (max-width: 520px) {
+        .controls {
+          top: 10px;
+          left: 10px;
+          width: calc(100vw - 20px);
+          max-height: 90vh;
+          padding: 13px;
+        }
+        .controls-toggle {
+          top: 10px;
+          left: 10px;
+        }
+        .creation-steps,
+        .view-controls {
+          grid-template-columns: 1fr;
+        }
+        .customer-dialog,
+        .customer-dialog.message-dialog {
+          top: 12px !important;
+          transform: translateX(-50%);
+          width: calc(100vw - 20px) !important;
+          max-height: calc(100vh - 24px) !important;
+          padding: 14px !important;
+        }
+        .customer-dialog-header {
+          gap: 8px;
+        }
+        .image-position-row {
+          grid-template-columns: 1fr;
+          gap: 3px;
+        }
+        .image-position-state {
+          text-align: left;
+          padding-left: 4px;
+        }
+        .image-position-action {
+          width: 100%;
+        }
+        .crop-dialog {
+          top: 10px !important;
+          transform: translateX(-50%);
+          width: calc(100vw - 20px) !important;
+          max-height: calc(100vh - 20px);
+          padding: 14px !important;
+        }
+        #pathCreationPanel {
+          top: 10px;
+          right: 10px;
+          width: min(340px, calc(100vw - 20px));
+          max-height: calc(100vh - 20px);
+          padding: 14px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -462,9 +995,14 @@
         <!-- SVG and background created by JavaScript -->
       </div>
     </div>
+    <div class="customer-panel-backdrop" id="customerPanelBackdrop" aria-hidden="true"></div>
     <!-- Personal Message Panel -->
     <div
       id="personalTextBox"
+      class="customer-dialog message-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="messageDialogTitle"
       style="
         display: none;
         position: fixed;
@@ -481,8 +1019,16 @@
         overflow-y: auto;
       "
     >
-      <div style="max-width: 1400px; margin: 0 auto">
+      <div class="customer-dialog-inner" style="max-width: 1400px; margin: 0 auto">
+        <div class="customer-dialog-header">
+          <div>
+            <h2 class="customer-dialog-title" id="messageDialogTitle">ADD YOUR MESSAGE</h2>
+            <p class="customer-dialog-subtitle">Select text, then apply formatting.</p>
+          </div>
+          <button class="customer-dialog-close" onclick="closeMsgPanel()">Close</button>
+        </div>
         <div
+          class="message-toolbar"
           style="
             display: flex;
             align-items: center;
@@ -491,13 +1037,8 @@
             flex-wrap: wrap;
           "
         >
-          <span style="font-size: 13px; font-weight: 700; color: #003399"
-            >✏ MY MESSAGE</span
-          >
-          <span style="font-size: 10px; color: #aabbdd; font-style: italic"
-            >Select text then apply formatting</span
-          >
           <div
+            class="message-toolbar"
             style="
               display: flex;
               align-items: center;
@@ -506,7 +1047,7 @@
               margin-left: 4px;
             "
           >
-            <label style="font-size: 11px; color: #aabbdd">Size:</label>
+            <label style="font-size: 11px; color: #aabbdd">Font size:</label>
             <select
               id="msgFontSize"
               onchange="applyMsgFontSize()"
@@ -553,7 +1094,7 @@
               <em>I</em>
             </button>
 
-            <label style="font-size: 11px; color: #aabbdd">Color:</label>
+            <label style="font-size: 11px; color: #aabbdd">Text color:</label>
             <input
               id="msgColor"
               onchange="applyMsgColor()"
@@ -568,13 +1109,13 @@
               "
               type="color"
               value="#ffffff"
-            /><span
+            /><span class="message-toolbar-label"
               style="
                 font-size: 11px;
                 color: rgba(255, 255, 255, 0.7);
                 margin-left: 6px;
               "
-              >Bg:</span
+              >Background:</span
             ><input
               id="msgBgColor"
               onchange="applyMsgBgColor()"
@@ -590,7 +1131,7 @@
               type="color"
               value="#1B2A6B"
             />
-            <label style="font-size: 11px; color: #aabbdd">Align:</label>
+            <label style="font-size: 11px; color: #aabbdd">Alignment:</label>
             <button
               onclick="applyMsgCmd('justifyLeft')"
               style="
@@ -643,7 +1184,7 @@
               "
               title="Apply selected color to ALL text"
             >
-              All
+              Apply to all
             </button>
             <button
               onclick="clearMsgFormatting()"
@@ -657,31 +1198,16 @@
                 color: #cc0000;
               "
             >
-              Clear fmt
+              Clear formatting
             </button>
           </div>
-          <button
-            onclick="closeMsgPanel()"
-            style="
-              margin-left: auto;
-              padding: 5px 14px;
-              background: #0052cc;
-              color: white;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-              font-size: 12px;
-              font-weight: 600;
-            "
-          >
-            Close
-          </button>
         </div>
         <input type="hidden" id="msgBgColorValue" value="#1B2A6B" />
         <div
           contenteditable="true"
           data-placeholder="Type your personal message here..."
           id="personalTextArea"
+          class="message-editor"
           onkeydown="
             if (event.key === 'Enter') {
               event.preventDefault();
@@ -944,84 +1470,107 @@
         </div>
       </div>
     </div>
-    <div class="controls">
-      <!-- ===== PRIMARY: Personalize + Order (most prominent) ===== -->
-      <div class="controls-label primary">★ Personalize Your Poster</div>
-      <div class="controls-primary">
-        <button class="control-btn" id="myPathBtn" onclick="toggleMyPath()">
-          🕐 My Path
-        </button>
-        <button class="control-btn" id="myImagesBtn" onclick="toggleMyImages()">
-          📷 My Images
-        </button>
-        <button class="control-btn" onclick="scrollToText()">
-          ✏ My Message
-        </button>
-        <button class="control-btn" id="myBgBtn" onclick="toggleMyBackground()">
-          🖼 My Background
-        </button>
-      </div>
-
-      <div class="controls-label primary">★ Get Your Poster</div>
-      <div class="controls-primary">
-        <button
-          class="control-btn"
-          onclick="orderMyPoster()"
-          style="
-            background: rgba(220, 20, 60, 0.15);
-            border-color: rgba(220, 20, 60, 0.7);
-            color: #8b0000;
-            font-weight: 700;
-          "
-        >
-          🛒 Order My Poster
-        </button>
-        <button class="control-btn" onclick="downloadPreviewLowRes()">
-          ⬇ Download Preview (watermark)
-        </button>
-        <button
-          class="control-btn"
-          onclick="ownerAccess()"
-          id="ownerAccessBtn"
-          style="background:rgba(10,35,66,0.12);border-color:rgba(10,35,66,0.6);color:#0a2342;"
-        >
-          🔐 Owner Access
-        </button>
-      </div>
-
-      <div class="controls-divider"></div>
-
-      <!-- ===== SECONDARY: Navigation + Paths ===== -->
-      <div class="controls-label">Navigation</div>
-      <button class="control-btn" onclick="zoomIn()">Zoom In</button>
-      <button class="control-btn" onclick="zoomOut()">Zoom Out</button>
-      <button class="control-btn" onclick="resetZoom()">Reset Zoom</button>
-      <div class="controls-divider"></div>
-      <div class="controls-label">Paths</div>
-      <button class="control-btn" id="traceBtn" onclick="highlightPath()">
-        Trace Random Path
-      </button>
-      <button class="control-btn" id="animBtn" onclick="togglePathAnimation()">
-        Start Path Animation
-      </button>
-      <button class="control-btn" onclick="clearHighlights()">
-        Clear Highlights
-      </button>
-      <button class="control-btn" onclick="toggleFullscreen()" id="fsBtn">
-        ⛶ Full Screen
-      </button>
-      <div class="controls-divider"></div>
-      <a
-        class="control-btn"
-        href="https://great-american-star.github.io/Great-American-Star-demos/"
-        style="
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-        "
+    <button
+      class="controls-toggle"
+      id="showControlsBtn"
+      type="button"
+      onclick="showControls()"
+      aria-controls="customerControls"
+      hidden
+    >
+      Show Controls
+    </button>
+    <div class="controls" id="customerControls">
+      <button
+        class="control-btn hide-controls-btn"
+        id="hideControlsBtn"
+        type="button"
+        onclick="hideControls()"
+        aria-controls="customerControls"
       >
-        Explore the Mathematics →
-      </a>
+        Hide Controls
+      </button>
+
+      <section class="controls-section" aria-labelledby="createPosterHeading">
+        <h2 class="controls-section-title" id="createPosterHeading">CREATE YOUR POSTER</h2>
+        <div class="creation-steps">
+          <button class="control-btn" id="myPathBtn" onclick="toggleMyPath()" aria-haspopup="dialog" aria-controls="myPathPanel">
+            1. Choose Your Path
+          </button>
+          <button class="control-btn" id="myImagesBtn" onclick="toggleMyImages()" aria-haspopup="dialog" aria-controls="myImagesPanel">
+            2. Add 6 Images
+          </button>
+          <button class="control-btn" id="messagePanelBtn" onclick="scrollToText()" aria-haspopup="dialog" aria-controls="personalTextBox">
+            3. Add Your Message
+          </button>
+          <button class="control-btn" id="myBgBtn" onclick="toggleMyBackground()" aria-haspopup="dialog" aria-controls="myBgPanel">
+            4. Choose Background
+          </button>
+        </div>
+      </section>
+
+      <section class="controls-section" aria-labelledby="viewControlsHeading">
+        <h2 class="controls-section-title" id="viewControlsHeading">VIEW CONTROLS</h2>
+        <div class="view-controls">
+          <button class="control-btn" onclick="zoomIn()">Zoom In</button>
+          <button class="control-btn" onclick="zoomOut()">Zoom Out</button>
+          <button class="control-btn" onclick="resetZoom()">Reset Zoom</button>
+          <button class="control-btn" onclick="toggleFullscreen()" id="fsBtn">
+            ⛶ Full Screen
+          </button>
+        </div>
+      </section>
+
+      <section class="controls-section" aria-labelledby="reviewOrderHeading">
+        <h2 class="controls-section-title" id="reviewOrderHeading">REVIEW &amp; ORDER</h2>
+        <div class="review-actions">
+          <button class="control-btn" onclick="downloadPreviewLowRes()">
+            Download Watermarked Preview
+          </button>
+          <button class="control-btn order-primary" onclick="orderMyPoster()">
+            🛒 Order My Poster
+          </button>
+        </div>
+      </section>
+
+      <details class="controls-accordion" id="pathDemonstrationsAccordion">
+        <summary aria-expanded="false" aria-controls="pathDemonstrationsContent">
+          PATH DEMONSTRATIONS &amp; MATHEMATICS
+        </summary>
+        <div class="accordion-content" id="pathDemonstrationsContent">
+          <button class="control-btn" id="traceBtn" onclick="highlightPath()">
+            Trace Random Path
+          </button>
+          <button class="control-btn" id="animBtn" onclick="togglePathAnimation()">
+            Start Path Animation
+          </button>
+          <button class="control-btn" onclick="clearHighlights()">
+            Clear Highlights
+          </button>
+          <a
+            class="control-btn"
+            href="https://great-american-star.github.io/Great-American-Star-demos/"
+          >
+            Explore the Mathematics →
+          </a>
+        </div>
+      </details>
+
+      <details class="controls-accordion" id="ownerToolsAccordion">
+        <summary aria-expanded="false" aria-controls="ownerToolsContent">
+          OWNER TOOLS 🔒
+        </summary>
+        <div class="accordion-content" id="ownerToolsContent">
+          <button
+            class="control-btn"
+            onclick="ownerAccess()"
+            id="ownerAccessBtn"
+            style="background:rgba(10,35,66,0.12);border-color:rgba(10,35,66,0.6);color:#0a2342;"
+          >
+            🔐 Owner Access
+          </button>
+        </div>
+      </details>
     </div>
     <input
       accept="image/*"
@@ -1040,6 +1589,10 @@
     <!-- My Path Panel -->
     <div
       id="myPathPanel"
+      class="customer-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pathDialogTitle"
       style="
         display: none;
         position: fixed;
@@ -1056,9 +1609,19 @@
         color: black;
       "
     >
-      <strong style="color: #003399">🕐 My Path</strong><br /><br />
-      <div style="display: flex; flex-direction: column; gap: 8px">
+      <div class="customer-dialog-header">
+        <h2 class="customer-dialog-title" id="pathDialogTitle">CHOOSE YOUR PATH</h2>
         <button
+          class="customer-dialog-close"
+          onclick="
+            document.getElementById('myPathPanel').style.display = 'none';
+            document.getElementById('myPathBtn').classList.remove('active');
+          "
+        >Close</button>
+      </div>
+      <div class="panel-choice-list" style="display: flex; flex-direction: column; gap: 8px">
+        <button
+          class="panel-choice-button"
           id="createPathBtn"
           onclick="startCreatePath()"
           style="
@@ -1072,12 +1635,14 @@
             text-align: left;
           "
         >
-          ✎ Create a Path<br /><span
+          Create Your Own Path<span
+            class="panel-choice-description"
             style="font-size: 11px; color: #666; font-weight: normal"
-            >Click step-by-step through each ring</span
+            >Choose the path step by step through the star.</span
           >
         </button>
         <button
+          class="panel-choice-button"
           onclick="doRandomPath()"
           style="
             padding: 10px;
@@ -1090,12 +1655,14 @@
             text-align: left;
           "
         >
-          🎲 Random Path<br /><span
+          Let the System Choose<span
+            class="panel-choice-description"
             style="font-size: 11px; color: #666; font-weight: normal"
-            >System highlights a random path</span
+            >The system selects a complete random path for your poster.</span
           >
         </button>
         <div
+          class="path-color-group"
           style="
             padding: 8px;
             background: #f8f8f8;
@@ -1226,25 +1793,7 @@
         </div>
         <div style="display: flex; gap: 6px">
           <button
-            onclick="
-              document.getElementById('myPathPanel').style.display = 'none';
-              document.getElementById('myPathBtn').classList.remove('active');
-            "
-            style="
-              flex: 1;
-              padding: 7px;
-              background: #0052cc;
-              color: white;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-              font-size: 12px;
-              font-weight: 600;
-            "
-          >
-            Close
-          </button>
-          <button
+            class="customer-dialog-close"
             onclick="
               clearHighlights();
               document.getElementById('myPathPanel').style.display = 'none';
@@ -1268,6 +1817,10 @@
     <!-- My Images Panel -->
     <div
       id="myImagesPanel"
+      class="customer-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="imagesDialogTitle"
       style="
         display: none;
         position: fixed;
@@ -1284,118 +1837,59 @@
         color: black;
       "
     >
-      <strong style="color: #8b0000">📷 My Images</strong><br /><br />
-      <div style="display: flex; flex-direction: column; gap: 6px">
-        <button
-          onclick="openCenterImageFromMenu()"
-          style="
-            padding: 9px;
-            background: #f0f0ff;
-            border: 1.5px solid #0052cc;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: left;
-          "
-        >
-          ⯀ Center Pentagon
-        </button>
-        <div style="font-size: 11px; color: #888; margin: 2px 0">
-          STAR TIPS:
+      <div class="customer-dialog-header">
+        <div>
+          <h2 class="customer-dialog-title" id="imagesDialogTitle">ADD 6 IMAGES</h2>
+          <p class="image-progress" id="imageProgressText">0 of 6 images added</p>
         </div>
         <button
-          onclick="selectTipFromMenu(0)"
-          style="
-            padding: 8px;
-            background: #fff8f0;
-            border: 1px solid #cc8800;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 12px;
-          "
-        >
-          ▲ Top tip
-        </button>
-        <button
-          onclick="selectTipFromMenu(1)"
-          style="
-            padding: 8px;
-            background: #fff8f0;
-            border: 1px solid #cc8800;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 12px;
-          "
-        >
-          ↗ Upper Right tip
-        </button>
-        <button
-          onclick="selectTipFromMenu(2)"
-          style="
-            padding: 8px;
-            background: #fff8f0;
-            border: 1px solid #cc8800;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 12px;
-          "
-        >
-          ↘ Lower Right tip
-        </button>
-        <button
-          onclick="selectTipFromMenu(3)"
-          style="
-            padding: 8px;
-            background: #fff8f0;
-            border: 1px solid #cc8800;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 12px;
-          "
-        >
-          ↙ Lower Left tip
-        </button>
-        <button
-          onclick="selectTipFromMenu(4)"
-          style="
-            padding: 8px;
-            background: #fff8f0;
-            border: 1px solid #cc8800;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 12px;
-          "
-        >
-          ↖ Upper Left tip
-        </button>
-        <button
+          class="customer-dialog-close"
           onclick="
             document.getElementById('myImagesPanel').style.display = 'none';
             document.getElementById('myImagesBtn').classList.remove('active');
           "
-          style="
-            margin-top: 4px;
-            padding: 6px;
-            background: #eee;
-            border: 1px solid #aaa;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-          "
-        >
-          Close
-        </button>
+        >Close</button>
+      </div>
+      <div class="panel-choice-list" style="display: flex; flex-direction: column; gap: 6px">
+        <div class="image-position-row">
+          <span class="image-position-name">1. Center Pentagon</span>
+          <span class="image-position-state" id="imagePositionStatus0">No image added</span>
+          <button class="panel-choice-button image-position-action" id="imagePositionAction0" onclick="openCenterImageFromMenu()">Add Image</button>
+        </div>
+        <div class="image-position-row">
+          <span class="image-position-name">2. Top Tip</span>
+          <span class="image-position-state" id="imagePositionStatus1">No image added</span>
+          <button class="panel-choice-button image-position-action" id="imagePositionAction1" onclick="selectTipFromMenu(0)">Add Image</button>
+        </div>
+        <div class="image-position-row">
+          <span class="image-position-name">3. Upper Right Tip</span>
+          <span class="image-position-state" id="imagePositionStatus2">No image added</span>
+          <button class="panel-choice-button image-position-action" id="imagePositionAction2" onclick="selectTipFromMenu(1)">Add Image</button>
+        </div>
+        <div class="image-position-row">
+          <span class="image-position-name">4. Lower Right Tip</span>
+          <span class="image-position-state" id="imagePositionStatus3">No image added</span>
+          <button class="panel-choice-button image-position-action" id="imagePositionAction3" onclick="selectTipFromMenu(2)">Add Image</button>
+        </div>
+        <div class="image-position-row">
+          <span class="image-position-name">5. Lower Left Tip</span>
+          <span class="image-position-state" id="imagePositionStatus4">No image added</span>
+          <button class="panel-choice-button image-position-action" id="imagePositionAction4" onclick="selectTipFromMenu(3)">Add Image</button>
+        </div>
+        <div class="image-position-row">
+          <span class="image-position-name">6. Upper Left Tip</span>
+          <span class="image-position-state" id="imagePositionStatus5">No image added</span>
+          <button class="panel-choice-button image-position-action" id="imagePositionAction5" onclick="selectTipFromMenu(4)">Add Image</button>
+        </div>
       </div>
     </div>
     <!-- My Background Panel -->
     <div
       id="myBgPanel"
+      class="customer-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="backgroundDialogTitle"
       style="
         display: none;
         position: fixed;
@@ -1410,9 +1904,19 @@
         box-shadow: 0 4px 16px rgba(0,0,0,0.3);
       "
     >
-      <strong style="color: #003399">🖼 My Background</strong><br /><br />
-      <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div class="customer-dialog-header">
+        <h2 class="customer-dialog-title" id="backgroundDialogTitle">CHOOSE BACKGROUND</h2>
         <button
+          class="customer-dialog-close"
+          onclick="
+            document.getElementById('myBgPanel').style.display = 'none';
+            document.getElementById('myBgBtn').classList.remove('active');
+          "
+        >Close</button>
+      </div>
+      <div class="panel-choice-list" style="display: flex; flex-direction: column; gap: 10px;">
+        <button
+          class="panel-choice-button background-choice"
           onclick="setBackground('flag')"
           id="bgFlagBtn"
           style="
@@ -1428,6 +1932,7 @@
           ★ American Flag
         </button>
         <button
+          class="panel-choice-button background-choice"
           onclick="setBackground('blue')"
           id="bgBlueBtn"
           style="
@@ -1443,6 +1948,7 @@
           💙 Blue Gradient
         </button>
         <button
+          class="panel-choice-button background-choice"
           onclick="setBackground('parchment')"
           id="bgParchmentBtn"
           style="
@@ -1457,28 +1963,16 @@
         >
           📜 Old Parchment
         </button>
-        <button
-          onclick="
-            document.getElementById('myBgPanel').style.display = 'none';
-            document.getElementById('myBgBtn').classList.remove('active');
-          "
-          style="
-            margin-top: 4px;
-            padding: 6px;
-            background: #eee;
-            border: 1px solid #aaa;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-          "
-        >
-          Close
-        </button>
       </div>
     </div>
+    <div class="crop-editor-backdrop" id="cropEditorBackdrop" aria-hidden="true"></div>
     <!-- Center Image Panel -->
     <div
       id="centerImagePanel"
+      class="crop-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="centerCropTitle"
       style="
         display: none;
         position: fixed;
@@ -1495,10 +1989,14 @@
         color: black;
       "
     >
-      <strong style="color: #003399">Center Pentagon Image</strong><br /><br />
+      <h2 class="crop-dialog-title" id="centerCropTitle">CENTER PENTAGON</h2>
+      <p class="crop-dialog-description">Zoom and position your image inside the shape.</p>
       <canvas
+        class="crop-workspace"
         height="440"
         id="pentagonPreview"
+        tabindex="0"
+        aria-label="Center Pentagon image crop workspace"
         style="
           border: 1px solid #ccc;
           border-radius: 4px;
@@ -1509,11 +2007,14 @@
         "
         width="440"
       ></canvas>
-      <div style="margin-top: 8px; font-size: 12px; color: #666">
-        Scroll = zoom • Drag = pan
+      <p class="crop-dialog-instructions">Scroll to zoom • Drag to reposition</p>
+      <div class="crop-zoom-controls">
+        <button class="crop-control-btn" onclick="zoomCenterCrop(0.9)">Zoom Out</button>
+        <button class="crop-control-btn" onclick="zoomCenterCrop(1.1)">Zoom In</button>
       </div>
-      <div style="margin-top: 10px; display: flex; gap: 6px">
+      <div class="crop-actions" style="margin-top: 10px; display: flex; gap: 6px">
         <button
+          class="crop-control-btn primary"
           onclick="applyCenterImage()"
           style="
             flex: 1;
@@ -1529,6 +2030,7 @@
           Apply
         </button>
         <button
+          class="crop-control-btn danger"
           onclick="removeCenterImage()"
           style="
             flex: 1;
@@ -1543,9 +2045,8 @@
           Remove
         </button>
         <button
-          onclick="
-            document.getElementById('centerImagePanel').style.display = 'none'
-          "
+          class="crop-control-btn"
+          onclick="closeCenterCropEditor()"
           style="
             flex: 1;
             padding: 7px;
@@ -1563,6 +2064,10 @@
     <!-- Tip Image Panel -->
     <div
       id="tipImagePanel"
+      class="crop-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tipCropTitle"
       style="
         display: none;
         position: fixed;
@@ -1579,12 +2084,14 @@
         color: black;
       "
     >
-      <strong style="color: #8b0000"
-        >Tip Image: <span id="tipImagePanelTitle">Top</span></strong
-      ><br /><br />
+      <h2 class="crop-dialog-title" id="tipCropTitle"><span id="tipImagePanelTitle">TOP TIP</span></h2>
+      <p class="crop-dialog-description">Zoom and position your image inside the shape.</p>
       <canvas
+        class="crop-workspace"
         height="440"
         id="tipImagePreview"
+        tabindex="0"
+        aria-label="Star tip image crop workspace"
         style="
           border: 1px solid #ccc;
           border-radius: 4px;
@@ -1595,11 +2102,14 @@
         "
         width="440"
       ></canvas>
-      <div style="margin-top: 8px; font-size: 12px; color: #666">
-        Scroll = zoom • Drag = pan
+      <p class="crop-dialog-instructions">Scroll to zoom • Drag to reposition</p>
+      <div class="crop-zoom-controls">
+        <button class="crop-control-btn" onclick="zoomTipCrop(0.9)">Zoom Out</button>
+        <button class="crop-control-btn" onclick="zoomTipCrop(1.1)">Zoom In</button>
       </div>
-      <div style="margin-top: 10px; display: flex; gap: 6px">
+      <div class="crop-actions" style="margin-top: 10px; display: flex; gap: 6px">
         <button
+          class="crop-control-btn primary"
           onclick="applyTipImage()"
           style="
             flex: 1;
@@ -1615,6 +2125,7 @@
           Apply
         </button>
         <button
+          class="crop-control-btn danger"
           onclick="removeTipImage()"
           style="
             flex: 1;
@@ -1629,9 +2140,8 @@
           Remove
         </button>
         <button
-          onclick="
-            document.getElementById('tipImagePanel').style.display = 'none'
-          "
+          class="crop-control-btn"
+          onclick="closeTipCropEditor()"
           style="
             flex: 1;
             padding: 7px;
@@ -1646,16 +2156,27 @@
         </button>
       </div>
     </div>
-    <div id="pathCreationPanel">
-      <h3>Create a Path — Click Through Each Row</h3>
-      <div class="panel-row">
-        Click on one cell in each row to create your custom path.
+    <div
+      id="pathCreationPanel"
+      role="dialog"
+      aria-labelledby="pathCreationTitle"
+      aria-describedby="pathCreationInstructions choicesDisplay"
+    >
+      <div class="path-creation-header">
+        <h2 id="pathCreationTitle">CREATE YOUR OWN PATH</h2>
+        <button
+          class="path-creation-close"
+          onclick="closePathCreationKeepPath()"
+        >Close</button>
       </div>
       <div class="panel-row">
-        Current row: <strong id="currentRowDisplay">0 — U (choose any)</strong>
+        <span id="pathCreationInstructions">Select one highlighted position in each row to build your path.</span>
       </div>
-      <div class="panel-row" id="choicesDisplay">
-        Green borders show valid next positions.
+      <div class="panel-row path-creation-progress">
+        Current row: <strong id="currentRowDisplay" aria-live="polite">0 of 24</strong>
+      </div>
+      <div class="panel-row path-creation-guidance" id="choicesDisplay">
+        Green outlines show the valid next positions.
       </div>
       <div
         class="panel-row"
@@ -1669,23 +2190,19 @@
           min-height: 20px;
         "
       ></div>
-      <button onclick="resetPathCreation()">Reset Path Creation</button>
-      <button
-        onclick="closePathCreationKeepPath()"
-        style="
-          margin-left: 6px;
-          padding: 6px 12px;
-          background: #0052cc;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 12px;
-          font-weight: 600;
-        "
-      >
-        Close
-      </button>
+      <div class="path-creation-actions">
+        <button
+          class="path-creation-undo"
+          id="undoPathCreationBtn"
+          onclick="undoLastPathStep()"
+          disabled
+        >
+          Undo Last Step
+        </button>
+        <button class="path-creation-reset" onclick="resetPathCreation()">
+          Reset Path Creation
+        </button>
+      </div>
     </div>
     <div class="version-tag">
       
@@ -1705,6 +2222,7 @@
         isAnimating = false;
       var pathCreationMode = false,
         pathCreationStep = 0;
+      var pathCreationReturnToChoice = false;
       var pathCreationSelected = [],
         pathCandidateElements = [];
       var STAR_CENTER_X = 1750,
@@ -1730,6 +2248,74 @@
         tipImgY = [0, 0, 0, 0, 0],
         tipImgScale = [1, 1, 1, 1, 1];
       var activeTipIndex = -1;
+      var lastCustomerPanelTrigger = null;
+      var lastImagePositionAction = null;
+      var centerCropSnapshot = null;
+      var tipCropSnapshot = null;
+
+      function updateImageProgress() {
+        var imageStates = [centerImg].concat(tipImages);
+        var added = imageStates.filter(function (image) { return !!image; }).length;
+        var progress = document.getElementById("imageProgressText");
+        if (progress) {
+          progress.textContent = added === 6 ? "✓ All 6 images added" : added + " of 6 images added";
+        }
+        imageStates.forEach(function (image, index) {
+          var status = document.getElementById("imagePositionStatus" + index);
+          var action = document.getElementById("imagePositionAction" + index);
+          if (!status) return;
+          status.textContent = image ? "✓ Image added" : "No image added";
+          status.classList.toggle("has-image", !!image);
+          if (action) action.textContent = image ? "Replace" : "Add Image";
+        });
+      }
+      setInterval(updateImageProgress, 250);
+
+      function syncCustomerPanelBackdrop() {
+        var panels = ["myPathPanel", "myImagesPanel", "personalTextBox", "myBgPanel"];
+        var anyOpen = panels.some(function (id) {
+          return document.getElementById(id).style.display !== "none";
+        });
+        var backdrop = document.getElementById("customerPanelBackdrop");
+        backdrop.classList.toggle("is-visible", anyOpen);
+        if (!anyOpen && lastCustomerPanelTrigger) {
+          lastCustomerPanelTrigger.focus();
+          lastCustomerPanelTrigger = null;
+        }
+      }
+
+      function closeVisibleCustomerPanels() {
+        if (isCropEditorOpen()) return;
+        ["myPathPanel", "myImagesPanel", "personalTextBox", "myBgPanel"].forEach(function (id) {
+          document.getElementById(id).style.display = "none";
+        });
+        ["myPathBtn", "myImagesBtn", "myBgBtn"].forEach(function (id) {
+          document.getElementById(id).classList.remove("active");
+        });
+        syncCustomerPanelBackdrop();
+      }
+
+      ["myPathPanel", "myImagesPanel", "personalTextBox", "myBgPanel"].forEach(function (id) {
+        new MutationObserver(syncCustomerPanelBackdrop).observe(
+          document.getElementById(id),
+          { attributes: true, attributeFilter: ["style"] }
+        );
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "Escape") return;
+        if (document.getElementById("centerImagePanel").style.display !== "none") {
+          closeCenterCropEditor();
+        } else if (document.getElementById("tipImagePanel").style.display !== "none") {
+          closeTipCropEditor();
+        } else if (
+          document.getElementById("pathCreationPanel").style.display !== "none"
+        ) {
+          closePathCreationKeepPath();
+        } else {
+          closeVisibleCustomerPanels();
+        }
+      });
       var tipNames = [
         "Top",
         "Upper Right",
@@ -1804,14 +2390,25 @@
       }
 
       function openCenterImageFromMenu() {
-        document.getElementById("myImagesPanel").style.display = "none";
-        document.getElementById("myImagesBtn").classList.remove("active");
+        lastImagePositionAction = document.getElementById("imagePositionAction0");
+        centerCropSnapshot = {
+          image: centerImg,
+          x: centerImgX,
+          y: centerImgY,
+          scale: centerImgScale,
+        };
         document.getElementById("centerImageInput").click();
       }
       function selectTipFromMenu(ti) {
-        document.getElementById("myImagesPanel").style.display = "none";
-        document.getElementById("myImagesBtn").classList.remove("active");
         activeTipIndex = ti;
+        lastImagePositionAction = document.getElementById("imagePositionAction" + (ti + 1));
+        tipCropSnapshot = {
+          index: ti,
+          image: tipImages[ti],
+          x: tipImgX[ti],
+          y: tipImgY[ti],
+          scale: tipImgScale[ti],
+        };
         document.getElementById("tipImageInput").click();
       }
 
@@ -1827,9 +2424,11 @@
             centerImgX = PENT_CX - (centerImg.width * centerImgScale) / 2;
             centerImgY = PENT_CY - (centerImg.height * centerImgScale) / 2;
             document.getElementById("centerImagePanel").style.display = "block";
+            syncCropEditorBackdrop();
             setupPentagonPreview();
             drawPentagonPreview();
             applyImageToStar();
+            pentagonCanvasEl.focus();
           };
           centerImg.src = e.target.result;
         };
@@ -1854,11 +2453,13 @@
             tipImgX[ti] = b.cx - (img.width * tipImgScale[ti]) / 2;
             tipImgY[ti] = b.cy - (img.height * tipImgScale[ti]) / 2;
             document.getElementById("tipImagePanelTitle").textContent =
-              tipNames[ti];
+              tipNames[ti].toUpperCase() + " TIP";
             document.getElementById("tipImagePanel").style.display = "block";
+            syncCropEditorBackdrop();
             setupTipImagePreview(ti);
             drawTipImagePreview(ti);
             applyTipImageToStar(ti);
+            tipPreviewCanvas.focus();
           };
           img.src = e.target.result;
         };
@@ -1866,42 +2467,143 @@
         event.target.value = "";
       }
 
+      function isCropEditorOpen() {
+        return (
+          document.getElementById("centerImagePanel").style.display !== "none" ||
+          document.getElementById("tipImagePanel").style.display !== "none"
+        );
+      }
+
+      function syncCropEditorBackdrop() {
+        document
+          .getElementById("cropEditorBackdrop")
+          .classList.toggle("is-visible", isCropEditorOpen());
+      }
+
+      function returnToImagePanel() {
+        document.getElementById("myImagesPanel").style.display = "block";
+        document.getElementById("myImagesBtn").classList.add("active");
+        updateImageProgress();
+        syncCropEditorBackdrop();
+        syncCustomerPanelBackdrop();
+        if (lastImagePositionAction) lastImagePositionAction.focus();
+      }
+
+      function zoomCenterCrop(factor) {
+        if (!centerImg) return;
+        centerImgX = PENT_CX - (PENT_CX - centerImgX) * factor;
+        centerImgY = PENT_CY - (PENT_CY - centerImgY) * factor;
+        centerImgScale *= factor;
+        drawPentagonPreview();
+      }
+
+      function zoomTipCrop(factor) {
+        if (activeTipIndex < 0 || !tipImages[activeTipIndex]) return;
+        var b = getTipTriangleBounds(activeTipIndex);
+        tipImgX[activeTipIndex] = b.cx - (b.cx - tipImgX[activeTipIndex]) * factor;
+        tipImgY[activeTipIndex] = b.cy - (b.cy - tipImgY[activeTipIndex]) * factor;
+        tipImgScale[activeTipIndex] *= factor;
+        drawTipImagePreview(activeTipIndex);
+      }
+
+      function closeCenterCropEditor() {
+        if (centerCropSnapshot) {
+          centerImg = centerCropSnapshot.image;
+          centerImgX = centerCropSnapshot.x;
+          centerImgY = centerCropSnapshot.y;
+          centerImgScale = centerCropSnapshot.scale;
+          if (centerImg) {
+            applyImageToStar();
+          } else {
+            var centerCanvas = document.getElementById("centerImgCanvas");
+            if (centerCanvas) centerCanvas.remove();
+          }
+        }
+        centerCropSnapshot = null;
+        document.getElementById("centerImagePanel").style.display = "none";
+        returnToImagePanel();
+      }
+
+      function closeTipCropEditor() {
+        if (tipCropSnapshot) {
+          var ti = tipCropSnapshot.index;
+          tipImages[ti] = tipCropSnapshot.image;
+          tipImgX[ti] = tipCropSnapshot.x;
+          tipImgY[ti] = tipCropSnapshot.y;
+          tipImgScale[ti] = tipCropSnapshot.scale;
+          if (tipImages[ti]) {
+            applyTipImageToStar(ti);
+          } else {
+            var tipCanvas = document.getElementById("tipImgCanvas" + ti);
+            if (tipCanvas) tipCanvas.remove();
+          }
+        }
+        tipCropSnapshot = null;
+        document.getElementById("tipImagePanel").style.display = "none";
+        returnToImagePanel();
+      }
+
+      function handleCenterCropWheel(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        zoomCenterCrop(e.deltaY < 0 ? 1.1 : 0.9);
+      }
+
+      function handleTipCropWheel(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        zoomTipCrop(e.deltaY < 0 ? 1.1 : 0.9);
+      }
+
       function setupPentagonPreview() {
         pentagonCanvasEl = document.getElementById("pentagonPreview");
         pentagonCanvasEl.onmousedown = function (e) {
+          e.preventDefault();
+          e.stopPropagation();
           isDragging = true;
           dragStartX = e.clientX;
           dragStartY = e.clientY;
           dragImgX = centerImgX;
           dragImgY = centerImgY;
         };
-        pentagonCanvasEl.onwheel = function (e) {
+        pentagonCanvasEl.ontouchstart = function (e) {
           e.preventDefault();
-          var f = e.deltaY < 0 ? 1.1 : 0.9;
-          centerImgX = PENT_CX - (PENT_CX - centerImgX) * f;
-          centerImgY = PENT_CY - (PENT_CY - centerImgY) * f;
-          centerImgScale *= f;
-          drawPentagonPreview();
+          e.stopPropagation();
+          var touch = e.touches[0];
+          isDragging = true;
+          dragStartX = touch.clientX;
+          dragStartY = touch.clientY;
+          dragImgX = centerImgX;
+          dragImgY = centerImgY;
         };
+        pentagonCanvasEl.addEventListener("wheel", handleCenterCropWheel, {
+          passive: false,
+        });
       }
       function setupTipImagePreview(ti) {
         tipPreviewCanvas = document.getElementById("tipImagePreview");
         tipPreviewCanvas.onmousedown = function (e) {
+          e.preventDefault();
+          e.stopPropagation();
           tipDragging = true;
           tipDragStartX = e.clientX;
           tipDragStartY = e.clientY;
           tipDragImgX = tipImgX[ti];
           tipDragImgY = tipImgY[ti];
         };
-        tipPreviewCanvas.onwheel = function (e) {
+        tipPreviewCanvas.ontouchstart = function (e) {
           e.preventDefault();
-          var f = e.deltaY < 0 ? 1.1 : 0.9;
-          var b = getTipTriangleBounds(ti);
-          tipImgX[ti] = b.cx - (b.cx - tipImgX[ti]) * f;
-          tipImgY[ti] = b.cy - (b.cy - tipImgY[ti]) * f;
-          tipImgScale[ti] *= f;
-          drawTipImagePreview(ti);
+          e.stopPropagation();
+          var touch = e.touches[0];
+          tipDragging = true;
+          tipDragStartX = touch.clientX;
+          tipDragStartY = touch.clientY;
+          tipDragImgX = tipImgX[ti];
+          tipDragImgY = tipImgY[ti];
         };
+        tipPreviewCanvas.addEventListener("wheel", handleTipCropWheel, {
+          passive: false,
+        });
       }
 
       document.addEventListener("mousemove", function (e) {
@@ -1924,6 +2626,37 @@
         }
       });
       document.addEventListener("mouseup", function () {
+        isDragging = false;
+        tipDragging = false;
+      });
+      document.addEventListener(
+        "touchmove",
+        function (e) {
+          if (!isDragging && !tipDragging) return;
+          e.preventDefault();
+          e.stopPropagation();
+          var touch = e.touches[0];
+          if (isDragging && pentagonCanvasEl) {
+            var centerScale = 200 / PENT_R;
+            centerImgX = dragImgX + (touch.clientX - dragStartX) / centerScale;
+            centerImgY = dragImgY + (touch.clientY - dragStartY) / centerScale;
+            drawPentagonPreview();
+          }
+          if (tipDragging && tipPreviewCanvas && activeTipIndex >= 0) {
+            var bounds = getTipTriangleBounds(activeTipIndex);
+            var width = bounds.maxX - bounds.minX;
+            var height = bounds.maxY - bounds.minY;
+            var tipScale = 440 / Math.max(width * 1.3, height * 1.3);
+            tipImgX[activeTipIndex] =
+              tipDragImgX + (touch.clientX - tipDragStartX) / tipScale;
+            tipImgY[activeTipIndex] =
+              tipDragImgY + (touch.clientY - tipDragStartY) / tipScale;
+            drawTipImagePreview(activeTipIndex);
+          }
+        },
+        { passive: false },
+      );
+      document.addEventListener("touchend", function () {
         isDragging = false;
         tipDragging = false;
       });
@@ -2068,24 +2801,32 @@
       }
       function applyCenterImage() {
         applyImageToStar();
+        centerCropSnapshot = null;
         document.getElementById("centerImagePanel").style.display = "none";
+        returnToImagePanel();
       }
       function removeCenterImage() {
         centerImg = null;
         var e = document.getElementById("centerImgCanvas");
         if (e) e.remove();
+        centerCropSnapshot = null;
         document.getElementById("centerImagePanel").style.display = "none";
+        returnToImagePanel();
       }
       function applyTipImage() {
         applyTipImageToStar(activeTipIndex);
+        tipCropSnapshot = null;
         document.getElementById("tipImagePanel").style.display = "none";
+        returnToImagePanel();
       }
       function removeTipImage() {
         if (activeTipIndex < 0) return;
         tipImages[activeTipIndex] = null;
         var e = document.getElementById("tipImgCanvas" + activeTipIndex);
         if (e) e.remove();
+        tipCropSnapshot = null;
         document.getElementById("tipImagePanel").style.display = "none";
+        returnToImagePanel();
       }
 
       function getCenterImageDataURL() {
@@ -2201,6 +2942,7 @@
       }
 
       function toggleMyPath() {
+        lastCustomerPanelTrigger = document.getElementById("myPathBtn");
         var p = document.getElementById("myPathPanel");
         var isOpen = p.style.display !== "none";
         p.style.display = isOpen ? "none" : "block";
@@ -2211,8 +2953,11 @@
           .classList.toggle("active", !isOpen);
         document.getElementById("myImagesBtn").classList.remove("active");
         document.getElementById("myBgBtn").classList.remove("active");
+        syncCustomerPanelBackdrop();
       }
       function toggleMyImages() {
+        lastCustomerPanelTrigger = document.getElementById("myImagesBtn");
+        updateImageProgress();
         var p = document.getElementById("myImagesPanel");
         var isOpen = p.style.display !== "none";
         p.style.display = isOpen ? "none" : "block";
@@ -2223,8 +2968,10 @@
           .classList.toggle("active", !isOpen);
         document.getElementById("myPathBtn").classList.remove("active");
         document.getElementById("myBgBtn").classList.remove("active");
+        syncCustomerPanelBackdrop();
       }
       function toggleMyBackground() {
+        lastCustomerPanelTrigger = document.getElementById("myBgBtn");
         var p = document.getElementById("myBgPanel");
         var isOpen = p.style.display !== "none";
         p.style.display = isOpen ? "none" : "block";
@@ -2235,6 +2982,7 @@
           .classList.toggle("active", !isOpen);
         document.getElementById("myPathBtn").classList.remove("active");
         document.getElementById("myImagesBtn").classList.remove("active");
+        syncCustomerPanelBackdrop();
       }
       var BLUE_GRADIENT_URL = "https://raw.githubusercontent.com/Great-American-Star/Great-American-Star-demos/main/blue_gradient_custom.jpg";
       var PARCHMENT_URL = "https://raw.githubusercontent.com/Great-American-Star/Great-American-Star-demos/main/parchment_18x24.jpg";
@@ -2259,6 +3007,8 @@
         window.currentBgUrl = url;
       }
       function startCreatePath() {
+        pathCreationReturnToChoice =
+          document.getElementById("myPathPanel").style.display !== "none";
         document.getElementById("myPathPanel").style.display = "none";
         document.getElementById("myPathBtn").classList.remove("active");
         enterPathCreationMode();
@@ -2270,13 +3020,16 @@
       }
 
       function scrollToText() {
+        lastCustomerPanelTrigger = document.getElementById("messagePanelBtn");
         var box = document.getElementById("personalTextBox");
         box.style.display = box.style.display === "none" ? "block" : "none";
         if (box.style.display === "block")
           document.getElementById("personalTextArea").focus();
+        syncCustomerPanelBackdrop();
       }
       function closeMsgPanel() {
         document.getElementById("personalTextBox").style.display = "none";
+        syncCustomerPanelBackdrop();
       }
       function applyMsgCmd(cmd) {
         document.getElementById("personalTextArea").focus();
@@ -3307,6 +4060,7 @@
         document.getElementById("pathCreationPanel").style.display = "block";
         showCandidatesForStep(0);
         updatePathPanel();
+        document.querySelector("#pathCreationPanel .path-creation-close").focus();
       }
       function exitPathCreationMode() {
         pathCreationMode = false;
@@ -3333,6 +4087,29 @@
         document.getElementById("createPathBtn").classList.remove("active");
         document.getElementById("myPathBtn").classList.remove("active");
         document.getElementById("pathCreationPanel").style.display = "none";
+        if (pathCreationReturnToChoice) {
+          document.getElementById("myPathPanel").style.display = "block";
+          document.getElementById("myPathBtn").classList.add("active");
+          syncCustomerPanelBackdrop();
+          document.getElementById("createPathBtn").focus();
+        }
+        pathCreationReturnToChoice = false;
+      }
+      function undoLastPathStep() {
+        if (pathCreationSelected.length === 0) {
+          updatePathPanel();
+          return;
+        }
+        clearPathCandidates();
+        var lastSelected = pathCreationSelected.pop();
+        lastSelected.classList.remove("path-selected");
+        if (lastSelected.dataset.origColor) {
+          lastSelected.style.color = lastSelected.dataset.origColor;
+          delete lastSelected.dataset.origColor;
+        }
+        pathCreationStep = pathCreationSelected.length;
+        showCandidatesForStep(pathCreationStep);
+        updatePathPanel();
       }
       function resetPathCreation() {
         pathCreationSelected.forEach(function (l) {
@@ -3541,25 +4318,11 @@
         ];
         var re = document.getElementById("currentRowDisplay"),
           ce = document.getElementById("choicesDisplay"),
-          pe = document.getElementById("pathSoFarDisplay");
-        if (complete) {
-          re.textContent = "Complete! \uD83C\uDF89";
-          ce.textContent =
-            'Your path is complete. Click "Reset Path Creation" to start again.';
-        } else {
-          re.textContent =
-            pathCreationStep +
-            ' \u2014 choose "' +
-            (names[pathCreationStep] || "?") +
-            '"';
-          ce.textContent =
-            n !== undefined
-              ? n +
-                " valid choice" +
-                (n !== 1 ? "s" : "") +
-                " shown (green borders)."
-              : "Green borders show valid next positions.";
-        }
+          pe = document.getElementById("pathSoFarDisplay"),
+          undoButton = document.getElementById("undoPathCreationBtn");
+        re.textContent = Math.min(pathCreationStep, 24) + " of 24";
+        ce.textContent = "Green outlines show the valid next positions.";
+        undoButton.disabled = pathCreationSelected.length === 0;
         pe.textContent = pathCreationSelected
           .map(function (l) {
             return l.textContent;
@@ -3739,7 +4502,7 @@
         var tH = titleH || 0;
         letters.forEach(function (l) {
           var x = (parseFloat(l.style.left) + 12) * ssc,
-            y = (parseFloat(l.style.top) + 24) * ssc + tH,
+            y = (parseFloat(l.style.top) + 12) * ssc + tH,
             fs = (parseInt(l.style.fontSize) || 24) * ssc;
           ctx.font =
             (l.style.fontWeight || "bold") + " " + fs + "px Georgia, serif";
@@ -4157,6 +4920,30 @@
             document.documentElement.requestFullscreen();
         }
       }
+      function hideControls() {
+        var panel = document.getElementById("customerControls");
+        var showButton = document.getElementById("showControlsBtn");
+        panel.classList.add("is-hidden");
+        panel.setAttribute("aria-hidden", "true");
+        showButton.hidden = false;
+        showButton.focus();
+      }
+      function showControls() {
+        var panel = document.getElementById("customerControls");
+        var showButton = document.getElementById("showControlsBtn");
+        panel.classList.remove("is-hidden");
+        panel.removeAttribute("aria-hidden");
+        showButton.hidden = true;
+        document.getElementById("hideControlsBtn").focus();
+      }
+      document.querySelectorAll(".controls-accordion").forEach(function (accordion) {
+        accordion.addEventListener("toggle", function () {
+          accordion.querySelector("summary").setAttribute(
+            "aria-expanded",
+            accordion.open ? "true" : "false"
+          );
+        });
+      });
       // Restore toolbar when Esc exits fullscreen
       document.addEventListener("fullscreenchange", function () {
         if (!document.fullscreenElement) {
@@ -4863,7 +5650,7 @@
             // Step 7: letters
             letters.forEach(function (l) {
               var x = (parseFloat(l.style.left) + 12) * ssc;
-              var y = (parseFloat(l.style.top) + 24) * ssc + titleH;
+              var y = (parseFloat(l.style.top) + 12) * ssc + titleH;
               var fs = (parseInt(l.style.fontSize) || 24) * ssc;
               ctx.font =
                 (l.style.fontWeight || "bold") + " " + fs + "px Georgia, serif";
@@ -5411,7 +6198,7 @@
         var tH = titleH || 0;
         letters.forEach(function (l) {
           var x = (parseFloat(l.style.left) + 12) * ssc,
-            y = (parseFloat(l.style.top) + 24) * ssc + tH,
+            y = (parseFloat(l.style.top) + 12) * ssc + tH,
             fs = (parseInt(l.style.fontSize) || 24) * ssc;
           ctx.font =
             (l.style.fontWeight || "bold") + " " + fs + "px Georgia, serif";
@@ -5748,6 +6535,10 @@
       document.addEventListener(
         "wheel",
         function (e) {
+          if (isCropEditorOpen()) {
+            e.preventDefault();
+            return;
+          }
           e.preventDefault();
           e.deltaY < 0 ? zoomIn() : zoomOut();
         },
