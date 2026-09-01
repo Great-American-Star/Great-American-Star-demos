@@ -8,13 +8,154 @@
       Anniversary
     </title>
     <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
         font-family: "Georgia", serif;
         background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         color: white;
         margin: 0;
-        padding: 20px;
+        padding: 0 20px 20px;
         line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      .hero {
+        position: relative;
+        isolation: isolate;
+        min-height: min(780px, calc(100vh - 76px));
+        display: grid;
+        align-items: center;
+        overflow: hidden;
+        margin: 0 -20px 38px;
+        background: #071a3b;
+      }
+
+      .hero-art,
+      .hero-shade {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .hero-art {
+        /* Crop the recorded browser scrollbar at the video's right edge. */
+        width: 104%;
+        right: auto;
+        max-width: none;
+        object-fit: cover;
+        object-position: center;
+        opacity: 0.8;
+        z-index: -3;
+      }
+
+      .hero-shade {
+        z-index: -1;
+        background:
+          linear-gradient(90deg, rgba(3, 13, 35, 0.9) 0%, rgba(4, 18, 48, 0.66) 43%, rgba(4, 18, 48, 0.18) 100%),
+          linear-gradient(0deg, rgba(3, 13, 35, 0.48), transparent 45%);
+      }
+
+      .hero-content {
+        width: min(680px, calc(100% - 48px));
+        margin: 0 auto 0 max(5vw, 36px);
+        padding: 54px 0;
+      }
+
+      .hero-eyebrow {
+        margin: 0 0 14px;
+        color: #ffd700;
+        font-family: Arial, sans-serif;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .hero h1 {
+        margin: 0;
+        color: #fff;
+        font-size: clamp(2.65rem, 6.1vw, 5.7rem);
+        line-height: 0.94;
+        letter-spacing: -0.045em;
+        text-shadow: 0 4px 25px rgba(0, 0, 0, 0.72);
+      }
+
+      .hero-path-count {
+        margin: 24px 0 15px;
+        color: #ffd700;
+        font-family: Arial, sans-serif;
+        font-size: clamp(1.05rem, 2.3vw, 1.45rem);
+        font-weight: 700;
+        letter-spacing: 0.045em;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+      }
+
+      .hero-description {
+        max-width: 580px;
+        margin: 0;
+        font-size: clamp(1rem, 1.8vw, 1.22rem);
+        line-height: 1.65;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.92);
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 31px;
+      }
+
+      .hero-primary,
+      .hero-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        font-family: Arial, sans-serif;
+        font-size: 0.89rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .hero-primary {
+        padding: 0 25px;
+        color: #071a3b;
+        background: #ffd700;
+        box-shadow: 0 8px 26px rgba(0, 0, 0, 0.36);
+      }
+
+      .hero-secondary {
+        padding: 0 20px;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        background: rgba(7, 26, 59, 0.28);
+      }
+
+      .hero-primary:hover,
+      .hero-primary:focus-visible,
+      .hero-secondary:hover,
+      .hero-secondary:focus-visible {
+        transform: translateY(-2px);
+      }
+
+      .hero-primary:hover,
+      .hero-primary:focus-visible {
+        background: #ffeb55;
+      }
+
+      .hero-secondary:hover,
+      .hero-secondary:focus-visible {
+        background: rgba(7, 26, 59, 0.7);
+        border-color: #ffd700;
       }
 
       .container {
@@ -328,6 +469,58 @@
       }
 
       @media (max-width: 768px) {
+        body {
+          padding: 0 12px 12px;
+        }
+
+        .hero {
+          min-height: min(700px, calc(100svh - 64px));
+          margin: 0 -12px 26px;
+          align-items: end;
+        }
+
+        .hero-art {
+          object-position: center;
+          opacity: 0.68;
+        }
+
+        .hero-shade {
+          background:
+            linear-gradient(0deg, rgba(3, 13, 35, 0.97) 3%, rgba(4, 18, 48, 0.74) 48%, rgba(4, 18, 48, 0.08) 100%),
+            linear-gradient(90deg, rgba(3, 13, 35, 0.42), rgba(3, 13, 35, 0.05));
+        }
+
+        .hero-content {
+          width: auto;
+          margin: 0;
+          padding: 48px 24px 42px;
+        }
+
+        .hero h1 {
+          font-size: clamp(2.65rem, 13vw, 4.35rem);
+        }
+
+        .hero-path-count {
+          margin-top: 19px;
+          font-size: 1rem;
+        }
+
+        .hero-description {
+          font-size: 1rem;
+          line-height: 1.55;
+        }
+
+        .hero-actions {
+          display: grid;
+          gap: 10px;
+          margin-top: 25px;
+        }
+
+        .hero-primary,
+        .hero-secondary {
+          width: 100%;
+        }
+
         .main-title {
           font-size: 2em;
         }
@@ -352,10 +545,39 @@
     </style>
   </head>
   <body>
+    <section class="hero" aria-labelledby="hero-title">
+      <video
+        class="hero-art"
+        aria-hidden="true"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="star-design-core-freedom-250.jpg"
+      >
+        <source src="Patriotic Star - UNITEDSTATESofAMERICA250 - Google Chrome 2026-06-02 14-14-39.mp4" type="video/mp4" />
+      </video>
+      <div class="hero-shade"></div>
+      <div class="hero-content">
+        <p class="hero-eyebrow">America 250 · Mathematics + Art</p>
+        <h1 id="hero-title">The Great<br />American Star</h1>
+        <p class="hero-path-count">359,277,250 Unique Paths. One Is Yours.</p>
+        <p class="hero-description">
+          A mathematical-art experience created for America’s 250th anniversary.
+          Discover the mathematics, find your path, and create your own
+          personalized Great American Star.
+        </p>
+        <div class="hero-actions">
+          <a class="hero-primary" href="star_790_free_experience.html">Create Your Star — Free</a>
+          <a class="hero-secondary" href="#mathematics">Explore the Mathematics</a>
+        </div>
+      </div>
+    </section>
     <div class="container">
       <!-- Header Section -->
       <div class="header">
-        <h1 class="main-title">The Great American Star</h1>
+        <h2 class="main-title">What Is The Great American Star?</h2>
         <p class="subtitle">
           Interactive mathematical art for America's 250th anniversary. Features
           359+ million unique paths arranged as a patriotic star with
@@ -387,21 +609,21 @@
       <!-- ⭐ FEATURED: THE FULL INTERACTIVE STAR -->
       <div class="featured-star-section">
         <div class="featured-badge">⭐ The Great American Star</div>
-        <h2>Create Your Personalized Poster</h2>
+        <h2>Create Your Personalized Great American Star</h2>
         <p>
           Choose your unique path through the star, add your personal photos and message,
-          and order a premium personalized poster — your one-of-a-kind keepsake
-          for America's 250th anniversary.
+          and create a one-of-a-kind mathematical artwork for America's 250th anniversary.
+          The interactive experience and digital download are free.
         </p>
         <ul class="feature-list">
           <li>Choose your unique path — one of 359,277,250</li>
           <li>Add 6 personal photos to the star tips</li>
           <li>Write your personal message</li>
-          <li>Preview your finished poster</li>
-          <li>Order — printed and shipped to your door</li>
+          <li>Preview your finished star</li>
+          <li>Share short feedback and download your artwork free</li>
         </ul>
-        <a href="star_790.html" class="featured-link" target="_blank"
-          >🌟 Create Your Poster</a
+        <a href="star_790_free_experience.html" class="featured-link"
+          >🌟 Create Your Star — Free</a
         >
       </div>
 
@@ -421,7 +643,7 @@
       </div>
 
       <!-- Interactive Demonstrations -->
-      <div class="section">
+      <div class="section" id="mathematics">
         <h2>🔬 Additional Demonstrations</h2>
         <div class="demo-grid">
           <div class="demo-card">
@@ -570,8 +792,8 @@
             the star
           </li>
           <li>
-            <strong>Multiple Formats:</strong> Available as digital downloads,
-            printed posters, and interactive displays
+            <strong>Multiple Formats:</strong> Available as digital downloads
+            and interactive displays
           </li>
         </ul>
       </div>
@@ -607,7 +829,7 @@
         </p>
       </div>
     </div>
-    <!-- ===== Sticky "Create Your Poster" bar (links to the star tool) ===== -->
+    <!-- ===== Sticky free-experience call to action ===== -->
     <style>
       body {
         padding-bottom: 76px !important;
@@ -668,8 +890,8 @@
       <p class="gas-cta-text">Ready to make your own one-of-a-kind star?</p>
       <a
         class="gas-cta-btn"
-        href="https://great-american-star.github.io/Great-American-Star-demos/star_790.html"
-        >⭐ Create Your Poster</a
+        href="star_790_free_experience.html"
+        >⭐ Create Your Star — Free</a
       >
     </div>
     <!-- ===== End sticky CTA ===== -->

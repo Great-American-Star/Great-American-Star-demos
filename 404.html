@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting to The Great American Star</title>
+  </head>
+  <body>
+    <p><a id="homeLink" href="index.html">Return to The Great American Star</a></p>
+    <script>
+      (function () {
+        var legacyFiles = [
+          "star_790.html",
+          "star_790_ORIGINAL_BACKUP.html",
+          "star_790_integrated.html",
+          "star_free_experience.html",
+        ];
+        var path = window.location.pathname;
+        var fileName = path.slice(path.lastIndexOf("/") + 1);
+        var basePath =
+          legacyFiles.indexOf(fileName) !== -1
+            ? path.slice(0, path.length - fileName.length)
+            : "/";
+        var destination = basePath + "index.html";
+        document.getElementById("homeLink").href = destination;
+        if (legacyFiles.indexOf(fileName) !== -1) {
+          window.location.replace(destination);
+        }
+      })();
+    </script>
+  </body>
+</html>

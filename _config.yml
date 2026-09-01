@@ -1,0 +1,9 @@
+# Keep legacy paid/store files in repository history, but do not publish them
+# through the GitHub Pages build. The custom 404 page sends legacy bookmarks
+# to the public landing page instead.
+exclude:
+  - star_790.html
+  - star_790_ORIGINAL_BACKUP.html
+  - star_790_integrated.html
+  - star_free_experience.html
+  - order-integration.js
