@@ -5323,15 +5323,18 @@
           freeExperienceState.submissionForm = form;
 
           function receiveMessage(event) {
-            var receiver = getFeedbackElement("feedbackReceiver");
-            var allowedGoogleOrigin =
+            // Apps Script can reply from a nested Google-hosted frame, so its
+            // WindowProxy is not reliably identical to the outer form iframe.
+            // Its HTTPS origin and the exact response type are the stable
+            // confirmation checks.
+            var allowedAppsScriptOrigin =
               event.origin === "https://script.google.com" ||
-              event.origin === "https://script.googleusercontent.com";
-            var validSender = receiver && event.source === receiver.contentWindow;
+              /^https:\/\/(?:[a-z0-9-]+\.)?googleusercontent\.com$/i.test(
+                event.origin,
+              );
             var response = event.data;
             if (
-              !allowedGoogleOrigin ||
-              !validSender ||
+              !allowedAppsScriptOrigin ||
               !response ||
               response.type !== FEEDBACK_MESSAGE_TYPE
             ) {
