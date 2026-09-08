@@ -5184,6 +5184,12 @@
         }
       }
 
+      function trackAnalyticsEvent(eventName) {
+        if (typeof gtag === "function") {
+          gtag("event", eventName);
+        }
+      }
+
       function createAnonymousSessionId() {
         if (freeExperienceState.anonymousSessionId)
           return freeExperienceState.anonymousSessionId;
@@ -5385,6 +5391,8 @@
           "success",
           "Thank you! Your full-size artwork is ready to download.",
         );
+        trackAnalyticsEvent("feedback_submit_success");
+        trackAnalyticsEvent("full_size_download_ready");
       }
 
       function downloadFreeArtwork() {
@@ -5394,6 +5402,7 @@
         ) {
           return;
         }
+        trackAnalyticsEvent("full_size_download_click");
         downloadFile(
           freeExperienceState.finalArtworkBlob,
           "My_Great_American_Star.png",
@@ -5642,6 +5651,7 @@
 
       function downloadPreviewLowRes() {
         if (previewExportState.latestBlob) {
+          trackAnalyticsEvent("watermarked_preview_download");
           downloadFile(
             previewExportState.latestBlob,
             "patriotic_star_PREVIEW_lowres.png",
@@ -5671,6 +5681,7 @@
             previewExportState.latestBlob = blob;
             restoreDownloadHandler();
             logExportStage("watermarked preview Blob created; render lock released");
+            trackAnalyticsEvent("watermarked_preview_download");
             downloadBlob(blob, filename);
             setCompletionStatus(
               "Your watermarked preview is ready. If the download did not begin, click Download Watermarked Preview again.",
