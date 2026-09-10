@@ -3502,9 +3502,98 @@
         alert("MSG HTML:\n" + (ta ? ta.innerHTML : "empty"));
       }
 
+      function sanitizePersonalMessage(html) {
+        // Template contents are inert: never parse untrusted HTML in a live div.
+        var source = document.createElement("template");
+        source.innerHTML = html;
+        var output = document.createElement("div");
+        var allowed = /^(br|div|p|span|b|strong|i|em|font)$/;
+        var discard = /^(script|style|iframe|object|embed|video|audio|source|track|img|picture|link|meta|base|svg|math|template|noscript)$/;
+        function copy(node, parent) {
+          if (node.nodeType === 3) {
+            parent.appendChild(document.createTextNode(node.nodeValue));
+            return;
+          }
+          if (node.nodeType !== 1) return;
+          var tag = node.localName.toLowerCase();
+          if (discard.test(tag)) return;
+          var clean = allowed.test(tag)
+            ? document.createElement(tag === "font" ? "span" : tag)
+            : null;
+          if (clean) {
+            // Copy only editor-supported formatting, never arbitrary CSS/attributes.
+            var style = node.style;
+            var color = style.color || (tag === "font" ? node.getAttribute("color") : "") || "";
+            if (/^(#[0-9a-f]{3,8}|[a-z]+|rgba?\([\d\s.,%]+\)|hsla?\([\d\s.,%+-]+\))$/i.test(color))
+              clean.style.color = color;
+            if (/^(32|48|64|80|96|120)px$/.test(style.fontSize))
+              clean.style.fontSize = style.fontSize;
+            if (/^(normal|bold|[1-9]00)$/.test(style.fontWeight))
+              clean.style.fontWeight = style.fontWeight;
+            if (/^(normal|italic)$/.test(style.fontStyle))
+              clean.style.fontStyle = style.fontStyle;
+            var align = style.textAlign || node.getAttribute("align") || "";
+            if (/^(left|center|right)$/.test(align)) clean.style.textAlign = align;
+            parent.appendChild(clean);
+          }
+          Array.from(node.childNodes).forEach(function (child) {
+            copy(child, clean || parent);
+          });
+        }
+        Array.from(source.content.childNodes).forEach(function (node) {
+          copy(node, output);
+        });
+        return output.innerHTML;
+      }
+
+      function insertPersonalMessage(event) {
+        event.preventDefault();
+        var transfer = event.clipboardData || event.dataTransfer;
+        if (!transfer) return;
+        var editor = document.getElementById("personalTextArea");
+        var html = transfer.getData("text/html");
+        if (!html) {
+          var text = document.createElement("div");
+          text.textContent = transfer.getData("text/plain");
+          html = text.innerHTML.replace(/\r\n?|\n/g, "<br>");
+        }
+        var safe = sanitizePersonalMessage(html);
+        editor.focus();
+        var selection = window.getSelection();
+        // Dropping inserts at the drop position where the browser exposes it.
+        var range = null;
+        if (event.type === "drop") {
+          if (document.caretPositionFromPoint) {
+            var point = document.caretPositionFromPoint(event.clientX, event.clientY);
+            if (point && editor.contains(point.offsetNode)) {
+              range = document.createRange();
+              range.setStart(point.offsetNode, point.offset);
+              range.collapse(true);
+            }
+          } else if (document.caretRangeFromPoint) {
+            range = document.caretRangeFromPoint(event.clientX, event.clientY);
+          }
+        }
+        if (range && editor.contains(range.commonAncestorContainer)) {
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        if (!selection.rangeCount || !editor.contains(selection.getRangeAt(0).commonAncestorContainer)) {
+          range = document.createRange();
+          range.selectNodeContents(editor);
+          range.collapse(false);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        // Retain the editor's native undo behavior; only sanitized HTML reaches it.
+        document.execCommand("insertHTML", false, safe);
+        invalidateArtworkExports();
+        updateCreationStepIndicators();
+      }
+
       function getPersonalText() {
         var ta = document.getElementById("personalTextArea");
-        return ta ? ta.innerHTML.trim() : "";
+        return ta ? sanitizePersonalMessage(ta.innerHTML).trim() : "";
       }
 
       function createSVG() {
@@ -5509,82 +5598,6 @@
         prepareFinalArtworkForFeedback();
       }
 
-      function loadDemoImages() {
-        var btn = document.getElementById("demoImgBtn");
-        btn.textContent = "Loading...";
-        btn.disabled = true;
-        var urls = [
-          "https://www.evisaprime.com/wp-content/uploads/2025/03/Statue_of_Liberty_National_Monument.jpg",
-          "https://live.staticflickr.com/4826/45194221734_150ae952af_z.jpg",
-          "https://geographic.media/wp-content/uploads/us0225-1.jpg",
-          "https://www.restorationchamp.com/wp-content/uploads/2021/11/usa-lincoln-memorial-scaled.jpg",
-          "https://pixy.org/src/21/217721.jpg",
-          "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/58/5d/00/caption.jpg?w=1200&h=700&s=1",
-        ];
-        var loaded = 0;
-        function tryLoad(url, cb) {
-          var img = new Image();
-          img.crossOrigin = "anonymous";
-          img.onload = function () {
-            cb(img);
-          };
-          img.onerror = function () {
-            // Try proxy
-            var proxy =
-              "https://images.weserv.nl/?url=" +
-              encodeURIComponent(url) +
-              "&w=800";
-            var img2 = new Image();
-            img2.crossOrigin = "anonymous";
-            img2.onload = function () {
-              cb(img2);
-            };
-            img2.onerror = function () {
-              cb(null);
-            };
-            img2.src = proxy;
-          };
-          img.src = url;
-        }
-        // Load center (Statue of Liberty)
-        tryLoad(urls[0], function (img) {
-          if (img) {
-            centerImg = img;
-            centerImgScale = (PENT_R * 2) / Math.min(img.width, img.height);
-            centerImgX = PENT_CX - (img.width * centerImgScale) / 2;
-            centerImgY = PENT_CY - (img.height * centerImgScale) / 2;
-            applyImageToStar();
-          }
-          loaded++;
-          if (loaded === 6) {
-            btn.textContent = "🖼 Demo Images Loaded";
-            btn.disabled = false;
-          }
-        });
-        // Load 5 tips
-        for (var ti = 0; ti < 5; ti++) {
-          (function (idx) {
-            tryLoad(urls[idx + 1], function (img) {
-              if (img) {
-                tipImages[idx] = img;
-                var b = getTipTriangleBounds(idx);
-                var bw = b.maxX - b.minX,
-                  bh = b.maxY - b.minY;
-                tipImgScale[idx] =
-                  Math.max(bw, bh) / Math.min(img.width, img.height);
-                tipImgX[idx] = b.cx - (img.width * tipImgScale[idx]) / 2;
-                tipImgY[idx] = b.cy - (img.height * tipImgScale[idx]) / 2;
-                applyTipImageToStar(idx);
-              }
-              loaded++;
-              if (loaded === 6) {
-                btn.textContent = "🖼 Demo Images Loaded";
-                btn.disabled = false;
-              }
-            });
-          })(ti);
-        }
-      }
       function toggleFullscreen() {
         var body = document.body;
         if (body.classList.contains("fullscreen-mode")) {
@@ -5723,33 +5736,6 @@
             "The watermarked preview could not be prepared. Please try again.",
           );
         }
-      }
-
-      function downloadVersion() {
-        var opts = [
-          {
-            name: "1. PNG - Digital Use  (small prints & sharing)",
-            fmt: "png",
-            scale: 1,
-          },
-          {
-            name: "2. PNG - Order Ready  (18x24 poster at 600 DPI) ⭐ Recommended",
-            fmt: "png",
-            scale: 2,
-          },
-        ];
-        var ch = prompt(
-          "Choose download format:\n" +
-            opts
-              .map(function (o) {
-                return o.name;
-              })
-              .join("\n") +
-            "\n\nEnter number (1-5):",
-        );
-        var chN = parseInt(ch);
-        if (chN >= 1 && chN <= 5)
-          generateDownload(opts[chN - 1].fmt, opts[chN - 1].scale);
       }
 
       function generateDownload(fmt, pngScale) {
@@ -7195,6 +7181,11 @@
       window.addEventListener("DOMContentLoaded", function () {
         var messageEditor = document.getElementById("personalTextArea");
         if (messageEditor) {
+          messageEditor.addEventListener("paste", insertPersonalMessage);
+          messageEditor.addEventListener("dragover", function (event) {
+            event.preventDefault();
+          });
+          messageEditor.addEventListener("drop", insertPersonalMessage);
           messageEditor.addEventListener("input", function () {
             invalidateArtworkExports();
           });
