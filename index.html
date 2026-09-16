@@ -674,6 +674,17 @@
         .hero-shade { height: 580px; background: linear-gradient(90deg, #071a3b 0%, rgba(7, 26, 59, 0.96) 33%, rgba(7, 26, 59, 0.3) 54%, transparent 78%); -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); }
         .audience-gateway { position: relative; z-index: 1; }
       }
+      /* Project origin story: native video, with its original proportions. */
+      .story-section { text-align: center; }
+      .story-section h2 { margin-top: 0; font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.3; }
+      .story-copy { max-width: 800px; margin: 0 auto 24px; font-size: 1.1rem; }
+      .story-section .video-container { max-width: 960px; }
+      .story-video { display: block; width: 100%; height: auto; }
+      .story-video:focus-visible { outline: 3px solid #ffd700; outline-offset: -3px; }
+      @media (max-width: 600px) {
+        .story-section { padding: 24px 16px; }
+        .story-copy { font-size: 1rem; }
+      }
     </style>
   </head>
   <body>
@@ -763,6 +774,25 @@
           individual representation.
         </p>
       </div>
+
+      <!-- The story behind the project -->
+      <section class="section story-section" aria-labelledby="story-title">
+        <p class="hero-eyebrow">THE STORY BEHIND THE STAR</p>
+        <h2 id="story-title">The Story Behind The Great American Star</h2>
+        <p class="story-copy">Created for America’s 250th anniversary, The Great American Star grew from a celebration into a mathematical-art project built around visual structure, individual paths, and the remarkable mathematics connecting them.</p>
+        <div class="video-container">
+          <video
+            class="story-video"
+            controls
+            playsinline
+            preload="metadata"
+            aria-label="The story behind The Great American Star"
+          >
+            <source src="/assets/video/great-american-star-intro.mp4" type="video/mp4" />
+            Your browser does not support the video element.
+          </video>
+        </div>
+      </section>
 
       <!-- ⭐ FEATURED: THE FULL INTERACTIVE STAR -->
       <div class="featured-star-section">
