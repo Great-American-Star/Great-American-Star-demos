@@ -550,9 +550,134 @@
           padding: 14px 32px;
         }
       }
+      /* Compact mathematical meaning and educator entry points. */
+      .numbers-meaning {
+        margin: 28px 0;
+        padding: 24px 28px;
+        border-left: 3px solid #ffd700;
+        border-radius: 0 10px 10px 0;
+        background: rgba(7, 26, 59, 0.4);
+      }
+      .numbers-meaning h3 { margin-top: 0; }
+      .meaning-lines {
+        list-style: none;
+        padding: 0;
+        margin: 16px 0 20px;
+        color: #ffd700;
+        font-size: clamp(1.05rem, 2.1vw, 1.4rem);
+        font-weight: bold;
+        line-height: 1.65;
+      }
+      .meaning-emphasis { color: #ffd700; font-size: 1.2em; }
+      .numbers-meaning p:last-child { margin-bottom: 0; }
+      .educators-invitation { border: 1px solid rgba(255, 215, 0, 0.55); }
+      .educators-invitation h2 { max-width: 850px; font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1.3; }
+      .educators-invitation > p:not(.hero-eyebrow) { max-width: 900px; }
+      .educators-link { margin-top: 10px; max-width: 100%; text-align: center; }
+      .educators-link:focus-visible { outline: 3px solid white; outline-offset: 5px; }
+      @media (max-width: 600px) {
+        .numbers-meaning { padding: 20px; }
+        .educators-link { width: 100%; padding: 14px 18px; }
+      }
+      /* Three main entrances, directly connected to the existing hero. */
+      .hero { min-height: 0; margin-bottom: 0; }
+      .hero-content { padding: 14px 0; }
+      .hero h1 { font-size: clamp(2.65rem, 4vw, 4.5rem); }
+      .hero-eyebrow { margin-bottom: 10px; }
+      .hero-path-count { margin: 14px 0 10px; font-size: 1.1rem; }
+      .hero-description { font-size: 1.05rem; line-height: 1.5; }
+      .hero-actions { margin-top: 18px; }
+      .audience-gateway { max-width: 1200px; margin: 0 auto 32px; padding-top: 20px; }
+      .audience-gateway > h2 { margin: 0 0 14px; font-size: 1.35rem; color: #fff; }
+      .audience-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+      .audience-card { display: flex; flex-direction: column; padding: 18px; background: #102b53; border: 1px solid #7385a0; border-top: 3px solid #ffd700; border-radius: 8px; }
+      .audience-card .audience-label { margin: 0 0 9px; color: #ffd700; font: bold 0.85rem/1.4 Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; }
+      .audience-card h3 { margin: 0 0 10px; font-size: 1.23rem; line-height: 1.2; }
+      .audience-card > p:not(.audience-label):not(.audience-status) { margin: 0 0 14px; font-size: 0.9rem; line-height: 1.45; }
+      .audience-link { display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: auto; padding: 10px 12px; border-radius: 4px; background: #ffd700; color: #071a3b; text-decoration: none; font: bold 0.83rem/1.4 Arial, sans-serif; text-align: center; }
+      .audience-link:hover { background: #ffeb55; }
+      .audience-link:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+      .audience-card .audience-status { margin: auto 0 0; padding-top: 12px; border-top: 1px solid #7385a0; color: #fff; font: 0.8rem/1.45 Arial, sans-serif; }
+      .audience-status strong { color: #ffd700; white-space: nowrap; }
+      @media (max-width: 760px) {
+        .audience-grid { grid-template-columns: 1fr; }
+        .audience-gateway { padding-top: 24px; }
+        .audience-card { padding: 24px; }
+        .audience-card h3 { font-size: 1.4rem; }
+        .audience-card > p:not(.audience-label):not(.audience-status) { font-size: 1rem; }
+        .hero-content { padding: 36px 0; }
+      }
+      /* A secondary mathematics route beneath the three audience choices. */
+      .mathematics-strip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        margin-top: 14px;
+        padding: 14px 20px;
+        background: #071a3b;
+        border-left: 3px solid #ffd700;
+        border-radius: 4px;
+      }
+      .mathematics-strip p { margin: 0; font-size: 0.9rem; line-height: 1.45; }
+      .mathematics-strip .mathematics-prompt { margin-bottom: 4px; color: #ffd700; font: bold 0.75rem/1.4 Arial, sans-serif; }
+      .mathematics-strip a { flex-shrink: 0; display: inline-flex; align-items: center; min-height: 44px; color: white; font: bold 0.85rem/1.4 Arial, sans-serif; text-underline-offset: 4px; }
+      .mathematics-strip a:hover { color: #ffd700; }
+      .mathematics-strip a:focus-visible { outline: 3px solid #ffd700; outline-offset: 4px; }
+      @media (max-width: 760px) {
+        .mathematics-strip { flex-direction: column; align-items: flex-start; gap: 12px; padding: 20px; }
+        .mathematics-strip p { font-size: 1rem; }
+      }
+      /* Video-only hero: crop the recording chrome and feather the media edges. */
+      .hero-art {
+        clip-path: inset(1% 12% 3% 12%);
+        -webkit-mask-image: linear-gradient(90deg, transparent 12%, #000 38%, #000 78%, transparent 88%), linear-gradient(180deg, transparent 0%, #000 5%, #000 48%, transparent 84%);
+        -webkit-mask-composite: source-in;
+        mask-image: linear-gradient(90deg, transparent 12%, #000 38%, #000 78%, transparent 88%), linear-gradient(180deg, transparent 0%, #000 5%, #000 48%, transparent 84%);
+        mask-composite: intersect;
+      }
+      @media (min-width: 1000px) {
+        .hero-content { padding-top: 12px; padding-bottom: 12px; }
+        .hero h1 { font-size: clamp(4.8rem, 6vw, 6rem); }
+        .hero-art {
+          left: auto;
+          right: -7%;
+          top: 0;
+          width: auto;
+          aspect-ratio: 8 / 5;
+          height: 118%;
+          object-fit: cover;
+          object-position: right top;
+          opacity: 0.94;
+        }
+        .hero-shade {
+          background: linear-gradient(90deg, #071a3b 0%, rgba(7, 26, 59, 0.97) 37%, rgba(7, 26, 59, 0.42) 57%, transparent 80%);
+        }
+      }
+      /* One shared media backdrop lets the video fade behind the audience gateway. */
+      .opening-composition { position: relative; isolation: isolate; }
+      .audience-card .audience-label { font-size: 1.25rem; line-height: 1.2; letter-spacing: 0.015em; margin-bottom: 12px; }
+      .audience-card > .audience-subheading:not(.audience-label):not(.audience-status) { font-size: 1.05rem; line-height: 1.3; font-weight: bold; margin-bottom: 10px; }
+      @media (min-width: 1000px) {
+        .opening-composition { margin: 0 -20px; padding: 0 20px; overflow: hidden; background: linear-gradient(180deg, #071a3b 0%, #142e59 52%, #25477f 100%); }
+        .hero { position: static; isolation: auto; overflow: visible; background: transparent; }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-art {
+          width: min(86vw, 1400px);
+          height: auto;
+          aspect-ratio: 8 / 5;
+          right: -8%;
+          top: -70px;
+          -webkit-mask-image: linear-gradient(90deg, transparent 12%, #000 38%, #000 76%, transparent 85%), linear-gradient(180deg, transparent 0%, #000 7%, #000 30%, transparent 82%);
+          mask-image: linear-gradient(90deg, transparent 12%, #000 38%, #000 76%, transparent 85%), linear-gradient(180deg, transparent 0%, #000 7%, #000 30%, transparent 82%);
+        }
+        .hero-shade { height: 580px; background: linear-gradient(90deg, #071a3b 0%, rgba(7, 26, 59, 0.96) 33%, rgba(7, 26, 59, 0.3) 54%, transparent 78%); -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); }
+        .audience-gateway { position: relative; z-index: 1; }
+      }
     </style>
   </head>
   <body>
+    <div class="opening-composition">
     <section class="hero" aria-labelledby="hero-title">
       <video
         class="hero-art"
@@ -562,26 +687,51 @@
         loop
         playsinline
         preload="metadata"
-        poster="star-design-core-freedom-250.jpg"
       >
-        <source src="Patriotic Star - UNITEDSTATESofAMERICA250 - Google Chrome 2026-06-02 14-14-39.mp4" type="video/mp4" />
+        <source src="Patriotic Star - UNITEDSTATESofAMERICA250 - Google Chrome 2026-06-03 01-21-12.mp4" type="video/mp4" />
       </video>
       <div class="hero-shade"></div>
       <div class="hero-content">
         <p class="hero-eyebrow">America 250 · Mathematics + Art</p>
         <h1 id="hero-title">The Great<br />American Star</h1>
-        <p class="hero-path-count">359,277,250 Unique Paths. One Is Yours.</p>
+        <p class="hero-path-count">359,277,250 Unique Paths. One American Star.</p>
         <p class="hero-description">
-          A mathematical-art experience created for America’s 250th anniversary.
-          Discover the mathematics, find your path, and create your own
-          personalized Great American Star.
+          A mathematical-art experience created for America’s 250th anniversary, where hundreds of millions of unique paths come together in one star.
+          Experience it personally, in the classroom, or as a large-scale interactive exhibit.
         </p>
-        <div class="hero-actions">
-          <a class="hero-primary" href="star_790_free_experience.html" onclick="if (typeof gtag === 'function') gtag('event', 'create_star_click');">Create Your Star — Free</a>
-          <a class="hero-secondary" href="#mathematics">Explore the Mathematics</a>
-        </div>
       </div>
     </section>
+    <section class="audience-gateway" id="experiences" aria-labelledby="audience-title">
+      <h2 id="audience-title">Experience The Great American Star</h2>
+      <div class="audience-grid">
+        <article class="audience-card">
+          <h3 class="audience-label">Individuals &amp; Families</h3>
+          <p class="audience-subheading">Create Your Own Star</p>
+          <p>Choose your mathematical path, personalize the star with your images and message, and create your own Great American Star.</p>
+          <a href="/star_790_free_experience.html" class="audience-link">Create Your Star — Free</a>
+        </article>
+        <article class="audience-card">
+          <h3 class="audience-label">For Educators</h3>
+          <p class="audience-subheading">Mathematics, Art &amp; America 250</p>
+          <p>Give students a hands-on way to discover patterns, large numbers, path counting, and mathematical art while exploring the American meaning built into the star.</p>
+          <a href="/educators/" class="audience-link">Explore for Educators →</a>
+        </article>
+        <article class="audience-card">
+          <h3 class="audience-label">MUSEUMS &amp; EXHIBITS</h3>
+          <p class="audience-subheading">A Large-Scale Interactive Experience</p>
+          <p>Imagine The Great American Star as an immersive installation where visitors explore the mathematics, choose a path, and experience their individual journey at full scale.</p>
+          <a href="/museums-exhibits/" class="audience-link">Explore Museum &amp; Exhibit Concepts →</a>
+        </article>
+      </div>
+      <div class="mathematics-strip">
+        <div>
+          <p class="mathematics-prompt">Want to go deeper into how the star works?</p>
+          <p>Explore the Pascal-style structure, path counting, and the mathematics behind 359,277,250 possibilities.</p>
+        </div>
+        <a href="#mathematics">Explore the Mathematics →</a>
+      </div>
+    </section>
+    </div>
     <div class="container">
       <!-- Header Section -->
       <div class="header">
@@ -785,6 +935,22 @@
           a unified whole.
         </p>
 
+        <!-- Meaning behind the mathematical structure -->
+        <section class="numbers-meaning" aria-labelledby="numbers-meaning-title">
+          <h3 id="numbers-meaning-title">The Numbers Have Meaning</h3>
+          <ul class="meaning-lines">
+            <li>50 starting points.</li>
+            <li>50 ending points.</li>
+            <li>359,277,250 unique mathematical paths.</li>
+            <li>One American star.</li>
+          </ul>
+          <p>The 50 starting points and 50 ending points represent the 50 states.</p>
+          <p>Between them are 359,277,250 possible mathematical paths — designed around the idea of a unique path for every American.</p>
+          <p>The patriotic symbolism is not simply added to the artwork.<br />
+            <strong class="meaning-emphasis">It is embedded in the mathematics.</strong>
+          </p>
+        </section>
+
         <h3>Personalization Features</h3>
         <ul>
           <li>
@@ -806,6 +972,14 @@
         </ul>
       </div>
 
+      <!-- Educators invitation -->
+      <section class="section educators-invitation" aria-labelledby="educators-invitation-title">
+        <p class="hero-eyebrow">For Educators</p>
+        <h2 id="educators-invitation-title">Turn America’s 250th Anniversary Into a Hands-On Mathematics Experience</h2>
+        <p>Students can explore mathematical paths, patterns, large numbers, probability, and mathematical art — then choose an individual path and transform it into their own Great American Star.</p>
+        <a class="hero-primary educators-link" href="/educators/">Explore The Great American Star for Educators →</a>
+      </section>
+
       <!-- Freedom 250 Connection -->
       <div class="section">
         <h2>Freedom 250 Connection</h2>
@@ -826,6 +1000,7 @@
 
       <!-- Copyright -->
       <div class="copyright">
+        <p style="margin-top:20px"><button type="button" data-site-feedback="Homepage">Send Feedback</button></p>
         <p><strong>© thegreatamericanstar.com</strong></p>
         <p>
           The Great American Star Project • Mathematical Art for America's 250th
@@ -837,72 +1012,6 @@
         </p>
       </div>
     </div>
-    <!-- ===== Sticky free-experience call to action ===== -->
-    <style>
-      body {
-        padding-bottom: 76px !important;
-      }
-      #gas-sticky-cta {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 99999;
-        background: rgba(10, 35, 66, 0.97);
-        backdrop-filter: blur(6px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 14px;
-        padding: 12px 16px;
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
-        font-family: Georgia, "Times New Roman", serif;
-      }
-      #gas-sticky-cta .gas-cta-text {
-        color: #fff;
-        font-size: 14px;
-        opacity: 0.92;
-        margin: 0;
-      }
-      #gas-sticky-cta a.gas-cta-btn {
-        background: #ff0013;
-        color: #fff;
-        text-decoration: none;
-        padding: 11px 26px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        transition:
-          background 0.2s ease,
-          transform 0.2s ease;
-        white-space: nowrap;
-      }
-      #gas-sticky-cta a.gas-cta-btn:hover {
-        background: #c8000f;
-        transform: translateY(-1px);
-      }
-      @media (max-width: 600px) {
-        #gas-sticky-cta .gas-cta-text {
-          display: none;
-        }
-        #gas-sticky-cta {
-          padding: 10px;
-        }
-        body {
-          padding-bottom: 64px !important;
-        }
-      }
-    </style>
-    <div id="gas-sticky-cta">
-      <p class="gas-cta-text">Ready to make your own one-of-a-kind star?</p>
-      <a
-        class="gas-cta-btn"
-        href="star_790_free_experience.html"
-        onclick="if (typeof gtag === 'function') gtag('event', 'create_star_click');"
-        >⭐ Create Your Star — Free</a
-      >
-    </div>
-    <!-- ===== End sticky CTA ===== -->
-  </body>
+  <script src="site-feedback.js" defer></script>
+</body>
 </html>
