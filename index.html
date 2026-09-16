@@ -460,10 +460,10 @@
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       }
 
-      .video-container iframe {
+      .video-container .path-demo-video {
+        display: block;
         width: 100%;
-        height: 450px;
-        border: none;
+        height: auto;
       }
 
       .copyright {
@@ -754,6 +754,30 @@
         </p>
       </div>
 
+      <!-- Path Visualization Video -->
+      <div class="section">
+        <h2>🎬 Path Visualization Demo</h2>
+        <div class="video-section">
+          <div class="video-container">
+            <video
+              class="path-demo-video"
+              controls
+              playsinline
+              preload="metadata"
+              aria-label="Great American Star path visualization demonstration"
+            >
+              <source src="/assets/video/path-visualization-demo.mp4" type="video/mp4" />
+              Your browser does not support the video element.
+            </video>
+          </div>
+          <p style="margin-top: 15px">
+            Watch as random paths are highlighted in real-time, showing how
+            individual journeys flow through the mathematical structure from the
+            central pentagon to the star's tips.
+          </p>
+        </div>
+      </div>
+
       <!-- Freedom 250 Partnership Section -->
       <div class="freedom-250-section">
         <h2 style="color: #ffd700; margin-bottom: 15px">
@@ -912,25 +936,6 @@
             />
             <div class="gallery-caption">Presidential Edition Example</div>
           </div>
-        </div>
-      </div>
-
-      <!-- Path Visualization Video -->
-      <div class="section">
-        <h2>🎬 Path Visualization Demo</h2>
-        <div class="video-section">
-          <div class="video-container">
-            <iframe
-              src="https://www.youtube.com/embed/3bjbKlmCZKw"
-              title="Great American Star Path Visualization"
-              allowfullscreen
-            ></iframe>
-          </div>
-          <p style="margin-top: 15px">
-            Watch as random paths are highlighted in real-time, showing how
-            individual journeys flow through the mathematical structure from the
-            central pentagon to the star's tips.
-          </p>
         </div>
       </div>
 
